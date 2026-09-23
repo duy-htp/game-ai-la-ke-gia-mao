@@ -1,0 +1,17 @@
+{
+  "@@locale": "vi",
+  "gameTitle": "AI LÀ KẺ GIẢ MẠO?",
+  "gameTagline": "Đọc vị bạn bè. Giữ kín bí mật.",
+  "createRoom": "TẠO PHÒNG",
+  "joinRoom": "VÀO PHÒNG",
+  "profile": "Hồ sơ",
+  "shop": "Cửa hàng",
+  "settings": "Cài đặt",
+  "comingSoon": "Tính năng sẽ có trong cột mốc tiếp theo.",
+  "developmentEnvironment": "BẢN PHÁT TRIỂN",
+  "stagingEnvironment": "BẢN KIỂM THỬ",
+  "identityMarkLabel": "Biểu tượng chiếc mặt nạ bí ẩn",
+  "errorNetworkUnavailable": "Không có kết nối mạng. Vui lòng thử lại.",
+  "errorSessionExpired": "Phiên đăng nhập đã hết hạn. Vui lòng bắt đầu lại.",
+  "errorUnexpected": "Đã xảy ra lỗi. Vui lòng thử lại."
+}

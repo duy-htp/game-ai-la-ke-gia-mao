@@ -1,0 +1,17 @@
+{
+  "@@locale": "en",
+  "gameTitle": "WHO IS THE IMPOSTOR?",
+  "gameTagline": "Read your friends. Keep your secret.",
+  "createRoom": "CREATE ROOM",
+  "joinRoom": "JOIN ROOM",
+  "profile": "Profile",
+  "shop": "Shop",
+  "settings": "Settings",
+  "comingSoon": "This feature is coming in a future milestone.",
+  "developmentEnvironment": "DEVELOPMENT BUILD",
+  "stagingEnvironment": "STAGING BUILD",
+  "identityMarkLabel": "Mysterious mask symbol",
+  "errorNetworkUnavailable": "No network connection. Please try again.",
+  "errorSessionExpired": "Your session expired. Please start again.",
+  "errorUnexpected": "Something went wrong. Please try again."
+}
