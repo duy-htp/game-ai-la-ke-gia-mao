@@ -445,6 +445,234 @@ abstract class AppLocalizations {
   /// In vi, this message translates to:
   /// **'Không thể xử lý phòng. Vui lòng thử lại.'**
   String get errorRoomOperation;
+
+  /// No description provided for @online.
+  ///
+  /// In vi, this message translates to:
+  /// **'TRỰC TUYẾN'**
+  String get online;
+
+  /// No description provided for @reconnecting.
+  ///
+  /// In vi, this message translates to:
+  /// **'ĐANG KẾT NỐI LẠI...'**
+  String get reconnecting;
+
+  /// No description provided for @onlineLower.
+  ///
+  /// In vi, this message translates to:
+  /// **'Trực tuyến'**
+  String get onlineLower;
+
+  /// No description provided for @disconnected.
+  ///
+  /// In vi, this message translates to:
+  /// **'Mất kết nối'**
+  String get disconnected;
+
+  /// No description provided for @ready.
+  ///
+  /// In vi, this message translates to:
+  /// **'SẴN SÀNG'**
+  String get ready;
+
+  /// No description provided for @notReady.
+  ///
+  /// In vi, this message translates to:
+  /// **'CHƯA SẴN SÀNG'**
+  String get notReady;
+
+  /// No description provided for @cancelReady.
+  ///
+  /// In vi, this message translates to:
+  /// **'HỦY SẴN SÀNG'**
+  String get cancelReady;
+
+  /// No description provided for @lobbySettings.
+  ///
+  /// In vi, this message translates to:
+  /// **'CÀI ĐẶT PHÒNG'**
+  String get lobbySettings;
+
+  /// No description provided for @impostorCount.
+  ///
+  /// In vi, this message translates to:
+  /// **'Số kẻ giả mạo'**
+  String get impostorCount;
+
+  /// No description provided for @category.
+  ///
+  /// In vi, this message translates to:
+  /// **'Chủ đề'**
+  String get category;
+
+  /// No description provided for @randomCategory.
+  ///
+  /// In vi, this message translates to:
+  /// **'Ngẫu nhiên'**
+  String get randomCategory;
+
+  /// No description provided for @clueTime.
+  ///
+  /// In vi, this message translates to:
+  /// **'Thời gian gợi ý'**
+  String get clueTime;
+
+  /// No description provided for @discussionTime.
+  ///
+  /// In vi, this message translates to:
+  /// **'Thời gian thảo luận'**
+  String get discussionTime;
+
+  /// No description provided for @saveSettings.
+  ///
+  /// In vi, this message translates to:
+  /// **'LƯU CÀI ĐẶT'**
+  String get saveSettings;
+
+  /// No description provided for @minimumPlayersRequired.
+  ///
+  /// In vi, this message translates to:
+  /// **'Cần ít nhất 3 người chơi'**
+  String get minimumPlayersRequired;
+
+  /// No description provided for @waitingReadyPlayers.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đang chờ {count} người sẵn sàng'**
+  String waitingReadyPlayers(int count);
+
+  /// No description provided for @invalidLobbySettings.
+  ///
+  /// In vi, this message translates to:
+  /// **'Cài đặt phòng chưa hợp lệ'**
+  String get invalidLobbySettings;
+
+  /// No description provided for @startGame.
+  ///
+  /// In vi, this message translates to:
+  /// **'BẮT ĐẦU'**
+  String get startGame;
+
+  /// No description provided for @startAvailableMilestoneFive.
+  ///
+  /// In vi, this message translates to:
+  /// **'BẮT ĐẦU · MILESTONE 5'**
+  String get startAvailableMilestoneFive;
+
+  /// No description provided for @categoryFood.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đồ ăn'**
+  String get categoryFood;
+
+  /// No description provided for @categoryAnimals.
+  ///
+  /// In vi, this message translates to:
+  /// **'Động vật'**
+  String get categoryAnimals;
+
+  /// No description provided for @categoryPlaces.
+  ///
+  /// In vi, this message translates to:
+  /// **'Địa điểm'**
+  String get categoryPlaces;
+
+  /// No description provided for @categoryObjects.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đồ vật'**
+  String get categoryObjects;
+
+  /// No description provided for @categoryJobs.
+  ///
+  /// In vi, this message translates to:
+  /// **'Nghề nghiệp'**
+  String get categoryJobs;
+
+  /// No description provided for @categorySports.
+  ///
+  /// In vi, this message translates to:
+  /// **'Thể thao'**
+  String get categorySports;
+
+  /// No description provided for @categoryEntertainment.
+  ///
+  /// In vi, this message translates to:
+  /// **'Giải trí'**
+  String get categoryEntertainment;
+
+  /// No description provided for @categoryVietnam.
+  ///
+  /// In vi, this message translates to:
+  /// **'Việt Nam'**
+  String get categoryVietnam;
+
+  /// No description provided for @categoryFriends.
+  ///
+  /// In vi, this message translates to:
+  /// **'Bạn bè'**
+  String get categoryFriends;
+
+  /// No description provided for @categoryRelationships.
+  ///
+  /// In vi, this message translates to:
+  /// **'Các mối quan hệ'**
+  String get categoryRelationships;
+
+  /// No description provided for @holdToReveal.
+  ///
+  /// In vi, this message translates to:
+  /// **'NHẤN GIỮ ĐỂ XEM VAI TRÒ'**
+  String get holdToReveal;
+
+  /// No description provided for @youAreNormal.
+  ///
+  /// In vi, this message translates to:
+  /// **'BẠN LÀ NGƯỜI THƯỜNG'**
+  String get youAreNormal;
+
+  /// No description provided for @youAreImpostor.
+  ///
+  /// In vi, this message translates to:
+  /// **'BẠN LÀ KẺ GIẢ MẠO'**
+  String get youAreImpostor;
+
+  /// No description provided for @secretKeyword.
+  ///
+  /// In vi, this message translates to:
+  /// **'TỪ KHÓA'**
+  String get secretKeyword;
+
+  /// No description provided for @impostorHint.
+  ///
+  /// In vi, this message translates to:
+  /// **'Hãy quan sát manh mối và tìm ra từ khóa.'**
+  String get impostorHint;
+
+  /// No description provided for @remembered.
+  ///
+  /// In vi, this message translates to:
+  /// **'ĐÃ NHỚ'**
+  String get remembered;
+
+  /// No description provided for @secretHidden.
+  ///
+  /// In vi, this message translates to:
+  /// **'Vai trò đang được ẩn'**
+  String get secretHidden;
+
+  /// No description provided for @errorGameOperation.
+  ///
+  /// In vi, this message translates to:
+  /// **'Không thể bắt đầu hoặc tải ván chơi.'**
+  String get errorGameOperation;
+
+  /// No description provided for @errorSecretUnavailable.
+  ///
+  /// In vi, this message translates to:
+  /// **'Không thể tải vai trò bí mật. Vui lòng thử lại.'**
+  String get errorSecretUnavailable;
 }
 
 class _AppLocalizationsDelegate

@@ -9,6 +9,9 @@ void main() {
       'authorization': 'Bearer secret',
       'service_role': 'service-secret',
       'keyword': 'Dưa hấu',
+      'keyword_id': 42,
+      'word_vi': 'Dưa hấu',
+      'word_en': 'Watermelon',
       'room_code': 'ABC23',
     });
 
@@ -19,6 +22,9 @@ void main() {
       'authorization',
       'service_role',
       'keyword',
+      'keyword_id',
+      'word_vi',
+      'word_en',
     ]) {
       expect(result[key], '[REDACTED]');
     }

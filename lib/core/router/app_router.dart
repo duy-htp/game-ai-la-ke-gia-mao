@@ -9,6 +9,7 @@ import '../../features/profile/presentation/onboarding_screen.dart';
 import '../../features/room/presentation/create_room_screen.dart';
 import '../../features/room/presentation/join_room_screen.dart';
 import '../../features/room/presentation/room_screen.dart';
+import '../../features/game/presentation/role_reveal_screen.dart';
 import 'route_names.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
@@ -17,6 +18,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     initialLocation: RoutePaths.startup,
     redirect: (context, state) {
       return switch (sessionState) {
+        AppSessionReady(:final game) when game != null =>
+          state.matchedLocation == RoutePaths.game ? null : RoutePaths.game,
         AppSessionReady(:final room) when room != null =>
           state.matchedLocation == RoutePaths.room ? null : RoutePaths.room,
         AppSessionReady() => switch (state.matchedLocation) {
@@ -65,6 +68,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         name: RouteNames.room,
         path: RoutePaths.room,
         builder: (context, state) => const RoomScreen(),
+      ),
+      GoRoute(
+        name: RouteNames.game,
+        path: RoutePaths.game,
+        builder: (context, state) => const RoleRevealScreen(),
       ),
     ],
   );

@@ -91,3 +91,11 @@ final class NotRoomMemberAppError extends AppError {
 final class RoomOperationAppError extends AppError {
   const RoomOperationAppError() : super('room_operation_failed');
 }
+
+final class GameOperationAppError extends AppError {
+  const GameOperationAppError() : super('game_operation_failed');
+}
+
+final class SecretUnavailableAppError extends AppError {
+  const SecretUnavailableAppError() : super('secret_unavailable');
+}

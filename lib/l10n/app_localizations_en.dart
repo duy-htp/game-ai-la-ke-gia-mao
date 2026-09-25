@@ -46,7 +46,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get authInitializing => 'Restoring your player…';
 
   @override
-  String get retry => 'TRY AGAIN';
+  String get retry => 'RETRY';
 
   @override
   String get chooseYourName => 'CHOOSE YOUR NAME';
@@ -203,4 +203,121 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get errorRoomOperation =>
       'The room request could not be completed. Please retry.';
+
+  @override
+  String get online => 'ONLINE';
+
+  @override
+  String get reconnecting => 'RECONNECTING...';
+
+  @override
+  String get onlineLower => 'Online';
+
+  @override
+  String get disconnected => 'Disconnected';
+
+  @override
+  String get ready => 'READY';
+
+  @override
+  String get notReady => 'NOT READY';
+
+  @override
+  String get cancelReady => 'NOT READY';
+
+  @override
+  String get lobbySettings => 'LOBBY SETTINGS';
+
+  @override
+  String get impostorCount => 'Impostors';
+
+  @override
+  String get category => 'Category';
+
+  @override
+  String get randomCategory => 'Random';
+
+  @override
+  String get clueTime => 'Clue time';
+
+  @override
+  String get discussionTime => 'Discussion time';
+
+  @override
+  String get saveSettings => 'SAVE SETTINGS';
+
+  @override
+  String get minimumPlayersRequired => 'At least 3 players required';
+
+  @override
+  String waitingReadyPlayers(int count) {
+    return 'Waiting for $count ready player(s)';
+  }
+
+  @override
+  String get invalidLobbySettings => 'Lobby settings are invalid';
+
+  @override
+  String get startGame => 'START';
+
+  @override
+  String get startAvailableMilestoneFive => 'START · MILESTONE 5';
+
+  @override
+  String get categoryFood => 'Food';
+
+  @override
+  String get categoryAnimals => 'Animals';
+
+  @override
+  String get categoryPlaces => 'Places';
+
+  @override
+  String get categoryObjects => 'Objects';
+
+  @override
+  String get categoryJobs => 'Jobs';
+
+  @override
+  String get categorySports => 'Sports';
+
+  @override
+  String get categoryEntertainment => 'Entertainment';
+
+  @override
+  String get categoryVietnam => 'Vietnam';
+
+  @override
+  String get categoryFriends => 'Friends';
+
+  @override
+  String get categoryRelationships => 'Relationships';
+
+  @override
+  String get holdToReveal => 'PRESS AND HOLD TO REVEAL ROLE';
+
+  @override
+  String get youAreNormal => 'YOU ARE A NORMAL PLAYER';
+
+  @override
+  String get youAreImpostor => 'YOU ARE THE IMPOSTOR';
+
+  @override
+  String get secretKeyword => 'KEYWORD';
+
+  @override
+  String get impostorHint => 'Watch the clues and discover the keyword.';
+
+  @override
+  String get remembered => 'GOT IT';
+
+  @override
+  String get secretHidden => 'Your role is hidden';
+
+  @override
+  String get errorGameOperation => 'The game could not be started or loaded.';
+
+  @override
+  String get errorSecretUnavailable =>
+      'Your secret role could not be loaded. Please retry.';
 }

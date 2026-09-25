@@ -4,6 +4,7 @@ import 'package:ai_la_ke_gia_mao/core/config/app_environment.dart';
 import 'package:ai_la_ke_gia_mao/features/auth/domain/auth_repository.dart';
 import 'package:ai_la_ke_gia_mao/features/profile/domain/profile_repository.dart';
 import 'package:ai_la_ke_gia_mao/features/room/domain/room_repository.dart';
+import 'package:ai_la_ke_gia_mao/features/game/domain/game_repository.dart';
 import 'package:ai_la_ke_gia_mao/features/room/presentation/create_room_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -26,6 +27,7 @@ Widget _testScope(Widget child) {
         FakeProfileRepository(profile: sampleProfile),
       ),
       roomRepositoryProvider.overrideWithValue(FakeRoomRepository()),
+      gameRepositoryProvider.overrideWithValue(FakeGameRepository()),
     ],
     child: child,
   );

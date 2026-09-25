@@ -48,3 +48,11 @@ Presence chỉ là tín hiệu; `get_current_room()` vẫn là nguồn sự th�
 reconnect hoặc mobile resume. Người chơi dùng ready state idempotent, chủ phòng
 lưu category/impostor/timer, và thay đổi settings sẽ reset ready của non-host.
 Backend tự tính `can_start`; thao tác tạo game được giữ lại cho Milestone 5.
+
+## Milestone 5 — Secure game engine
+
+Host có thể khởi tạo một ván `role_reveal` bằng transaction server-authoritative.
+Backend snapshot participant, chọn category/keyword, phân role và turn order bằng
+random bytes phía server. Public game snapshot không chứa role hay keyword;
+secret của từng người chỉ được trả bởi RPC không nhận player ID. Role Reveal yêu
+cầu giữ một giây, tự ẩn sau năm giây và ẩn ngay khi app background.

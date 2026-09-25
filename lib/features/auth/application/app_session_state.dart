@@ -1,6 +1,7 @@
 import '../../../core/errors/app_error.dart';
 import '../../profile/domain/player_profile.dart';
 import '../../room/domain/room_snapshot.dart';
+import '../../game/domain/game_snapshot.dart';
 import '../domain/auth_identity.dart';
 
 sealed class AppSessionState {
@@ -38,10 +39,11 @@ final class AppSessionNeedsProfile extends AppSessionState {
 }
 
 final class AppSessionReady extends AppSessionState {
-  const AppSessionReady(this.profile, {this.room});
+  const AppSessionReady(this.profile, {this.room, this.game});
 
   final PlayerProfile profile;
   final RoomSnapshot? room;
+  final GameSnapshot? game;
 }
 
 final class AppSessionRecoverableError extends AppSessionState {

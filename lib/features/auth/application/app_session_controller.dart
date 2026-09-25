@@ -6,6 +6,8 @@ import '../../profile/domain/profile_input_validator.dart';
 import '../../profile/domain/profile_repository.dart';
 import '../../room/domain/room_repository.dart';
 import '../../room/domain/room_snapshot.dart';
+import '../../game/domain/game_repository.dart';
+import '../../game/domain/game_snapshot.dart';
 import '../domain/auth_repository.dart';
 import 'app_session_state.dart';
 
@@ -34,9 +36,11 @@ class AppSessionController extends Notifier<AppSessionState> {
     final authRepository = ref.read(authRepositoryProvider);
     final profileRepository = ref.read(profileRepositoryProvider);
     final roomRepository = ref.read(roomRepositoryProvider);
+    final gameRepository = ref.read(gameRepositoryProvider);
     if (authRepository == null ||
         profileRepository == null ||
-        roomRepository == null) {
+        roomRepository == null ||
+        gameRepository == null) {
       state = const AppSessionFatalConfigurationError(
         AuthInitializationAppError(),
       );
@@ -51,7 +55,8 @@ class AppSessionController extends Notifier<AppSessionState> {
         return;
       }
       final room = await roomRepository.loadCurrentRoom();
-      state = AppSessionReady(profile, room: room);
+      final game = room == null ? null : await gameRepository.loadCurrentGame();
+      state = AppSessionReady(profile, room: room, game: game);
     } on AppError catch (error) {
       state = AppSessionRecoverableError(error);
     } catch (_) {
@@ -93,7 +98,7 @@ class AppSessionController extends Notifier<AppSessionState> {
   void setRoom(RoomSnapshot room) {
     final current = state;
     if (current is AppSessionReady) {
-      state = AppSessionReady(current.profile, room: room);
+      state = AppSessionReady(current.profile, room: room, game: current.game);
     }
   }
 
@@ -101,6 +106,13 @@ class AppSessionController extends Notifier<AppSessionState> {
     final current = state;
     if (current is AppSessionReady) {
       state = AppSessionReady(current.profile);
+    }
+  }
+
+  void setGame(GameSnapshot? game) {
+    final current = state;
+    if (current is AppSessionReady) {
+      state = AppSessionReady(current.profile, room: current.room, game: game);
     }
   }
 }

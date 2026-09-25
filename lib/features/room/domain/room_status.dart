@@ -2,6 +2,7 @@ import '../../../core/errors/app_error.dart';
 
 enum RoomStatus {
   waiting('waiting'),
+  inGame('in_game'),
   closed('closed');
 
   const RoomStatus(this.value);

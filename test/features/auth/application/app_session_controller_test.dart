@@ -6,6 +6,7 @@ import 'package:ai_la_ke_gia_mao/features/auth/application/app_session_state.dar
 import 'package:ai_la_ke_gia_mao/features/auth/domain/auth_repository.dart';
 import 'package:ai_la_ke_gia_mao/features/profile/domain/profile_repository.dart';
 import 'package:ai_la_ke_gia_mao/features/room/domain/room_repository.dart';
+import 'package:ai_la_ke_gia_mao/features/game/domain/game_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -28,6 +29,7 @@ ProviderContainer _container({
       authRepositoryProvider.overrideWithValue(auth),
       profileRepositoryProvider.overrideWithValue(profiles),
       roomRepositoryProvider.overrideWithValue(rooms ?? FakeRoomRepository()),
+      gameRepositoryProvider.overrideWithValue(FakeGameRepository()),
     ],
   );
 }

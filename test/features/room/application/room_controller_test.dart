@@ -8,6 +8,7 @@ import 'package:ai_la_ke_gia_mao/features/profile/domain/profile_repository.dart
 import 'package:ai_la_ke_gia_mao/features/room/application/room_action_state.dart';
 import 'package:ai_la_ke_gia_mao/features/room/application/room_controller.dart';
 import 'package:ai_la_ke_gia_mao/features/room/domain/room_repository.dart';
+import 'package:ai_la_ke_gia_mao/features/game/domain/game_repository.dart';
 import 'package:ai_la_ke_gia_mao/features/room/domain/lobby_settings.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -29,6 +30,7 @@ ProviderContainer _container(FakeRoomRepository rooms) {
         FakeProfileRepository(profile: sampleProfile),
       ),
       roomRepositoryProvider.overrideWithValue(rooms),
+      gameRepositoryProvider.overrideWithValue(FakeGameRepository()),
       createRequestIdProvider.overrideWithValue(
         () => '90000000-0000-4000-8000-000000000001',
       ),

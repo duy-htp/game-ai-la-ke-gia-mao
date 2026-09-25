@@ -9,6 +9,10 @@ import 'package:ai_la_ke_gia_mao/features/room/domain/room_code.dart';
 import 'package:ai_la_ke_gia_mao/features/room/domain/room_repository.dart';
 import 'package:ai_la_ke_gia_mao/features/room/domain/room_snapshot.dart';
 import 'package:ai_la_ke_gia_mao/features/room/domain/room_status.dart';
+import 'package:ai_la_ke_gia_mao/features/game/domain/game_repository.dart';
+import 'package:ai_la_ke_gia_mao/features/game/domain/game_snapshot.dart';
+import 'package:ai_la_ke_gia_mao/features/game/domain/game_status.dart';
+import 'package:ai_la_ke_gia_mao/features/game/domain/player_game_secret.dart';
 import 'package:ai_la_ke_gia_mao/features/room/domain/lobby_settings.dart';
 import 'package:ai_la_ke_gia_mao/features/room/domain/room_realtime.dart';
 
@@ -41,6 +45,61 @@ final sampleRoom = RoomSnapshot(
     ),
   ],
 );
+
+final sampleGame = GameSnapshot(
+  gameId: '30000000-0000-4000-8000-000000000001',
+  roomId: sampleRoom.roomId,
+  roundNumber: 1,
+  status: GameStatus.roleReveal,
+  phaseStartedAt: DateTime.utc(2026, 9, 25),
+  phaseEndsAt: DateTime.utc(2026, 9, 25, 0, 0, 15),
+  revision: 1,
+  participants: [
+    GameParticipantSummary(
+      playerId: sampleProfile.id,
+      username: sampleProfile.username,
+      avatarId: sampleProfile.avatarId,
+    ),
+  ],
+);
+
+class FakeGameRepository implements GameRepository {
+  FakeGameRepository({
+    this.currentGame,
+    this.secret = const PlayerGameSecret(
+      role: PlayerRole.normal,
+      wordVi: 'Dưa hấu',
+      wordEn: 'Watermelon',
+    ),
+    this.error,
+  });
+  GameSnapshot? currentGame;
+  final PlayerGameSecret secret;
+  final Object? error;
+  int startCalls = 0;
+  int loadCalls = 0;
+  int secretCalls = 0;
+  @override
+  Future<GameSnapshot> startGame(String requestId) async {
+    startCalls++;
+    if (error case final value?) throw value;
+    return currentGame ??= sampleGame;
+  }
+
+  @override
+  Future<GameSnapshot?> loadCurrentGame() async {
+    loadCalls++;
+    if (error case final value?) throw value;
+    return currentGame;
+  }
+
+  @override
+  Future<PlayerGameSecret> loadMySecret() async {
+    secretCalls++;
+    if (error case final value?) throw value;
+    return secret;
+  }
+}
 
 class FakeAuthRepository implements AuthRepository {
   FakeAuthRepository({this.error});

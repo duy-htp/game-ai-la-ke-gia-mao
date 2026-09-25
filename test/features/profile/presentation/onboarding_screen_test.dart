@@ -7,6 +7,7 @@ import 'package:ai_la_ke_gia_mao/features/home/presentation/home_screen.dart';
 import 'package:ai_la_ke_gia_mao/features/profile/domain/profile_repository.dart';
 import 'package:ai_la_ke_gia_mao/features/profile/presentation/onboarding_screen.dart';
 import 'package:ai_la_ke_gia_mao/features/room/domain/room_repository.dart';
+import 'package:ai_la_ke_gia_mao/features/game/domain/game_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -26,6 +27,7 @@ Widget _app(FakeProfileRepository profiles, {Locale? locale}) {
       authRepositoryProvider.overrideWithValue(FakeAuthRepository()),
       profileRepositoryProvider.overrideWithValue(profiles),
       roomRepositoryProvider.overrideWithValue(FakeRoomRepository()),
+      gameRepositoryProvider.overrideWithValue(FakeGameRepository()),
     ],
     child: App(locale: locale),
   );

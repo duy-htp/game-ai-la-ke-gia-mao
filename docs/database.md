@@ -118,3 +118,18 @@ từ active host, tối thiểu ba người, settings hợp lệ và toàn bộ 
 Rooms/memberships vẫn không cấp SELECT. Trigger gọi `realtime.send` với payload
 tối giản. Policy trên `realtime.messages` dùng SECURITY DEFINER predicate để
 chỉ active room member được nghe private channel tương ứng.
+
+## Secure game engine
+
+`games` lưu active phase, server timestamps, selected category/keyword, revision
+và start idempotency key. Partial unique index bảo đảm mỗi room tối đa một active
+game; `(room_id, round_number)` bảo đảm lịch sử vòng. `game_players` là snapshot
+cố định với private role và unique turn order. `words` chứa 100 concept VI/EN,
+10 mỗi category; không bảng nào cấp direct client access.
+
+`start_game(request_id)` khóa room rồi kiểm tra lại host, trạng thái, actual
+member count, ready và impostor settings. Category/word, role và turn order đều
+dùng `extensions.gen_random_bytes` ở server. Toàn bộ insert và room transition
+`waiting → in_game` chung một transaction. Retry cùng request ID trả cùng game.
+`get_current_game()` trả explicit safe JSON; `get_my_game_secret()` không có input
+identity và lấy duy nhất `auth.uid()`.

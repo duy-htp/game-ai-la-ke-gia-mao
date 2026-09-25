@@ -198,4 +198,121 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get errorRoomOperation => 'Không thể xử lý phòng. Vui lòng thử lại.';
+
+  @override
+  String get online => 'TRỰC TUYẾN';
+
+  @override
+  String get reconnecting => 'ĐANG KẾT NỐI LẠI...';
+
+  @override
+  String get onlineLower => 'Trực tuyến';
+
+  @override
+  String get disconnected => 'Mất kết nối';
+
+  @override
+  String get ready => 'SẴN SÀNG';
+
+  @override
+  String get notReady => 'CHƯA SẴN SÀNG';
+
+  @override
+  String get cancelReady => 'HỦY SẴN SÀNG';
+
+  @override
+  String get lobbySettings => 'CÀI ĐẶT PHÒNG';
+
+  @override
+  String get impostorCount => 'Số kẻ giả mạo';
+
+  @override
+  String get category => 'Chủ đề';
+
+  @override
+  String get randomCategory => 'Ngẫu nhiên';
+
+  @override
+  String get clueTime => 'Thời gian gợi ý';
+
+  @override
+  String get discussionTime => 'Thời gian thảo luận';
+
+  @override
+  String get saveSettings => 'LƯU CÀI ĐẶT';
+
+  @override
+  String get minimumPlayersRequired => 'Cần ít nhất 3 người chơi';
+
+  @override
+  String waitingReadyPlayers(int count) {
+    return 'Đang chờ $count người sẵn sàng';
+  }
+
+  @override
+  String get invalidLobbySettings => 'Cài đặt phòng chưa hợp lệ';
+
+  @override
+  String get startGame => 'BẮT ĐẦU';
+
+  @override
+  String get startAvailableMilestoneFive => 'BẮT ĐẦU · MILESTONE 5';
+
+  @override
+  String get categoryFood => 'Đồ ăn';
+
+  @override
+  String get categoryAnimals => 'Động vật';
+
+  @override
+  String get categoryPlaces => 'Địa điểm';
+
+  @override
+  String get categoryObjects => 'Đồ vật';
+
+  @override
+  String get categoryJobs => 'Nghề nghiệp';
+
+  @override
+  String get categorySports => 'Thể thao';
+
+  @override
+  String get categoryEntertainment => 'Giải trí';
+
+  @override
+  String get categoryVietnam => 'Việt Nam';
+
+  @override
+  String get categoryFriends => 'Bạn bè';
+
+  @override
+  String get categoryRelationships => 'Các mối quan hệ';
+
+  @override
+  String get holdToReveal => 'NHẤN GIỮ ĐỂ XEM VAI TRÒ';
+
+  @override
+  String get youAreNormal => 'BẠN LÀ NGƯỜI THƯỜNG';
+
+  @override
+  String get youAreImpostor => 'BẠN LÀ KẺ GIẢ MẠO';
+
+  @override
+  String get secretKeyword => 'TỪ KHÓA';
+
+  @override
+  String get impostorHint => 'Hãy quan sát manh mối và tìm ra từ khóa.';
+
+  @override
+  String get remembered => 'ĐÃ NHỚ';
+
+  @override
+  String get secretHidden => 'Vai trò đang được ẩn';
+
+  @override
+  String get errorGameOperation => 'Không thể bắt đầu hoặc tải ván chơi.';
+
+  @override
+  String get errorSecretUnavailable =>
+      'Không thể tải vai trò bí mật. Vui lòng thử lại.';
 }

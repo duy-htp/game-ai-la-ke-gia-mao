@@ -7,6 +7,7 @@ import 'package:ai_la_ke_gia_mao/features/auth/domain/auth_repository.dart';
 import 'package:ai_la_ke_gia_mao/features/home/presentation/home_screen.dart';
 import 'package:ai_la_ke_gia_mao/features/profile/domain/profile_repository.dart';
 import 'package:ai_la_ke_gia_mao/features/room/domain/room_repository.dart';
+import 'package:ai_la_ke_gia_mao/features/game/domain/game_repository.dart';
 import 'package:ai_la_ke_gia_mao/features/room/presentation/create_room_screen.dart';
 import 'package:ai_la_ke_gia_mao/features/room/presentation/join_room_screen.dart';
 import 'package:ai_la_ke_gia_mao/features/room/presentation/room_screen.dart';
@@ -31,6 +32,7 @@ ProviderContainer _container(FakeRoomRepository rooms) {
         FakeProfileRepository(profile: sampleProfile),
       ),
       roomRepositoryProvider.overrideWithValue(rooms),
+      gameRepositoryProvider.overrideWithValue(FakeGameRepository()),
     ],
   );
 }

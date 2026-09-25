@@ -15,6 +15,7 @@ import '../application/room_realtime_controller.dart';
 import '../domain/lobby_settings.dart';
 import '../domain/room_realtime.dart';
 import '../domain/room_snapshot.dart';
+import '../../game/application/game_controller.dart';
 
 class RoomScreen extends ConsumerStatefulWidget {
   const RoomScreen({super.key});
@@ -64,10 +65,11 @@ class _RoomScreenState extends ConsumerState<RoomScreen>
     }
     final room = session.room!;
     final isHost = room.hostId == session.profile.id;
-    final vi = Localizations.localeOf(context).languageCode == 'vi';
     final realtime = ref.watch(roomRealtimeControllerProvider);
     final action = ref.watch(roomControllerProvider);
-    final busy = action is RoomActionSubmitting;
+    final gameAction = ref.watch(gameControllerProvider);
+    final busy =
+        action is RoomActionSubmitting || gameAction is GameActionSubmitting;
     // Preserve an unsaved host draft across membership/ready revisions. Only an
     // authoritative settings change replaces it.
     if (_draft == null ||
@@ -77,12 +79,10 @@ class _RoomScreenState extends ConsumerState<RoomScreen>
     }
     final unready = room.members.where((m) => !m.isHost && !m.isReady).length;
     final reason = room.members.length < 3
-        ? (vi ? 'Cần ít nhất 3 người chơi' : 'At least 3 players required')
+        ? context.l10n.minimumPlayersRequired
         : unready > 0
-        ? (vi
-              ? 'Đang chờ $unready người sẵn sàng'
-              : 'Waiting for $unready ready player(s)')
-        : (vi ? 'Cài đặt phòng chưa hợp lệ' : 'Lobby settings are invalid');
+        ? context.l10n.waitingReadyPlayers(unready)
+        : context.l10n.invalidLobbySettings;
 
     return Scaffold(
       key: RoomScreen.screenKey,
@@ -103,7 +103,7 @@ class _RoomScreenState extends ConsumerState<RoomScreen>
                           style: Theme.of(context).textTheme.titleLarge,
                         ),
                       ),
-                      _ConnectionChip(state: realtime.connection, vi: vi),
+                      _ConnectionChip(state: realtime.connection),
                     ],
                   ),
                   const SizedBox(height: 12),
@@ -137,7 +137,6 @@ class _RoomScreenState extends ConsumerState<RoomScreen>
                       online: realtime.onlinePlayerIds.contains(
                         member.playerId,
                       ),
-                      vi: vi,
                     ),
                   ),
                   const SizedBox(height: 18),
@@ -145,7 +144,6 @@ class _RoomScreenState extends ConsumerState<RoomScreen>
                     room: room,
                     draft: _draft!,
                     isHost: isHost,
-                    vi: vi,
                     busy: busy,
                     onChanged: (value) => setState(() => _draft = value),
                     onSave: () async {
@@ -159,14 +157,17 @@ class _RoomScreenState extends ConsumerState<RoomScreen>
                   if (isHost)
                     FilledButton.icon(
                       key: const Key('start-game-button'),
-                      onPressed: null,
-                      icon: const Icon(Icons.play_arrow_rounded),
+                      onPressed: room.canStart && !busy
+                          ? ref.read(gameControllerProvider.notifier).startGame
+                          : null,
+                      icon: gameAction is GameActionSubmitting
+                          ? const SizedBox.square(
+                              dimension: 20,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
+                          : const Icon(Icons.play_arrow_rounded),
                       label: Text(
-                        room.canStart
-                            ? (vi
-                                  ? 'BẮT ĐẦU · MILESTONE 5'
-                                  : 'START · MILESTONE 5')
-                            : reason,
+                        room.canStart ? context.l10n.startGame : reason,
                       ),
                     )
                   else
@@ -197,8 +198,8 @@ class _RoomScreenState extends ConsumerState<RoomScreen>
                                   (m) => m.playerId == session.profile.id,
                                 )
                                 .isReady
-                            ? (vi ? 'HỦY SẴN SÀNG' : 'NOT READY')
-                            : (vi ? 'SẴN SÀNG' : 'READY'),
+                            ? context.l10n.cancelReady
+                            : context.l10n.ready,
                       ),
                     ),
                   const SizedBox(height: 10),
@@ -226,9 +227,8 @@ class _RoomScreenState extends ConsumerState<RoomScreen>
 }
 
 class _ConnectionChip extends StatelessWidget {
-  const _ConnectionChip({required this.state, required this.vi});
+  const _ConnectionChip({required this.state});
   final RoomConnectionState state;
-  final bool vi;
   @override
   Widget build(BuildContext context) => Chip(
     key: const Key('connection-indicator'),
@@ -238,21 +238,16 @@ class _ConnectionChip extends StatelessWidget {
     ),
     label: Text(
       state == RoomConnectionState.connected
-          ? (vi ? 'TRỰC TUYẾN' : 'ONLINE')
-          : (vi ? 'ĐANG KẾT NỐI LẠI...' : 'RECONNECTING...'),
+          ? context.l10n.online
+          : context.l10n.reconnecting,
     ),
   );
 }
 
 class _MemberCard extends StatelessWidget {
-  const _MemberCard({
-    required this.member,
-    required this.online,
-    required this.vi,
-  });
+  const _MemberCard({required this.member, required this.online});
   final RoomMember member;
   final bool online;
-  final bool vi;
   @override
   Widget build(BuildContext context) => Card(
     key: Key('room-member-${member.playerId}'),
@@ -267,9 +262,7 @@ class _MemberCard extends StatelessWidget {
         overflow: TextOverflow.ellipsis,
       ),
       subtitle: Text(
-        online
-            ? (vi ? 'Trực tuyến' : 'Online')
-            : (vi ? 'Mất kết nối' : 'Disconnected'),
+        online ? context.l10n.onlineLower : context.l10n.disconnected,
       ),
       trailing: member.isHost
           ? Chip(
@@ -282,9 +275,7 @@ class _MemberCard extends StatelessWidget {
                 size: 17,
               ),
               label: Text(
-                member.isReady
-                    ? (vi ? 'SẴN SÀNG' : 'READY')
-                    : (vi ? 'CHƯA SẴN SÀNG' : 'NOT READY'),
+                member.isReady ? context.l10n.ready : context.l10n.notReady,
               ),
             ),
     ),
@@ -296,14 +287,13 @@ class _SettingsCard extends StatelessWidget {
     required this.room,
     required this.draft,
     required this.isHost,
-    required this.vi,
     required this.busy,
     required this.onChanged,
     required this.onSave,
   });
   final RoomSnapshot room;
   final LobbySettings draft;
-  final bool isHost, vi, busy;
+  final bool isHost, busy;
   final ValueChanged<LobbySettings> onChanged;
   final VoidCallback onSave;
 
@@ -328,11 +318,11 @@ class _SettingsCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
-            vi ? 'CÀI ĐẶT PHÒNG' : 'LOBBY SETTINGS',
+            context.l10n.lobbySettings,
             style: Theme.of(context).textTheme.titleMedium,
           ),
           const SizedBox(height: 10),
-          Text(vi ? 'Số kẻ giả mạo' : 'Impostors'),
+          Text(context.l10n.impostorCount),
           Wrap(
             spacing: 8,
             children: [1, if (room.maxPlayers >= 7) 2]
@@ -348,7 +338,7 @@ class _SettingsCard extends StatelessWidget {
                 .toList(),
           ),
           const SizedBox(height: 8),
-          Text(vi ? 'Chủ đề' : 'Category'),
+          Text(context.l10n.category),
           DropdownButtonFormField<String>(
             key: const Key('category-selector'),
             initialValue: draft.categoryKey ?? 'random',
@@ -356,7 +346,7 @@ class _SettingsCard extends StatelessWidget {
                 .map(
                   (key) => DropdownMenuItem(
                     value: key ?? 'random',
-                    child: Text(_categoryName(key)),
+                    child: Text(_categoryName(context, key)),
                   ),
                 )
                 .toList(),
@@ -370,7 +360,7 @@ class _SettingsCard extends StatelessWidget {
                 : null,
           ),
           const SizedBox(height: 8),
-          Text(vi ? 'Thời gian gợi ý' : 'Clue time'),
+          Text(context.l10n.clueTime),
           Wrap(
             spacing: 6,
             children: [15, 30, 45, 60]
@@ -386,7 +376,7 @@ class _SettingsCard extends StatelessWidget {
                 .toList(),
           ),
           const SizedBox(height: 8),
-          Text(vi ? 'Thời gian thảo luận' : 'Discussion time'),
+          Text(context.l10n.discussionTime),
           Wrap(
             spacing: 6,
             children: [60, 90, 120]
@@ -406,7 +396,7 @@ class _SettingsCard extends StatelessWidget {
             FilledButton(
               key: const Key('save-settings-button'),
               onPressed: !busy && draft != room.settings ? onSave : null,
-              child: Text(vi ? 'LƯU CÀI ĐẶT' : 'SAVE SETTINGS'),
+              child: Text(context.l10n.saveSettings),
             ),
           ],
         ],
@@ -427,32 +417,20 @@ class _SettingsCard extends StatelessWidget {
     'friends',
     'relationships',
   ];
-  String _categoryName(String? key) {
-    const viNames = {
-      'food': 'Đồ ăn',
-      'animals': 'Động vật',
-      'places': 'Địa điểm',
-      'objects': 'Đồ vật',
-      'jobs': 'Nghề nghiệp',
-      'sports': 'Thể thao',
-      'entertainment': 'Giải trí',
-      'vietnam': 'Việt Nam',
-      'friends': 'Bạn bè',
-      'relationships': 'Các mối quan hệ',
+  String _categoryName(BuildContext context, String? key) {
+    if (key == null) return context.l10n.randomCategory;
+    return switch (key) {
+      'food' => context.l10n.categoryFood,
+      'animals' => context.l10n.categoryAnimals,
+      'places' => context.l10n.categoryPlaces,
+      'objects' => context.l10n.categoryObjects,
+      'jobs' => context.l10n.categoryJobs,
+      'sports' => context.l10n.categorySports,
+      'entertainment' => context.l10n.categoryEntertainment,
+      'vietnam' => context.l10n.categoryVietnam,
+      'friends' => context.l10n.categoryFriends,
+      'relationships' => context.l10n.categoryRelationships,
+      _ => key,
     };
-    const enNames = {
-      'food': 'Food',
-      'animals': 'Animals',
-      'places': 'Places',
-      'objects': 'Objects',
-      'jobs': 'Jobs',
-      'sports': 'Sports',
-      'entertainment': 'Entertainment',
-      'vietnam': 'Vietnam',
-      'friends': 'Friends',
-      'relationships': 'Relationships',
-    };
-    if (key == null) return vi ? 'Ngẫu nhiên' : 'Random';
-    return (vi ? viNames : enNames)[key]!;
   }
 }

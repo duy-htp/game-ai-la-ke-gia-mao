@@ -6,6 +6,8 @@ import '../../auth/application/app_session_controller.dart';
 import '../../auth/application/app_session_state.dart';
 import '../domain/room_realtime.dart';
 import '../domain/room_repository.dart';
+import '../domain/room_status.dart';
+import '../../game/domain/game_repository.dart';
 
 class RoomRealtimeState {
   const RoomRealtimeState({
@@ -96,6 +98,13 @@ class RoomRealtimeController extends Notifier<RoomRealtimeState> {
       final currentRoom = current is AppSessionReady ? current.room : null;
       if (currentRoom == null || room.revision > currentRoom.revision) {
         ref.read(appSessionControllerProvider.notifier).setRoom(room);
+      }
+      final gameRepository = ref.read(gameRepositoryProvider);
+      if (room.status == RoomStatus.inGame && gameRepository != null) {
+        final game = await gameRepository.loadCurrentGame();
+        if (generation == _refreshGeneration && game != null) {
+          ref.read(appSessionControllerProvider.notifier).setGame(game);
+        }
       }
     } catch (_) {
       state = state.copyWith(connection: RoomConnectionState.reconnecting);

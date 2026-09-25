@@ -68,3 +68,14 @@ dart run tool/realtime_lobby_harness.dart <local-api-url> <local-anon-key>
 Harness xác minh join invalidation, Presence, authoritative refetch sau khi
 subscription bị tháo/reconnect, settings invalidation và ready reset trên local
 Supabase Realtime; đây không phải mock test.
+
+Milestone 5 thêm pgTAP secrecy/invariant tests, race hai connection
+`supabase/tests/concurrency/game_start_race.sh`, và harness ba client thật:
+
+```sh
+dart run tool/game_start_realtime_harness.dart <local-api-url> <publishable-key>
+```
+
+Harness kiểm tra tất cả client hội tụ vào cùng `role_reveal`, Broadcast không có
+secret, đúng số impostor, impostor không có keyword, normal nhận cùng concept đã
+chọn và reconnect khôi phục room/game/secret.

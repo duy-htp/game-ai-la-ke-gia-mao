@@ -8,13 +8,22 @@ import 'package:ai_la_ke_gia_mao/features/profile/domain/player_profile.dart';
 import 'package:ai_la_ke_gia_mao/features/profile/domain/profile_repository.dart';
 import 'package:ai_la_ke_gia_mao/features/profile/presentation/onboarding_screen.dart';
 import 'package:ai_la_ke_gia_mao/features/room/domain/room_repository.dart';
+import 'package:ai_la_ke_gia_mao/features/game/domain/game_repository.dart';
+import 'package:ai_la_ke_gia_mao/features/game/domain/game_snapshot.dart';
+import 'package:ai_la_ke_gia_mao/features/game/presentation/role_reveal_screen.dart';
+import 'package:ai_la_ke_gia_mao/features/room/domain/room_snapshot.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../helpers/fakes.dart';
 
-Widget _testApp({Locale? locale, PlayerProfile? profile}) {
+Widget _testApp({
+  Locale? locale,
+  PlayerProfile? profile,
+  RoomSnapshot? room,
+  GameSnapshot? game,
+}) {
   return ProviderScope(
     overrides: [
       appConfigProvider.overrideWithValue(
@@ -28,7 +37,12 @@ Widget _testApp({Locale? locale, PlayerProfile? profile}) {
       profileRepositoryProvider.overrideWithValue(
         FakeProfileRepository(profile: profile ?? sampleProfile),
       ),
-      roomRepositoryProvider.overrideWithValue(FakeRoomRepository()),
+      roomRepositoryProvider.overrideWithValue(
+        FakeRoomRepository(currentRoom: room),
+      ),
+      gameRepositoryProvider.overrideWithValue(
+        FakeGameRepository(currentGame: game),
+      ),
     ],
     child: App(locale: locale),
   );
@@ -82,6 +96,7 @@ void main() {
         authRepositoryProvider.overrideWithValue(FakeAuthRepository()),
         profileRepositoryProvider.overrideWithValue(FakeProfileRepository()),
         roomRepositoryProvider.overrideWithValue(FakeRoomRepository()),
+        gameRepositoryProvider.overrideWithValue(FakeGameRepository()),
       ],
     );
     addTearDown(container.dispose);
@@ -96,4 +111,14 @@ void main() {
     expect(find.byKey(OnboardingScreen.screenKey), findsOneWidget);
     expect(find.byKey(HomeScreen.screenKey), findsNothing);
   });
+
+  testWidgets(
+    'startup with active game restores Role Reveal instead of Lobby',
+    (tester) async {
+      await tester.pumpWidget(_testApp(room: sampleRoom, game: sampleGame));
+      await tester.pumpAndSettle();
+      expect(find.byKey(RoleRevealScreen.screenKey), findsOneWidget);
+      expect(find.text('PHÒNG CHỜ'), findsNothing);
+    },
+  );
 }

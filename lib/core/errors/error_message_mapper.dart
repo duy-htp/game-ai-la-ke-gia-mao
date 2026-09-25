@@ -31,6 +31,8 @@ abstract final class ErrorMessageMapper {
       ProfileRequiredAppError() => localizations.errorProfileRequired,
       NotRoomMemberAppError() => localizations.errorNotRoomMember,
       RoomOperationAppError() => localizations.errorRoomOperation,
+      GameOperationAppError() => localizations.errorGameOperation,
+      SecretUnavailableAppError() => localizations.errorSecretUnavailable,
     };
   }
 }

@@ -65,3 +65,11 @@ response cũ ghi đè state mới. Reconnect và app resume đều refetch bằn
 Presence key là authenticated user ID và luôn được giao với membership trong
 snapshot. Mất Presence chỉ đổi chỉ báo online; không xóa membership hay chuyển
 host. Chỉ explicit `leave_room()` mới kích hoạt host transfer ở Milestone 4.
+
+## Game and secret boundaries
+
+`AppSessionReady.game` chỉ chứa `GameSnapshot` công khai. Keyword/role không đi
+vào session chung mà thuộc auto-disposed `RoleSecretController` trong
+RoleRevealScreen. Startup khôi phục profile → room → public game rồi router dựa
+trên server status. Room-scoped private Broadcast vẫn chỉ báo invalidation;
+clients refetch room và game, sau đó tự gọi secret RPC cho chính mình.
