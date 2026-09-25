@@ -315,4 +315,47 @@ class AppLocalizationsVi extends AppLocalizations {
   @override
   String get errorSecretUnavailable =>
       'Không thể tải vai trò bí mật. Vui lòng thử lại.';
+
+  @override
+  String get clueRound => 'VÒNG MANH MỐI';
+
+  @override
+  String get yourClueTurn => 'ĐẾN LƯỢT BẠN';
+
+  @override
+  String waitingForClue(String username) {
+    return 'Đang chờ $username đưa manh mối...';
+  }
+
+  @override
+  String get clueHint => 'Nhập manh mối (tối đa 80 ký tự)';
+
+  @override
+  String get submitClue => 'GỬI MANH MỐI';
+
+  @override
+  String get submittedClues => 'Các manh mối';
+
+  @override
+  String get noClueSubmitted => 'Không đưa ra manh mối';
+
+  @override
+  String get discussion => 'THẢO LUẬN';
+
+  @override
+  String get votingWillFollow =>
+      'Bình chọn sẽ được triển khai ở milestone tiếp theo.';
+
+  @override
+  String get errorInvalidClue =>
+      'Manh mối không hợp lệ. Hãy chọn manh mối khác.';
+
+  @override
+  String get errorNotCurrentTurn => 'Chưa đến lượt của bạn.';
+
+  @override
+  String get errorTurnExpired => 'Thời gian đưa manh mối đã hết.';
+
+  @override
+  String get errorClueAlreadySubmitted => 'Lượt này đã có manh mối.';
 }

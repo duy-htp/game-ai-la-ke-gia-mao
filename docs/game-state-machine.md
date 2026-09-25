@@ -16,3 +16,15 @@ không tự chuyển phase. Các trạng thái `clue`, `discussion`, `voting`,
 `vote_result`, `final_guess`, `result` được dành chỗ trong constraint nhưng
 chưa có transition/RPC/UI và **NOT IMPLEMENTED YET**. Milestone 6 sẽ bổ sung
 transition authoritative từ `role_reveal` sang `clue`.
+
+## Milestone 6
+
+```text
+role_reveal -- all acknowledged / deadline --> clue turn 1
+clue turn N -- submit / deadline -----------> clue turn N+1
+final clue turn -- submit / deadline -------> discussion
+```
+
+Mỗi transition khóa game row. Entering clue tạo atomically đúng một turn theo
+M5 `turn_order`. Timeout ghi `timed_out` và không tạo clue giả. Discussion dùng
+deadline đã snapshot nhưng là terminal state của Milestone 6; chưa có vote.

@@ -54,11 +54,14 @@ final sampleGame = GameSnapshot(
   phaseStartedAt: DateTime.utc(2026, 9, 25),
   phaseEndsAt: DateTime.utc(2026, 9, 25, 0, 0, 15),
   revision: 1,
+  serverNow: DateTime.utc(2026, 9, 25),
+  turns: const [],
   participants: [
     GameParticipantSummary(
       playerId: sampleProfile.id,
       username: sampleProfile.username,
       avatarId: sampleProfile.avatarId,
+      roleAcknowledged: false,
     ),
   ],
 );
@@ -79,6 +82,10 @@ class FakeGameRepository implements GameRepository {
   int startCalls = 0;
   int loadCalls = 0;
   int secretCalls = 0;
+  int acknowledgeCalls = 0;
+  int advanceCalls = 0;
+  int submitCalls = 0;
+  String? submittedText;
   @override
   Future<GameSnapshot> startGame(String requestId) async {
     startCalls++;
@@ -98,6 +105,28 @@ class FakeGameRepository implements GameRepository {
     secretCalls++;
     if (error case final value?) throw value;
     return secret;
+  }
+
+  @override
+  Future<GameSnapshot> acknowledgeRole() async {
+    acknowledgeCalls++;
+    if (error case final value?) throw value;
+    return currentGame ?? sampleGame;
+  }
+
+  @override
+  Future<GameSnapshot> advanceIfDue() async {
+    advanceCalls++;
+    if (error case final value?) throw value;
+    return currentGame ?? sampleGame;
+  }
+
+  @override
+  Future<GameSnapshot> submitClue(String text) async {
+    submitCalls++;
+    submittedText = text;
+    if (error case final value?) throw value;
+    return currentGame ?? sampleGame;
   }
 }
 

@@ -79,3 +79,8 @@ dart run tool/game_start_realtime_harness.dart <local-api-url> <publishable-key>
 Harness kiểm tra tất cả client hội tụ vào cùng `role_reveal`, Broadcast không có
 secret, đúng số impostor, impostor không có keyword, normal nhận cùng concept đã
 chọn và reconnect khôi phục room/game/secret.
+
+Milestone 6 thêm `clue_round_test.sql` cho acknowledgement, settings snapshot,
+turn order, validation VI/EN, timeout history, Discussion entry, RLS và snapshot
+secrecy. Concurrency/harness kiểm tra duplicate advancement, submit-timeout race,
+Realtime convergence và reconnect giữa active clue turn.

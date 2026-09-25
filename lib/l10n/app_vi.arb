@@ -113,5 +113,19 @@
   "secretHidden": "Vai trò đang được ẩn",
   "retry": "THỬ LẠI",
   "errorGameOperation": "Không thể bắt đầu hoặc tải ván chơi.",
-  "errorSecretUnavailable": "Không thể tải vai trò bí mật. Vui lòng thử lại."
+  "errorSecretUnavailable": "Không thể tải vai trò bí mật. Vui lòng thử lại.",
+  "clueRound": "VÒNG MANH MỐI",
+  "yourClueTurn": "ĐẾN LƯỢT BẠN",
+  "waitingForClue": "Đang chờ {username} đưa manh mối...",
+  "@waitingForClue": {"placeholders": {"username": {"type": "String"}}},
+  "clueHint": "Nhập manh mối (tối đa 80 ký tự)",
+  "submitClue": "GỬI MANH MỐI",
+  "submittedClues": "Các manh mối",
+  "noClueSubmitted": "Không đưa ra manh mối",
+  "discussion": "THẢO LUẬN",
+  "votingWillFollow": "Bình chọn sẽ được triển khai ở milestone tiếp theo.",
+  "errorInvalidClue": "Manh mối không hợp lệ. Hãy chọn manh mối khác.",
+  "errorNotCurrentTurn": "Chưa đến lượt của bạn.",
+  "errorTurnExpired": "Thời gian đưa manh mối đã hết.",
+  "errorClueAlreadySubmitted": "Lượt này đã có manh mối."
 }

@@ -5,6 +5,7 @@ import 'package:ai_la_ke_gia_mao/features/auth/application/app_session_controlle
 import 'package:ai_la_ke_gia_mao/features/auth/application/app_session_state.dart';
 import 'package:ai_la_ke_gia_mao/features/auth/domain/auth_repository.dart';
 import 'package:ai_la_ke_gia_mao/features/game/application/game_controller.dart';
+import 'package:ai_la_ke_gia_mao/features/game/application/game_phase_controller.dart';
 import 'package:ai_la_ke_gia_mao/features/game/domain/game_repository.dart';
 import 'package:ai_la_ke_gia_mao/features/profile/domain/profile_repository.dart';
 import 'package:ai_la_ke_gia_mao/features/room/domain/room_repository.dart';
@@ -53,4 +54,35 @@ void main() {
     await container.read(gameControllerProvider.notifier).startGame();
     expect(container.read(gameControllerProvider), isA<GameActionError>());
   });
+
+  test('acknowledge role uses own-player RPC and applies snapshot', () async {
+    final games = FakeGameRepository(currentGame: sampleGame);
+    final container = makeContainer(games);
+    addTearDown(container.dispose);
+    await container.read(appSessionControllerProvider.notifier).initialize();
+    await container
+        .read(gamePhaseControllerProvider.notifier)
+        .acknowledgeRole();
+    expect(games.acknowledgeCalls, 1);
+    expect(container.read(gamePhaseControllerProvider), isA<GamePhaseIdle>());
+  });
+
+  test(
+    'clue submission trims input and generic failure remains typed',
+    () async {
+      final games = FakeGameRepository(error: const InvalidClueAppError());
+      final container = makeContainer(games);
+      addTearDown(container.dispose);
+      await container.read(appSessionControllerProvider.notifier).initialize();
+      await container
+          .read(gamePhaseControllerProvider.notifier)
+          .submitClue('  test  ');
+      expect(games.submitCalls, 1);
+      expect(games.submittedText, 'test');
+      expect(
+        container.read(gamePhaseControllerProvider),
+        isA<GamePhaseFailure>(),
+      );
+    },
+  );
 }

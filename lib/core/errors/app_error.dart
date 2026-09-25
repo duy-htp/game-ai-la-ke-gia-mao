@@ -99,3 +99,19 @@ final class GameOperationAppError extends AppError {
 final class SecretUnavailableAppError extends AppError {
   const SecretUnavailableAppError() : super('secret_unavailable');
 }
+
+final class InvalidClueAppError extends AppError {
+  const InvalidClueAppError() : super('invalid_clue');
+}
+
+final class NotCurrentTurnAppError extends AppError {
+  const NotCurrentTurnAppError() : super('not_current_turn');
+}
+
+final class TurnExpiredAppError extends AppError {
+  const TurnExpiredAppError() : super('turn_expired');
+}
+
+final class ClueAlreadySubmittedAppError extends AppError {
+  const ClueAlreadySubmittedAppError() : super('clue_already_submitted');
+}

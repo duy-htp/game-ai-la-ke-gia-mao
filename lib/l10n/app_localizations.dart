@@ -673,6 +673,84 @@ abstract class AppLocalizations {
   /// In vi, this message translates to:
   /// **'Không thể tải vai trò bí mật. Vui lòng thử lại.'**
   String get errorSecretUnavailable;
+
+  /// No description provided for @clueRound.
+  ///
+  /// In vi, this message translates to:
+  /// **'VÒNG MANH MỐI'**
+  String get clueRound;
+
+  /// No description provided for @yourClueTurn.
+  ///
+  /// In vi, this message translates to:
+  /// **'ĐẾN LƯỢT BẠN'**
+  String get yourClueTurn;
+
+  /// No description provided for @waitingForClue.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đang chờ {username} đưa manh mối...'**
+  String waitingForClue(String username);
+
+  /// No description provided for @clueHint.
+  ///
+  /// In vi, this message translates to:
+  /// **'Nhập manh mối (tối đa 80 ký tự)'**
+  String get clueHint;
+
+  /// No description provided for @submitClue.
+  ///
+  /// In vi, this message translates to:
+  /// **'GỬI MANH MỐI'**
+  String get submitClue;
+
+  /// No description provided for @submittedClues.
+  ///
+  /// In vi, this message translates to:
+  /// **'Các manh mối'**
+  String get submittedClues;
+
+  /// No description provided for @noClueSubmitted.
+  ///
+  /// In vi, this message translates to:
+  /// **'Không đưa ra manh mối'**
+  String get noClueSubmitted;
+
+  /// No description provided for @discussion.
+  ///
+  /// In vi, this message translates to:
+  /// **'THẢO LUẬN'**
+  String get discussion;
+
+  /// No description provided for @votingWillFollow.
+  ///
+  /// In vi, this message translates to:
+  /// **'Bình chọn sẽ được triển khai ở milestone tiếp theo.'**
+  String get votingWillFollow;
+
+  /// No description provided for @errorInvalidClue.
+  ///
+  /// In vi, this message translates to:
+  /// **'Manh mối không hợp lệ. Hãy chọn manh mối khác.'**
+  String get errorInvalidClue;
+
+  /// No description provided for @errorNotCurrentTurn.
+  ///
+  /// In vi, this message translates to:
+  /// **'Chưa đến lượt của bạn.'**
+  String get errorNotCurrentTurn;
+
+  /// No description provided for @errorTurnExpired.
+  ///
+  /// In vi, this message translates to:
+  /// **'Thời gian đưa manh mối đã hết.'**
+  String get errorTurnExpired;
+
+  /// No description provided for @errorClueAlreadySubmitted.
+  ///
+  /// In vi, this message translates to:
+  /// **'Lượt này đã có manh mối.'**
+  String get errorClueAlreadySubmitted;
 }
 
 class _AppLocalizationsDelegate

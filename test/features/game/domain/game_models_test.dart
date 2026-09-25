@@ -30,6 +30,42 @@ void main() {
     expect(secret.role, PlayerRole.normal);
     expect(secret.wordEn, 'Watermelon');
   });
+  test('parses public acknowledgement and clue turn history', () {
+    final game = GameSnapshot.fromJson({
+      'game_id': 'g1',
+      'room_id': 'r1',
+      'round_number': 1,
+      'status': 'clue',
+      'phase_started_at': '2026-09-25T00:00:00Z',
+      'phase_ends_at': '2026-09-25T00:00:30Z',
+      'server_now': '2026-09-25T00:00:10Z',
+      'revision': 4,
+      'participants': [
+        {
+          'player_id': 'p1',
+          'username': 'An',
+          'avatar_id': 'avatar_01',
+          'role_acknowledged': true,
+        },
+      ],
+      'turns': [
+        {
+          'turn_id': 1,
+          'turn_index': 1,
+          'player_id': 'p1',
+          'status': 'submitted',
+          'started_at': '2026-09-25T00:00:00Z',
+          'ends_at': '2026-09-25T00:00:30Z',
+          'completed_at': '2026-09-25T00:00:08Z',
+          'clue_text': 'Mùa hè',
+        },
+      ],
+    });
+    expect(game.status, GameStatus.clue);
+    expect(game.participants.single.roleAcknowledged, isTrue);
+    expect(game.turns.single.clueText, 'Mùa hè');
+    expect(game.activeTurn, isNull);
+  });
   test('impostor secret rejects any keyword leakage', () {
     expect(
       () => PlayerGameSecret.fromJson({

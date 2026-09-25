@@ -33,6 +33,10 @@ abstract final class ErrorMessageMapper {
       RoomOperationAppError() => localizations.errorRoomOperation,
       GameOperationAppError() => localizations.errorGameOperation,
       SecretUnavailableAppError() => localizations.errorSecretUnavailable,
+      InvalidClueAppError() => localizations.errorInvalidClue,
+      NotCurrentTurnAppError() => localizations.errorNotCurrentTurn,
+      TurnExpiredAppError() => localizations.errorTurnExpired,
+      ClueAlreadySubmittedAppError() => localizations.errorClueAlreadySubmitted,
     };
   }
 }

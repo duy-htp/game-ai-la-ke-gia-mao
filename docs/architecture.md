@@ -73,3 +73,10 @@ vào session chung mà thuộc auto-disposed `RoleSecretController` trong
 RoleRevealScreen. Startup khôi phục profile → room → public game rồi router dựa
 trên server status. Room-scoped private Broadcast vẫn chỉ báo invalidation;
 clients refetch room và game, sau đó tự gọi secret RPC cho chính mình.
+
+## Authoritative clue loop
+
+`GamePhaseController` gửi acknowledge/submit/advance và chỉ áp dụng snapshot
+authoritative mới. Realtime vẫn là room-scoped invalidation; client refetch RPC.
+Timer cục bộ chỉ hiển thị và gọi `advance_game_if_due()` một lần khi về 0;
+`clock_timestamp()` cùng row lock phía database mới quyết định hết hạn.

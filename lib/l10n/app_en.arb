@@ -113,5 +113,19 @@
   "secretHidden": "Your role is hidden",
   "retry": "RETRY",
   "errorGameOperation": "The game could not be started or loaded.",
-  "errorSecretUnavailable": "Your secret role could not be loaded. Please retry."
+  "errorSecretUnavailable": "Your secret role could not be loaded. Please retry.",
+  "clueRound": "CLUE ROUND",
+  "yourClueTurn": "IT'S YOUR TURN",
+  "waitingForClue": "Waiting for {username} to give a clue...",
+  "@waitingForClue": {"placeholders": {"username": {"type": "String"}}},
+  "clueHint": "Enter a clue (up to 80 characters)",
+  "submitClue": "SUBMIT CLUE",
+  "submittedClues": "Clues",
+  "noClueSubmitted": "No clue given",
+  "discussion": "DISCUSSION",
+  "votingWillFollow": "Voting will follow in the next milestone.",
+  "errorInvalidClue": "That clue is not valid. Choose another clue.",
+  "errorNotCurrentTurn": "It is not your turn.",
+  "errorTurnExpired": "Your clue time has expired.",
+  "errorClueAlreadySubmitted": "A clue has already been submitted for this turn."
 }

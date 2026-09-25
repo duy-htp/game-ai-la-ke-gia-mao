@@ -11,6 +11,9 @@ import 'package:ai_la_ke_gia_mao/features/room/domain/room_repository.dart';
 import 'package:ai_la_ke_gia_mao/features/game/domain/game_repository.dart';
 import 'package:ai_la_ke_gia_mao/features/game/domain/game_snapshot.dart';
 import 'package:ai_la_ke_gia_mao/features/game/presentation/role_reveal_screen.dart';
+import 'package:ai_la_ke_gia_mao/features/game/presentation/clue_screen.dart';
+import 'package:ai_la_ke_gia_mao/features/game/presentation/discussion_screen.dart';
+import 'package:ai_la_ke_gia_mao/features/game/domain/game_status.dart';
 import 'package:ai_la_ke_gia_mao/features/room/domain/room_snapshot.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -121,4 +124,66 @@ void main() {
       expect(find.text('PHÒNG CHỜ'), findsNothing);
     },
   );
+
+  testWidgets('server clue phase routes to ClueScreen with own-turn input', (
+    tester,
+  ) async {
+    final now = DateTime.utc(2026, 9, 26);
+    final game = GameSnapshot(
+      gameId: sampleGame.gameId,
+      roomId: sampleGame.roomId,
+      roundNumber: 1,
+      status: GameStatus.clue,
+      phaseStartedAt: now,
+      phaseEndsAt: now.add(const Duration(seconds: 30)),
+      serverNow: now,
+      revision: 5,
+      participants: sampleGame.participants,
+      turns: [
+        GameTurnSnapshot(
+          turnId: 1,
+          turnIndex: 1,
+          playerId: sampleProfile.id,
+          status: GameTurnStatus.active,
+          startedAt: now,
+          endsAt: now.add(const Duration(seconds: 30)),
+          completedAt: null,
+          clueText: null,
+        ),
+      ],
+    );
+    await tester.pumpWidget(_testApp(room: sampleRoom, game: game));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
+    expect(find.byKey(ClueScreen.screenKey), findsOneWidget);
+    expect(find.byKey(const Key('clue-input')), findsOneWidget);
+    expect(find.text('ĐẾN LƯỢT BẠN'), findsOneWidget);
+  });
+
+  testWidgets('server discussion phase routes to minimal DiscussionScreen', (
+    tester,
+  ) async {
+    final game = GameSnapshot(
+      gameId: sampleGame.gameId,
+      roomId: sampleGame.roomId,
+      roundNumber: 1,
+      status: GameStatus.discussion,
+      phaseStartedAt: sampleGame.phaseStartedAt,
+      phaseEndsAt: sampleGame.phaseEndsAt,
+      serverNow: sampleGame.serverNow,
+      revision: 9,
+      participants: sampleGame.participants,
+      turns: const [],
+    );
+    await tester.pumpWidget(
+      _testApp(locale: const Locale('en'), room: sampleRoom, game: game),
+    );
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
+    expect(find.byKey(DiscussionScreen.screenKey), findsOneWidget);
+    expect(
+      find.text('Voting will follow in the next milestone.'),
+      findsOneWidget,
+    );
+  });
 }

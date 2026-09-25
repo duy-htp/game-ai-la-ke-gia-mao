@@ -6,6 +6,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/errors/error_message_mapper.dart';
 import '../../../core/localization/localization_extension.dart';
 import '../application/role_secret_controller.dart';
+import '../application/game_phase_controller.dart';
+import '../../auth/application/app_session_state.dart';
+import '../../auth/application/app_session_controller.dart';
+import '../../room/application/room_realtime_controller.dart';
 import '../domain/player_game_secret.dart';
 
 class RoleRevealScreen extends ConsumerStatefulWidget {
@@ -19,11 +23,30 @@ class _RoleRevealScreenState extends ConsumerState<RoleRevealScreen>
     with WidgetsBindingObserver {
   Timer? _holdTimer;
   Timer? _hideTimer;
+  Timer? _deadlineTimer;
   bool _revealed = false;
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    Future.microtask(() {
+      final session = ref.read(appSessionControllerProvider);
+      if (session is AppSessionReady && session.room != null) {
+        ref
+            .read(roomRealtimeControllerProvider.notifier)
+            .start(session.room!.roomId);
+      }
+      ref.read(gamePhaseControllerProvider.notifier).advanceIfDue();
+      if (session is AppSessionReady && session.game?.phaseEndsAt != null) {
+        final remaining = session.game!.phaseEndsAt!.difference(
+          session.game!.serverNow,
+        );
+        _deadlineTimer = Timer(
+          remaining.isNegative ? Duration.zero : remaining,
+          () => ref.read(gamePhaseControllerProvider.notifier).advanceIfDue(),
+        );
+      }
+    });
   }
 
   @override
@@ -31,12 +54,18 @@ class _RoleRevealScreenState extends ConsumerState<RoleRevealScreen>
     WidgetsBinding.instance.removeObserver(this);
     _holdTimer?.cancel();
     _hideTimer?.cancel();
+    _deadlineTimer?.cancel();
     super.dispose();
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state != AppLifecycleState.resumed) _hide();
+    if (state != AppLifecycleState.resumed) {
+      _hide();
+    } else {
+      ref.read(gamePhaseControllerProvider.notifier).refresh();
+      ref.read(gamePhaseControllerProvider.notifier).advanceIfDue();
+    }
   }
 
   void _startHold() {
@@ -93,7 +122,15 @@ class _RoleRevealScreenState extends ConsumerState<RoleRevealScreen>
                 ),
                 RoleSecretReady(:final secret) =>
                   _revealed
-                      ? _SecretContent(secret: secret, onRemembered: _hide)
+                      ? _SecretContent(
+                          secret: secret,
+                          onRemembered: () {
+                            _hide();
+                            ref
+                                .read(gamePhaseControllerProvider.notifier)
+                                .acknowledgeRole();
+                          },
+                        )
                       : Listener(
                           key: const Key('hold-to-reveal'),
                           onPointerDown: (_) => _startHold(),

@@ -133,3 +133,16 @@ dùng `extensions.gen_random_bytes` ở server. Toàn bộ insert và room trans
 `waiting → in_game` chung một transaction. Retry cùng request ID trả cùng game.
 `get_current_game()` trả explicit safe JSON; `get_my_game_secret()` không có input
 identity và lấy duy nhất `auth.uid()`.
+
+## Clue round
+
+`games` snapshot impostor/clue/discussion settings khi start.
+`game_players.role_acknowledged_at` chỉ được public hóa thành boolean.
+`game_turns` lưu một player bất biến cho mỗi lượt và trạng thái
+`active/submitted/timed_out`; partial unique index bảo đảm tối đa một active turn.
+`clues` liên kết duy nhất với turn và không cấp INSERT trực tiếp.
+
+Keyword matching dùng NFC, `unaccent`, lowercase, gom punctuation/whitespace
+thành một khoảng trắng, rồi so khớp phrase theo ranh giới token cho cả VI và EN.
+Mọi semantic rejection chỉ trả `invalid_clue`; tối đa năm keyword-match failures
+mỗi turn hạn chế oracle probing nhưng không tuyên bố loại bỏ hoàn toàn side-channel.

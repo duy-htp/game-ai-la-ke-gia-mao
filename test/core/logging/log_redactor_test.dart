@@ -12,6 +12,7 @@ void main() {
       'keyword_id': 42,
       'word_vi': 'Dưa hấu',
       'word_en': 'Watermelon',
+      'clue_text': 'Mùa hè',
       'room_code': 'ABC23',
     });
 
@@ -25,6 +26,7 @@ void main() {
       'keyword_id',
       'word_vi',
       'word_en',
+      'clue_text',
     ]) {
       expect(result[key], '[REDACTED]');
     }

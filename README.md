@@ -56,3 +56,9 @@ Backend snapshot participant, chọn category/keyword, phân role và turn order
 random bytes phía server. Public game snapshot không chứa role hay keyword;
 secret của từng người chỉ được trả bởi RPC không nhận player ID. Role Reveal yêu
 cầu giữ một giây, tự ẩn sau năm giây và ẩn ngay khi app background.
+
+## Milestone 6 — Clue Round
+
+Role acknowledgement, deadline, thứ tự lượt, clue validation và timeout đều do
+database quyết định. `game_turns` lưu lịch sử submitted/timed-out; lượt cuối
+chuyển sang Discussion tối giản. Voting chưa được triển khai.

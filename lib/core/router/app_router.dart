@@ -10,6 +10,9 @@ import '../../features/room/presentation/create_room_screen.dart';
 import '../../features/room/presentation/join_room_screen.dart';
 import '../../features/room/presentation/room_screen.dart';
 import '../../features/game/presentation/role_reveal_screen.dart';
+import '../../features/game/presentation/clue_screen.dart';
+import '../../features/game/presentation/discussion_screen.dart';
+import '../../features/game/domain/game_status.dart';
 import 'route_names.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
@@ -72,7 +75,15 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         name: RouteNames.game,
         path: RoutePaths.game,
-        builder: (context, state) => const RoleRevealScreen(),
+        builder: (context, state) {
+          final current = ref.read(appSessionControllerProvider);
+          final game = current is AppSessionReady ? current.game : null;
+          return switch (game?.status) {
+            GameStatus.clue => const ClueScreen(),
+            GameStatus.discussion => const DiscussionScreen(),
+            _ => const RoleRevealScreen(),
+          };
+        },
       ),
     ],
   );

@@ -7,12 +7,14 @@ class GameParticipantSummary {
     required this.playerId,
     required this.username,
     required this.avatarId,
+    required this.roleAcknowledged,
   });
   factory GameParticipantSummary.fromJson(Map<String, Object?> json) {
     final value = GameParticipantSummary(
       playerId: json['player_id']! as String,
       username: json['username']! as String,
       avatarId: json['avatar_id']! as String,
+      roleAcknowledged: json['role_acknowledged'] as bool? ?? false,
     );
     if (value.playerId.isEmpty ||
         value.username.isEmpty ||
@@ -24,6 +26,54 @@ class GameParticipantSummary {
   final String playerId;
   final String username;
   final String avatarId;
+  final bool roleAcknowledged;
+}
+
+enum GameTurnStatus {
+  active,
+  submitted,
+  timedOut;
+
+  static GameTurnStatus parse(String value) => switch (value) {
+    'active' => active,
+    'submitted' => submitted,
+    'timed_out' => timedOut,
+    _ => throw const FormatException('Unsupported turn status'),
+  };
+}
+
+class GameTurnSnapshot {
+  const GameTurnSnapshot({
+    required this.turnId,
+    required this.turnIndex,
+    required this.playerId,
+    required this.status,
+    required this.startedAt,
+    required this.endsAt,
+    required this.completedAt,
+    required this.clueText,
+  });
+  factory GameTurnSnapshot.fromJson(Map<String, Object?> json) =>
+      GameTurnSnapshot(
+        turnId: json['turn_id']! as int,
+        turnIndex: json['turn_index']! as int,
+        playerId: json['player_id']! as String,
+        status: GameTurnStatus.parse(json['status']! as String),
+        startedAt: DateTime.parse(json['started_at']! as String),
+        endsAt: DateTime.parse(json['ends_at']! as String),
+        completedAt: json['completed_at'] == null
+            ? null
+            : DateTime.parse(json['completed_at']! as String),
+        clueText: json['clue_text'] as String?,
+      );
+  final int turnId;
+  final int turnIndex;
+  final String playerId;
+  final GameTurnStatus status;
+  final DateTime startedAt;
+  final DateTime endsAt;
+  final DateTime? completedAt;
+  final String? clueText;
 }
 
 class GameSnapshot {
@@ -36,6 +86,8 @@ class GameSnapshot {
     required this.phaseEndsAt,
     required this.revision,
     required this.participants,
+    required this.serverNow,
+    required this.turns,
   });
   factory GameSnapshot.fromJson(Map<String, Object?> json) {
     try {
@@ -49,9 +101,19 @@ class GameSnapshot {
             ? null
             : DateTime.parse(json['phase_ends_at']! as String),
         revision: json['revision']! as int,
+        serverNow: DateTime.parse(
+          (json['server_now'] ?? json['phase_started_at'])! as String,
+        ),
         participants: (json['participants']! as List<Object?>)
             .map(
               (item) => GameParticipantSummary.fromJson(
+                Map<String, Object?>.from(item! as Map),
+              ),
+            )
+            .toList(growable: false),
+        turns: (json['turns'] as List<Object?>? ?? const [])
+            .map(
+              (item) => GameTurnSnapshot.fromJson(
                 Map<String, Object?>.from(item! as Map),
               ),
             )
@@ -70,4 +132,20 @@ class GameSnapshot {
   final DateTime? phaseEndsAt;
   final int revision;
   final List<GameParticipantSummary> participants;
+  final DateTime serverNow;
+  final List<GameTurnSnapshot> turns;
+
+  GameTurnSnapshot? get activeTurn {
+    for (final turn in turns) {
+      if (turn.status == GameTurnStatus.active) return turn;
+    }
+    return null;
+  }
+
+  GameParticipantSummary? participant(String id) {
+    for (final player in participants) {
+      if (player.playerId == id) return player;
+    }
+    return null;
+  }
 }

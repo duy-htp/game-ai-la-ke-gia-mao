@@ -320,4 +320,46 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get errorSecretUnavailable =>
       'Your secret role could not be loaded. Please retry.';
+
+  @override
+  String get clueRound => 'CLUE ROUND';
+
+  @override
+  String get yourClueTurn => 'IT\'S YOUR TURN';
+
+  @override
+  String waitingForClue(String username) {
+    return 'Waiting for $username to give a clue...';
+  }
+
+  @override
+  String get clueHint => 'Enter a clue (up to 80 characters)';
+
+  @override
+  String get submitClue => 'SUBMIT CLUE';
+
+  @override
+  String get submittedClues => 'Clues';
+
+  @override
+  String get noClueSubmitted => 'No clue given';
+
+  @override
+  String get discussion => 'DISCUSSION';
+
+  @override
+  String get votingWillFollow => 'Voting will follow in the next milestone.';
+
+  @override
+  String get errorInvalidClue => 'That clue is not valid. Choose another clue.';
+
+  @override
+  String get errorNotCurrentTurn => 'It is not your turn.';
+
+  @override
+  String get errorTurnExpired => 'Your clue time has expired.';
+
+  @override
+  String get errorClueAlreadySubmitted =>
+      'A clue has already been submitted for this turn.';
 }

@@ -44,6 +44,7 @@ Future<void> main(List<String> args) async {
       Completer<Map<String, dynamic>>(),
       Completer<Map<String, dynamic>>(),
     ];
+    final broadcastPayloads = <Map<String, dynamic>>[];
     for (var i = 1; i < 3; i++) {
       final id = clients[i].auth.currentUser!.id;
       final channel = clients[i].channel(
@@ -53,6 +54,7 @@ Future<void> main(List<String> args) async {
       channel.onBroadcast(
         event: 'room_changed',
         callback: (payload) {
+          broadcastPayloads.add(payload);
           if (!invalidations[i - 1].isCompleted) {
             invalidations[i - 1].complete(payload);
           }
@@ -124,25 +126,81 @@ Future<void> main(List<String> args) async {
           .every((s) => s['word_vi'] != null && s['word_en'] != null),
       'normal has keyword',
     );
-    await clients[1].removeChannel(channels.removeAt(0));
+    for (final client in clients) {
+      await client.rpc<Object?>('acknowledge_role');
+    }
+    var clueGame = Map<String, dynamic>.from(
+      await clients[0].rpc<Object?>('get_current_game') as Map,
+    );
+    _expect(clueGame['status'] == 'clue', 'acknowledgements enter clue');
+    _expect((clueGame['turns'] as List).length == 1, 'one first turn');
+    int clientForPlayer(String playerId) =>
+        clients.indexWhere((client) => client.auth.currentUser!.id == playerId);
+    var active = Map<String, dynamic>.from(
+      (clueGame['turns'] as List).last as Map,
+    );
+    await clients[clientForPlayer(active['player_id'] as String)].rpc<Object?>(
+      'submit_clue',
+      params: {'p_text': 'Mùa hè'},
+    );
+    clueGame = Map<String, dynamic>.from(
+      await clients[0].rpc<Object?>('get_current_game') as Map,
+    );
+    _expect((clueGame['turns'] as List).length == 2, 'first clue advances');
+    active = Map<String, dynamic>.from((clueGame['turns'] as List).last as Map);
+    final disconnectedIndex = clientForPlayer(active['player_id'] as String);
+    await clients[disconnectedIndex].removeAllChannels();
+    final serverNow = DateTime.parse(clueGame['server_now'] as String);
+    final turnEndsAt = DateTime.parse(active['ends_at'] as String);
+    await Future<void>.delayed(
+      turnEndsAt.difference(serverNow) + const Duration(seconds: 1),
+    );
+    await clients[(disconnectedIndex + 1) % clients.length].rpc<Object?>(
+      'advance_game_if_due',
+    );
     final restoredRoom = Map<String, dynamic>.from(
-      await clients[1].rpc<Object?>('get_current_room') as Map,
+      await clients[disconnectedIndex].rpc<Object?>('get_current_room') as Map,
     );
     final restoredGame = Map<String, dynamic>.from(
-      await clients[1].rpc<Object?>('get_current_game') as Map,
+      await clients[disconnectedIndex].rpc<Object?>('get_current_game') as Map,
     );
     final restoredSecret = Map<String, dynamic>.from(
-      await clients[1].rpc<Object?>('get_my_game_secret') as Map,
+      await clients[disconnectedIndex].rpc<Object?>('get_my_game_secret')
+          as Map,
     );
     _expect(
       restoredRoom['status'] == 'in_game' &&
           restoredGame['game_id'] == started['game_id'] &&
-          restoredSecret['role'] != null,
-      'reconnect restoration',
+          restoredSecret['role'] != null &&
+          (restoredGame['turns'] as List).length == 3 &&
+          (restoredGame['turns'] as List)[1]['status'] == 'timed_out',
+      'active-turn reconnect restoration',
     );
+    active = Map<String, dynamic>.from(
+      (restoredGame['turns'] as List).last as Map,
+    );
+    await clients[clientForPlayer(active['player_id'] as String)].rpc<Object?>(
+      'submit_clue',
+      params: {'p_text': 'Giải khát'},
+    );
+    final discussion = Map<String, dynamic>.from(
+      await clients[0].rpc<Object?>('get_current_game') as Map,
+    );
+    _expect(
+      discussion['status'] == 'discussion',
+      'final clue enters discussion',
+    );
+    _expect((discussion['turns'] as List).length == 3, 'shared turn history');
+    for (final payload in broadcastPayloads) {
+      final encoded = payload.toString();
+      _expect(
+        !encoded.contains('role') && !encoded.contains('keyword'),
+        'all broadcasts remain secret-free',
+      );
+    }
     // ignore: avoid_print
     print(
-      'PASS: 3-client game start, secrecy, realtime and reconnect converged',
+      'PASS: 3-client role ack, clue submit, timeout, discussion and reconnect converged',
     );
   } finally {
     for (final client in clients) {
