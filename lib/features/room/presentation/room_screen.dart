@@ -1,7 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/errors/error_message_mapper.dart';
 import '../../../core/localization/localization_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../auth/application/app_session_controller.dart';
@@ -10,100 +11,209 @@ import '../../profile/domain/avatar_catalog.dart';
 import '../../profile/presentation/avatar_badge.dart';
 import '../application/room_action_state.dart';
 import '../application/room_controller.dart';
+import '../application/room_realtime_controller.dart';
+import '../domain/lobby_settings.dart';
+import '../domain/room_realtime.dart';
 import '../domain/room_snapshot.dart';
 
-class RoomScreen extends ConsumerWidget {
+class RoomScreen extends ConsumerStatefulWidget {
   const RoomScreen({super.key});
-
   static const screenKey = Key('room-screen');
+  @override
+  ConsumerState<RoomScreen> createState() => _RoomScreenState();
+}
+
+class _RoomScreenState extends ConsumerState<RoomScreen>
+    with WidgetsBindingObserver {
+  LobbySettings? _draft;
+  LobbySettings? _draftBase;
+  late final RoomRealtimeController _realtimeController;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final session = ref.watch(appSessionControllerProvider);
-    final room = switch (session) {
-      AppSessionReady(room: final room?) => room,
-      _ => null,
-    };
-    if (room == null) return const SizedBox.shrink();
+  void initState() {
+    super.initState();
+    _realtimeController = ref.read(roomRealtimeControllerProvider.notifier);
+    WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final session = ref.read(appSessionControllerProvider);
+      if (session is AppSessionReady && session.room != null) {
+        unawaited(_realtimeController.start(session.room!.roomId));
+      }
+    });
+  }
 
-    final l10n = context.l10n;
-    final actionState = ref.watch(roomControllerProvider);
-    final leaving =
-        actionState is RoomActionSubmitting &&
-        actionState.action == RoomAction.leave;
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    unawaited(_realtimeController.stop());
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      unawaited(_realtimeController.refresh());
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final session = ref.watch(appSessionControllerProvider);
+    if (session is! AppSessionReady || session.room == null) {
+      return const SizedBox.shrink();
+    }
+    final room = session.room!;
+    final isHost = room.hostId == session.profile.id;
+    final vi = Localizations.localeOf(context).languageCode == 'vi';
+    final realtime = ref.watch(roomRealtimeControllerProvider);
+    final action = ref.watch(roomControllerProvider);
+    final busy = action is RoomActionSubmitting;
+    // Preserve an unsaved host draft across membership/ready revisions. Only an
+    // authoritative settings change replaces it.
+    if (_draft == null ||
+        (_draftBase != room.settings && _draft == _draftBase)) {
+      _draft = room.settings;
+      _draftBase = room.settings;
+    }
+    final unready = room.members.where((m) => !m.isHost && !m.isReady).length;
+    final reason = room.members.length < 3
+        ? (vi ? 'Cần ít nhất 3 người chơi' : 'At least 3 players required')
+        : unready > 0
+        ? (vi
+              ? 'Đang chờ $unready người sẵn sàng'
+              : 'Waiting for $unready ready player(s)')
+        : (vi ? 'Cài đặt phòng chưa hợp lệ' : 'Lobby settings are invalid');
 
     return Scaffold(
       key: RoomScreen.screenKey,
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24),
+          padding: const EdgeInsets.all(20),
           child: Center(
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 560),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          context.l10n.waitingRoom,
+                          style: Theme.of(context).textTheme.titleLarge,
+                        ),
+                      ),
+                      _ConnectionChip(state: realtime.connection, vi: vi),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
                   Text(
-                    l10n.waitingRoom,
+                    room.code.value,
+                    key: const Key('room-code'),
                     textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.titleLarge,
+                    style: Theme.of(context).textTheme.displaySmall
+                        ?.copyWith(color: AppColors.gold, letterSpacing: 7),
                   ),
-                  const SizedBox(height: 16),
-                  Semantics(
-                    label: l10n.roomCodeValue(room.code.value),
-                    child: Text(
-                      room.code.value,
-                      key: const Key('room-code'),
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.displaySmall
-                          ?.copyWith(color: AppColors.gold, letterSpacing: 7),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    l10n.gameTitle,
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                  const SizedBox(height: 28),
+                  Text(context.l10n.gameTitle, textAlign: TextAlign.center),
+                  const SizedBox(height: 22),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        l10n.players,
+                        context.l10n.players,
                         style: Theme.of(context).textTheme.titleLarge,
                       ),
-                      Text(l10n.capacity(room.members.length, room.maxPlayers)),
+                      Text(
+                        context.l10n.capacity(
+                          room.members.length,
+                          room.maxPlayers,
+                        ),
+                      ),
                     ],
                   ),
-                  const SizedBox(height: 12),
-                  ...room.members.map((member) => _MemberCard(member: member)),
-                  if (actionState case RoomActionError(:final error)) ...[
-                    const SizedBox(height: 16),
-                    Text(
-                      ErrorMessageMapper.localize(error, l10n),
-                      key: const Key('room-action-error'),
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.error,
+                  ...room.members.map(
+                    (member) => _MemberCard(
+                      member: member,
+                      online: realtime.onlinePlayerIds.contains(
+                        member.playerId,
+                      ),
+                      vi: vi,
+                    ),
+                  ),
+                  const SizedBox(height: 18),
+                  _SettingsCard(
+                    room: room,
+                    draft: _draft!,
+                    isHost: isHost,
+                    vi: vi,
+                    busy: busy,
+                    onChanged: (value) => setState(() => _draft = value),
+                    onSave: () async {
+                      await ref
+                          .read(roomControllerProvider.notifier)
+                          .updateSettings(_draft!);
+                      if (mounted) setState(() => _draftBase = _draft);
+                    },
+                  ),
+                  const SizedBox(height: 14),
+                  if (isHost)
+                    FilledButton.icon(
+                      key: const Key('start-game-button'),
+                      onPressed: null,
+                      icon: const Icon(Icons.play_arrow_rounded),
+                      label: Text(
+                        room.canStart
+                            ? (vi
+                                  ? 'BẮT ĐẦU · MILESTONE 5'
+                                  : 'START · MILESTONE 5')
+                            : reason,
+                      ),
+                    )
+                  else
+                    FilledButton.icon(
+                      key: const Key('ready-button'),
+                      onPressed: busy
+                          ? null
+                          : () {
+                              final self = room.members.firstWhere(
+                                (m) => m.playerId == session.profile.id,
+                              );
+                              ref
+                                  .read(roomControllerProvider.notifier)
+                                  .setReady(!self.isReady);
+                            },
+                      icon: Icon(
+                        room.members
+                                .firstWhere(
+                                  (m) => m.playerId == session.profile.id,
+                                )
+                                .isReady
+                            ? Icons.close_rounded
+                            : Icons.check_rounded,
+                      ),
+                      label: Text(
+                        room.members
+                                .firstWhere(
+                                  (m) => m.playerId == session.profile.id,
+                                )
+                                .isReady
+                            ? (vi ? 'HỦY SẴN SÀNG' : 'NOT READY')
+                            : (vi ? 'SẴN SÀNG' : 'READY'),
                       ),
                     ),
-                  ],
-                  const SizedBox(height: 28),
+                  const SizedBox(height: 10),
                   OutlinedButton.icon(
                     key: const Key('leave-room-button'),
-                    onPressed: leaving
+                    onPressed: busy
                         ? null
-                        : () => ref
-                              .read(roomControllerProvider.notifier)
-                              .leaveRoom(),
-                    icon: leaving
-                        ? const SizedBox.square(
-                            dimension: 20,
-                            child: CircularProgressIndicator(strokeWidth: 2),
-                          )
-                        : const Icon(Icons.logout_rounded),
-                    label: Text(l10n.leaveRoom),
+                        : () async {
+                            await ref
+                                .read(roomControllerProvider.notifier)
+                                .leaveRoom();
+                            await _realtimeController.stop();
+                          },
+                    icon: const Icon(Icons.logout_rounded),
+                    label: Text(context.l10n.leaveRoom),
                   ),
                 ],
               ),
@@ -115,47 +225,234 @@ class RoomScreen extends ConsumerWidget {
   }
 }
 
-class _MemberCard extends StatelessWidget {
-  const _MemberCard({required this.member});
+class _ConnectionChip extends StatelessWidget {
+  const _ConnectionChip({required this.state, required this.vi});
+  final RoomConnectionState state;
+  final bool vi;
+  @override
+  Widget build(BuildContext context) => Chip(
+    key: const Key('connection-indicator'),
+    avatar: Icon(
+      state == RoomConnectionState.connected ? Icons.wifi : Icons.sync,
+      size: 16,
+    ),
+    label: Text(
+      state == RoomConnectionState.connected
+          ? (vi ? 'TRỰC TUYẾN' : 'ONLINE')
+          : (vi ? 'ĐANG KẾT NỐI LẠI...' : 'RECONNECTING...'),
+    ),
+  );
+}
 
+class _MemberCard extends StatelessWidget {
+  const _MemberCard({
+    required this.member,
+    required this.online,
+    required this.vi,
+  });
   final RoomMember member;
+  final bool online;
+  final bool vi;
+  @override
+  Widget build(BuildContext context) => Card(
+    key: Key('room-member-${member.playerId}'),
+    child: ListTile(
+      leading: AvatarBadge(
+        emoji: AvatarCatalog.byId(member.avatarId).emoji,
+        size: 44,
+      ),
+      title: Text(
+        member.username,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      ),
+      subtitle: Text(
+        online
+            ? (vi ? 'Trực tuyến' : 'Online')
+            : (vi ? 'Mất kết nối' : 'Disconnected'),
+      ),
+      trailing: member.isHost
+          ? Chip(
+              avatar: const Icon(Icons.star_rounded, size: 17),
+              label: Text(context.l10n.host),
+            )
+          : Chip(
+              avatar: Icon(
+                member.isReady ? Icons.check_circle : Icons.schedule,
+                size: 17,
+              ),
+              label: Text(
+                member.isReady
+                    ? (vi ? 'SẴN SÀNG' : 'READY')
+                    : (vi ? 'CHƯA SẴN SÀNG' : 'NOT READY'),
+              ),
+            ),
+    ),
+  );
+}
+
+class _SettingsCard extends StatelessWidget {
+  const _SettingsCard({
+    required this.room,
+    required this.draft,
+    required this.isHost,
+    required this.vi,
+    required this.busy,
+    required this.onChanged,
+    required this.onSave,
+  });
+  final RoomSnapshot room;
+  final LobbySettings draft;
+  final bool isHost, vi, busy;
+  final ValueChanged<LobbySettings> onChanged;
+  final VoidCallback onSave;
+
+  LobbySettings _copy({
+    int? impostors,
+    String? category,
+    bool categorySet = false,
+    int? clue,
+    int? discussion,
+  }) => LobbySettings(
+    impostorCount: impostors ?? draft.impostorCount,
+    categoryKey: categorySet ? category : draft.categoryKey,
+    clueSeconds: clue ?? draft.clueSeconds,
+    discussionSeconds: discussion ?? draft.discussionSeconds,
+  );
 
   @override
-  Widget build(BuildContext context) {
-    final avatar = AvatarCatalog.byId(member.avatarId);
-    return Card(
-      key: Key('room-member-${member.playerId}'),
-      child: Padding(
-        padding: const EdgeInsets.all(14),
-        child: Row(
-          children: [
-            SizedBox(
-              width: 28,
-              child: Text(
-                '${member.seat}',
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontWeight: FontWeight.w900),
-              ),
+  Widget build(BuildContext context) => Card(
+    child: Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            vi ? 'CÀI ĐẶT PHÒNG' : 'LOBBY SETTINGS',
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+          const SizedBox(height: 10),
+          Text(vi ? 'Số kẻ giả mạo' : 'Impostors'),
+          Wrap(
+            spacing: 8,
+            children: [1, if (room.maxPlayers >= 7) 2]
+                .map(
+                  (v) => ChoiceChip(
+                    label: Text('$v'),
+                    selected: draft.impostorCount == v,
+                    onSelected: isHost
+                        ? (_) => onChanged(_copy(impostors: v))
+                        : null,
+                  ),
+                )
+                .toList(),
+          ),
+          const SizedBox(height: 8),
+          Text(vi ? 'Chủ đề' : 'Category'),
+          DropdownButtonFormField<String>(
+            key: const Key('category-selector'),
+            initialValue: draft.categoryKey ?? 'random',
+            items: _categories
+                .map(
+                  (key) => DropdownMenuItem(
+                    value: key ?? 'random',
+                    child: Text(_categoryName(key)),
+                  ),
+                )
+                .toList(),
+            onChanged: isHost
+                ? (value) => onChanged(
+                    _copy(
+                      category: value == 'random' ? null : value,
+                      categorySet: true,
+                    ),
+                  )
+                : null,
+          ),
+          const SizedBox(height: 8),
+          Text(vi ? 'Thời gian gợi ý' : 'Clue time'),
+          Wrap(
+            spacing: 6,
+            children: [15, 30, 45, 60]
+                .map(
+                  (v) => ChoiceChip(
+                    label: Text('${v}s'),
+                    selected: draft.clueSeconds == v,
+                    onSelected: isHost
+                        ? (_) => onChanged(_copy(clue: v))
+                        : null,
+                  ),
+                )
+                .toList(),
+          ),
+          const SizedBox(height: 8),
+          Text(vi ? 'Thời gian thảo luận' : 'Discussion time'),
+          Wrap(
+            spacing: 6,
+            children: [60, 90, 120]
+                .map(
+                  (v) => ChoiceChip(
+                    label: Text('${v}s'),
+                    selected: draft.discussionSeconds == v,
+                    onSelected: isHost
+                        ? (_) => onChanged(_copy(discussion: v))
+                        : null,
+                  ),
+                )
+                .toList(),
+          ),
+          if (isHost) ...[
+            const SizedBox(height: 12),
+            FilledButton(
+              key: const Key('save-settings-button'),
+              onPressed: !busy && draft != room.settings ? onSave : null,
+              child: Text(vi ? 'LƯU CÀI ĐẶT' : 'SAVE SETTINGS'),
             ),
-            const SizedBox(width: 10),
-            AvatarBadge(emoji: avatar.emoji, size: 48),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                member.username,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-            ),
-            if (member.isHost)
-              Chip(
-                avatar: const Icon(Icons.star_rounded, size: 17),
-                label: Text(context.l10n.host),
-              ),
           ],
-        ),
+        ],
       ),
-    );
+    ),
+  );
+
+  static const _categories = <String?>[
+    null,
+    'food',
+    'animals',
+    'places',
+    'objects',
+    'jobs',
+    'sports',
+    'entertainment',
+    'vietnam',
+    'friends',
+    'relationships',
+  ];
+  String _categoryName(String? key) {
+    const viNames = {
+      'food': 'Đồ ăn',
+      'animals': 'Động vật',
+      'places': 'Địa điểm',
+      'objects': 'Đồ vật',
+      'jobs': 'Nghề nghiệp',
+      'sports': 'Thể thao',
+      'entertainment': 'Giải trí',
+      'vietnam': 'Việt Nam',
+      'friends': 'Bạn bè',
+      'relationships': 'Các mối quan hệ',
+    };
+    const enNames = {
+      'food': 'Food',
+      'animals': 'Animals',
+      'places': 'Places',
+      'objects': 'Objects',
+      'jobs': 'Jobs',
+      'sports': 'Sports',
+      'entertainment': 'Entertainment',
+      'vietnam': 'Vietnam',
+      'friends': 'Friends',
+      'relationships': 'Relationships',
+    };
+    if (key == null) return vi ? 'Ngẫu nhiên' : 'Random';
+    return (vi ? viNames : enNames)[key]!;
   }
 }

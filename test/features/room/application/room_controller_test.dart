@@ -8,6 +8,7 @@ import 'package:ai_la_ke_gia_mao/features/profile/domain/profile_repository.dart
 import 'package:ai_la_ke_gia_mao/features/room/application/room_action_state.dart';
 import 'package:ai_la_ke_gia_mao/features/room/application/room_controller.dart';
 import 'package:ai_la_ke_gia_mao/features/room/domain/room_repository.dart';
+import 'package:ai_la_ke_gia_mao/features/room/domain/lobby_settings.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -163,5 +164,56 @@ void main() {
       (container.read(appSessionControllerProvider) as AppSessionReady).room,
       isNull,
     );
+  });
+
+  test(
+    'set ready sends idempotent target state and applies snapshot',
+    () async {
+      final rooms = FakeRoomRepository(currentRoom: sampleRoom);
+      final container = _container(rooms);
+      addTearDown(container.dispose);
+      await _initialize(container);
+
+      await container.read(roomControllerProvider.notifier).setReady(true);
+      await container.read(roomControllerProvider.notifier).setReady(true);
+
+      expect(rooms.readyCalls, 2);
+      expect(rooms.submittedReady, isTrue);
+      expect(container.read(roomControllerProvider), isA<RoomActionIdle>());
+    },
+  );
+
+  test('ready failure remains a typed action error', () async {
+    final rooms = FakeRoomRepository(
+      currentRoom: sampleRoom,
+      readyError: const RoomOperationAppError(),
+    );
+    final container = _container(rooms);
+    addTearDown(container.dispose);
+    await _initialize(container);
+
+    await container.read(roomControllerProvider.notifier).setReady(true);
+
+    expect(container.read(roomControllerProvider), isA<RoomActionError>());
+  });
+
+  test('host saves complete settings as one state-setting request', () async {
+    final rooms = FakeRoomRepository(currentRoom: sampleRoom);
+    final container = _container(rooms);
+    addTearDown(container.dispose);
+    await _initialize(container);
+    const settings = LobbySettings(
+      impostorCount: 1,
+      categoryKey: 'food',
+      clueSeconds: 45,
+      discussionSeconds: 120,
+    );
+
+    await container
+        .read(roomControllerProvider.notifier)
+        .updateSettings(settings);
+
+    expect(rooms.settingsCalls, 1);
+    expect(rooms.submittedSettings, settings);
   });
 }

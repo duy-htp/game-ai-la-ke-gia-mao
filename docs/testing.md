@@ -58,3 +58,13 @@ supabase/tests/concurrency/room_join_race.sh
 
 Kỳ vọng: đúng một join thành công, một join nhận `room_full`, member count và
 distinct active seats đều bằng capacity.
+
+Milestone 4 thêm pgTAP `realtime_lobby_test.sql` và harness hai client thật:
+
+```sh
+dart run tool/realtime_lobby_harness.dart <local-api-url> <local-anon-key>
+```
+
+Harness xác minh join invalidation, Presence, authoritative refetch sau khi
+subscription bị tháo/reconnect, settings invalidation và ready reset trên local
+Supabase Realtime; đây không phải mock test.

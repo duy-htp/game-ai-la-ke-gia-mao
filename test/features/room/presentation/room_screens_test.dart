@@ -65,7 +65,8 @@ void main() {
     expect(find.text('6'), findsOneWidget);
 
     await tester.tap(find.byKey(const Key('create-room-submit')));
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 200));
 
     expect(rooms.submittedMaxPlayers, 6);
     expect(find.byKey(RoomScreen.screenKey), findsOneWidget);
@@ -126,6 +127,7 @@ void main() {
     expect(find.text('Chủ phòng'), findsOneWidget);
     expect(find.text('1/6'), findsOneWidget);
 
+    await tester.ensureVisible(find.byKey(const Key('leave-room-button')));
     await tester.tap(find.byKey(const Key('leave-room-button')));
     await tester.pumpAndSettle();
 

@@ -40,3 +40,11 @@ Xem [hướng dẫn cài đặt](docs/setup.md), [kiến trúc](docs/architectur
 
 Application ID hiện tại là `com.duyhtp.ailakegiamao` và cần được rà soát lại
 trước khi phát hành production.
+
+## Milestone 4 — Realtime lobby
+
+Room hiện đồng bộ bằng Supabase Broadcast channel riêng tư. Broadcast và
+Presence chỉ là tín hiệu; `get_current_room()` vẫn là nguồn sự thật sau event,
+reconnect hoặc mobile resume. Người chơi dùng ready state idempotent, chủ phòng
+lưu category/impostor/timer, và thay đổi settings sẽ reset ready của non-host.
+Backend tự tính `can_start`; thao tác tạo game được giữ lại cho Milestone 5.

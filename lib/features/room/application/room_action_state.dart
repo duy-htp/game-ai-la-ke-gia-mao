@@ -1,6 +1,6 @@
 import '../../../core/errors/app_error.dart';
 
-enum RoomAction { create, join, leave }
+enum RoomAction { create, join, leave, ready, settings }
 
 sealed class RoomActionState {
   const RoomActionState();

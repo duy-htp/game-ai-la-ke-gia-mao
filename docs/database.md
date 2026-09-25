@@ -102,3 +102,19 @@ cho authenticated profile. Rate limiting/code-enumeration mitigation nâng cao
 được hoãn sang hardening milestone.
 
 Lobby realtime và game schema vẫn nằm ngoài Milestone 3.
+
+## Milestone 4 lobby extension
+
+Rooms có thêm server-owned `revision`, `impostor_count`, nullable `category_id`
+(null nghĩa random), `clue_seconds`, `discussion_seconds`; membership có
+`is_ready`. Mười category metadata MVP được seed và chỉ category active được
+authenticated đọc. Timer/impostor values được constraint và RPC kiểm tra.
+
+`set_ready(boolean)` lấy player từ `auth.uid()` và chỉ cho non-host active member
+trong waiting room. `update_room_settings(...)` chỉ dành cho host; thay đổi thật
+sự mới tăng revision và reset ready của non-host. Snapshot tự tính `can_start`
+từ active host, tối thiểu ba người, settings hợp lệ và toàn bộ non-host ready.
+
+Rooms/memberships vẫn không cấp SELECT. Trigger gọi `realtime.send` với payload
+tối giản. Policy trên `realtime.messages` dùng SECURITY DEFINER predicate để
+chỉ active room member được nghe private channel tương ứng.

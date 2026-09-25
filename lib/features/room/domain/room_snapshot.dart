@@ -1,6 +1,7 @@
 import '../../../core/errors/app_error.dart';
 import '../../profile/domain/avatar_catalog.dart';
 import 'game_type.dart';
+import 'lobby_settings.dart';
 import 'room_code.dart';
 import 'room_status.dart';
 
@@ -11,6 +12,7 @@ class RoomMember {
     required this.avatarId,
     required this.seat,
     required this.isHost,
+    this.isReady = false,
     required this.joinedAt,
   });
 
@@ -22,6 +24,7 @@ class RoomMember {
         avatarId: json['avatar_id']! as String,
         seat: json['seat']! as int,
         isHost: json['is_host']! as bool,
+        isReady: (json['is_ready'] as bool?) ?? false,
         joinedAt: DateTime.parse(json['joined_at']! as String),
       );
       if (member.playerId.isEmpty ||
@@ -41,6 +44,7 @@ class RoomMember {
   final String avatarId;
   final int seat;
   final bool isHost;
+  final bool isReady;
   final DateTime joinedAt;
 }
 
@@ -52,6 +56,9 @@ class RoomSnapshot {
     required this.status,
     required this.maxPlayers,
     required this.hostId,
+    this.revision = 1,
+    this.settings = const LobbySettings.defaults(),
+    this.canStart = false,
     required this.members,
   });
 
@@ -65,6 +72,17 @@ class RoomSnapshot {
         status: RoomStatus.parse(json['status']! as String),
         maxPlayers: json['max_players']! as int,
         hostId: json['host_id'] as String?,
+        revision: (json['revision'] as int?) ?? 1,
+        settings: switch (json['settings']) {
+          final Map settings => LobbySettings(
+            impostorCount: settings['impostor_count']! as int,
+            categoryKey: settings['category_key'] as String?,
+            clueSeconds: settings['clue_seconds']! as int,
+            discussionSeconds: settings['discussion_seconds']! as int,
+          ),
+          _ => const LobbySettings.defaults(),
+        },
+        canStart: (json['can_start'] as bool?) ?? false,
         members: rawMembers
             .map(
               (member) => RoomMember.fromJson(
@@ -93,5 +111,8 @@ class RoomSnapshot {
   final RoomStatus status;
   final int maxPlayers;
   final String? hostId;
+  final int revision;
+  final LobbySettings settings;
+  final bool canStart;
   final List<RoomMember> members;
 }

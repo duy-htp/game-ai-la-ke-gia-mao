@@ -6,6 +6,7 @@ import '../../auth/application/app_session_controller.dart';
 import '../domain/game_type.dart';
 import '../domain/room_code.dart';
 import '../domain/room_repository.dart';
+import '../domain/lobby_settings.dart';
 import 'room_action_state.dart';
 
 final createRequestIdProvider = Provider<String Function()>(
@@ -83,6 +84,34 @@ class RoomController extends Notifier<RoomActionState> {
       state = RoomActionError(error);
     } catch (_) {
       state = const RoomActionError(RoomOperationAppError());
+    }
+  }
+
+  Future<void> setReady(bool value) async {
+    if (state is RoomActionSubmitting) return;
+    final repository = ref.read(roomRepositoryProvider);
+    if (repository == null) return;
+    state = const RoomActionSubmitting(RoomAction.ready);
+    try {
+      final room = await repository.setReady(value);
+      ref.read(appSessionControllerProvider.notifier).setRoom(room);
+      state = const RoomActionIdle();
+    } on AppError catch (error) {
+      state = RoomActionError(error);
+    }
+  }
+
+  Future<void> updateSettings(LobbySettings settings) async {
+    if (state is RoomActionSubmitting) return;
+    final repository = ref.read(roomRepositoryProvider);
+    if (repository == null) return;
+    state = const RoomActionSubmitting(RoomAction.settings);
+    try {
+      final room = await repository.updateSettings(settings);
+      ref.read(appSessionControllerProvider.notifier).setRoom(room);
+      state = const RoomActionIdle();
+    } on AppError catch (error) {
+      state = RoomActionError(error);
     }
   }
 

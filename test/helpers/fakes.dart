@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:ai_la_ke_gia_mao/features/auth/domain/auth_identity.dart';
 import 'package:ai_la_ke_gia_mao/features/auth/domain/auth_repository.dart';
 import 'package:ai_la_ke_gia_mao/features/profile/domain/player_profile.dart';
@@ -7,6 +9,8 @@ import 'package:ai_la_ke_gia_mao/features/room/domain/room_code.dart';
 import 'package:ai_la_ke_gia_mao/features/room/domain/room_repository.dart';
 import 'package:ai_la_ke_gia_mao/features/room/domain/room_snapshot.dart';
 import 'package:ai_la_ke_gia_mao/features/room/domain/room_status.dart';
+import 'package:ai_la_ke_gia_mao/features/room/domain/lobby_settings.dart';
+import 'package:ai_la_ke_gia_mao/features/room/domain/room_realtime.dart';
 
 final sampleProfile = PlayerProfile(
   id: '00000000-0000-4000-8000-000000000001',
@@ -90,6 +94,8 @@ class FakeRoomRepository implements RoomRepository {
     this.createError,
     this.joinError,
     this.leaveError,
+    this.readyError,
+    this.settingsError,
   });
 
   RoomSnapshot? currentRoom;
@@ -97,13 +103,20 @@ class FakeRoomRepository implements RoomRepository {
   Object? createError;
   Object? joinError;
   Object? leaveError;
+  Object? readyError;
+  Object? settingsError;
   int loadCalls = 0;
   int createCalls = 0;
   int joinCalls = 0;
   int leaveCalls = 0;
+  int readyCalls = 0;
+  int settingsCalls = 0;
   int? submittedMaxPlayers;
   String? submittedRequestId;
   RoomCode? submittedCode;
+  bool? submittedReady;
+  LobbySettings? submittedSettings;
+  FakeRoomRealtimeSession? lastRealtimeSession;
 
   @override
   Future<RoomSnapshot?> loadCurrentRoom() async {
@@ -122,7 +135,7 @@ class FakeRoomRepository implements RoomRepository {
     submittedMaxPlayers = maxPlayers;
     submittedRequestId = requestId;
     if (createError case final error?) throw error;
-    return currentRoom ?? sampleRoom;
+    return currentRoom ??= sampleRoom;
   }
 
   @override
@@ -130,7 +143,7 @@ class FakeRoomRepository implements RoomRepository {
     joinCalls += 1;
     submittedCode = code;
     if (joinError case final error?) throw error;
-    return currentRoom ?? sampleRoom;
+    return currentRoom ??= sampleRoom;
   }
 
   @override
@@ -139,4 +152,37 @@ class FakeRoomRepository implements RoomRepository {
     if (leaveError case final error?) throw error;
     currentRoom = null;
   }
+
+  @override
+  Future<RoomSnapshot> setReady(bool isReady) async {
+    readyCalls += 1;
+    submittedReady = isReady;
+    if (readyError case final error?) throw error;
+    return currentRoom ?? sampleRoom;
+  }
+
+  @override
+  Future<RoomSnapshot> updateSettings(LobbySettings settings) async {
+    settingsCalls += 1;
+    submittedSettings = settings;
+    if (settingsError case final error?) throw error;
+    return currentRoom ?? sampleRoom;
+  }
+
+  @override
+  Future<List<GameCategory>> loadCategories() async => const [];
+
+  @override
+  Future<RoomRealtimeSession> connectRealtime(String roomId) async =>
+      lastRealtimeSession = FakeRoomRealtimeSession();
+}
+
+class FakeRoomRealtimeSession implements RoomRealtimeSession {
+  final controller = StreamController<RoomRealtimeEvent>.broadcast();
+
+  @override
+  Stream<RoomRealtimeEvent> get events => controller.stream;
+
+  @override
+  Future<void> dispose() => controller.close();
 }

@@ -53,3 +53,15 @@ authoritative room data.
 - Profile JSON được parse thành `PlayerProfile` trước khi đi vào UI.
 - Room RPC trả `RoomSnapshot` an toàn thay vì raw table rows.
 - Direct navigation không thể bỏ qua onboarding hoặc active-room guard.
+
+## Realtime lobby authority
+
+`AppSessionReady.room` là bản snapshot duy nhất trong Flutter.
+`RoomRealtimeController` chỉ sở hữu lifecycle channel, trạng thái kết nối và
+presence tạm thời. Private Broadcast mang `room_id` và có nghĩa “hãy refetch”.
+Invalidation được gom trong 120 ms; generation counter và server revision chặn
+response cũ ghi đè state mới. Reconnect và app resume đều refetch bằng RPC.
+
+Presence key là authenticated user ID và luôn được giao với membership trong
+snapshot. Mất Presence chỉ đổi chỉ báo online; không xóa membership hay chuyển
+host. Chỉ explicit `leave_room()` mới kích hoạt host transfer ở Milestone 4.
