@@ -43,6 +43,42 @@ class AppLocalizationsEn extends AppLocalizations {
   String get identityMarkLabel => 'Mysterious mask symbol';
 
   @override
+  String get authInitializing => 'Restoring your player…';
+
+  @override
+  String get retry => 'TRY AGAIN';
+
+  @override
+  String get chooseYourName => 'CHOOSE YOUR NAME';
+
+  @override
+  String get displayName => 'Display name';
+
+  @override
+  String get usernameHint => 'Example: Alex';
+
+  @override
+  String get chooseAvatar => 'CHOOSE YOUR CHARACTER';
+
+  @override
+  String get startPlaying => 'START PLAYING';
+
+  @override
+  String avatarOption(int number) {
+    return 'Character $number';
+  }
+
+  @override
+  String playerLevel(int level) {
+    return 'Lv. $level';
+  }
+
+  @override
+  String coinBalance(int coins) {
+    return 'Balance: $coins coins';
+  }
+
+  @override
   String get errorNetworkUnavailable =>
       'No network connection. Please try again.';
 
@@ -51,4 +87,40 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorUnexpected => 'Something went wrong. Please try again.';
+
+  @override
+  String get errorConfiguration => 'The server connection is not configured.';
+
+  @override
+  String get errorAuthInitialization =>
+      'The player session could not be initialized.';
+
+  @override
+  String get errorAnonymousSignIn =>
+      'A guest session could not be created. Please retry.';
+
+  @override
+  String get errorProfileLoad =>
+      'Your profile could not be loaded. Please retry.';
+
+  @override
+  String get errorUsernameBlank => 'Enter a display name.';
+
+  @override
+  String get errorUsernameTooShort =>
+      'The name must contain at least 2 characters.';
+
+  @override
+  String get errorUsernameTooLong => 'The name cannot exceed 20 characters.';
+
+  @override
+  String get errorUsernameInvalidCharacters =>
+      'The name contains unsupported characters.';
+
+  @override
+  String get errorInvalidAvatar => 'Choose a valid character.';
+
+  @override
+  String get errorProfileCreation =>
+      'Your profile could not be created. Please retry.';
 }

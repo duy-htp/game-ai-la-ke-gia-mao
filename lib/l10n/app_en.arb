@@ -11,7 +11,36 @@
   "developmentEnvironment": "DEVELOPMENT BUILD",
   "stagingEnvironment": "STAGING BUILD",
   "identityMarkLabel": "Mysterious mask symbol",
+  "authInitializing": "Restoring your player…",
+  "retry": "TRY AGAIN",
+  "chooseYourName": "CHOOSE YOUR NAME",
+  "displayName": "Display name",
+  "usernameHint": "Example: Alex",
+  "chooseAvatar": "CHOOSE YOUR CHARACTER",
+  "startPlaying": "START PLAYING",
+  "avatarOption": "Character {number}",
+  "@avatarOption": {
+    "placeholders": {"number": {"type": "int"}}
+  },
+  "playerLevel": "Lv. {level}",
+  "@playerLevel": {
+    "placeholders": {"level": {"type": "int"}}
+  },
+  "coinBalance": "Balance: {coins} coins",
+  "@coinBalance": {
+    "placeholders": {"coins": {"type": "int"}}
+  },
   "errorNetworkUnavailable": "No network connection. Please try again.",
   "errorSessionExpired": "Your session expired. Please start again.",
-  "errorUnexpected": "Something went wrong. Please try again."
+  "errorUnexpected": "Something went wrong. Please try again.",
+  "errorConfiguration": "The server connection is not configured.",
+  "errorAuthInitialization": "The player session could not be initialized.",
+  "errorAnonymousSignIn": "A guest session could not be created. Please retry.",
+  "errorProfileLoad": "Your profile could not be loaded. Please retry.",
+  "errorUsernameBlank": "Enter a display name.",
+  "errorUsernameTooShort": "The name must contain at least 2 characters.",
+  "errorUsernameTooLong": "The name cannot exceed 20 characters.",
+  "errorUsernameInvalidCharacters": "The name contains unsupported characters.",
+  "errorInvalidAvatar": "Choose a valid character.",
+  "errorProfileCreation": "Your profile could not be created. Please retry."
 }

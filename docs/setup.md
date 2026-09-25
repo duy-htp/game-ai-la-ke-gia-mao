@@ -29,7 +29,41 @@ flutter run --dart-define-from-file=config/development.json
 ```
 
 `config/*.json` bị Git bỏ qua; chỉ file `*.example.json` được commit. Không đặt
-secret trong repository. Milestone 1 chưa có cấu hình Supabase.
+secret trong repository. Milestone 2 dùng:
+
+- `SUPABASE_URL`
+- `SUPABASE_ANON_KEY` (chấp nhận publishable key hiện hành)
+
+Ứng dụng tuyệt đối không nhận service-role key, database password hoặc JWT
+secret.
+
+## Supabase local
+
+Supabase CLI 2.117.0 được chạy qua npm vì Homebrew bị chặn bởi Command Line
+Tools cũ:
+
+```sh
+npx --yes supabase@latest start
+npx --yes supabase@latest db reset
+npx --yes supabase@latest test db
+npx --yes supabase@latest stop
+```
+
+Docker daemon phải hoạt động. Local config bật anonymous sign-in và migration
+tự động được áp từ `supabase/migrations`.
+
+## Supabase remote development
+
+1. Tạo development project riêng trên Supabase.
+2. Áp migration bằng Supabase CLI, không tạo schema thủ công trong Dashboard.
+3. Trong Dashboard mở **Authentication → Providers → Anonymous Sign-Ins** và
+   bật anonymous sign-in. Đây là Auth service setting, không nằm trong SQL
+   migration.
+4. Sao chép Project URL và publishable/anon key vào file config local bị ignore.
+5. Không dùng staging/production credentials cho development.
+
+Anonymous user không mặc nhiên đáng tin cậy. Trước release cần xem xét account
+creation spam, room spam, rate limiting, device abuse và rewarded-ad abuse.
 
 ## Application identity
 
@@ -49,3 +83,6 @@ bị macOS/web hoạt động. Native mobile chưa sẵn sàng:
   và `sudo xcodebuild -runFirstLaunch`; cài CocoaPods theo hướng dẫn chính thức.
 
 Không cần các IDE/native tool này để chạy analyze và widget/unit tests.
+
+`supabase_flutter` thêm native plugin dependencies; build thiết bị thật vẫn
+chưa được xác minh cho tới khi Android SDK/Xcode/CocoaPods sẵn sàng.

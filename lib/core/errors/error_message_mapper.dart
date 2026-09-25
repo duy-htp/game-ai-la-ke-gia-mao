@@ -7,6 +7,20 @@ abstract final class ErrorMessageMapper {
       NetworkAppError() => localizations.errorNetworkUnavailable,
       SessionExpiredAppError() => localizations.errorSessionExpired,
       UnexpectedAppError() => localizations.errorUnexpected,
+      MissingConfigurationAppError() ||
+      InvalidConfigurationAppError() => localizations.errorConfiguration,
+      AuthInitializationAppError() => localizations.errorAuthInitialization,
+      AnonymousSignInAppError() => localizations.errorAnonymousSignIn,
+      ProfileLoadAppError() => localizations.errorProfileLoad,
+      InvalidUsernameAppError(reason: final reason) => switch (reason) {
+        UsernameErrorReason.blank => localizations.errorUsernameBlank,
+        UsernameErrorReason.tooShort => localizations.errorUsernameTooShort,
+        UsernameErrorReason.tooLong => localizations.errorUsernameTooLong,
+        UsernameErrorReason.controlCharacter =>
+          localizations.errorUsernameInvalidCharacters,
+      },
+      InvalidAvatarAppError() => localizations.errorInvalidAvatar,
+      ProfileCreationAppError() => localizations.errorProfileCreation,
     };
   }
 }

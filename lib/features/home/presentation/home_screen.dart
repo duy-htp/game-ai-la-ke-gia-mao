@@ -5,6 +5,11 @@ import '../../../core/config/app_config.dart';
 import '../../../core/config/app_environment.dart';
 import '../../../core/localization/localization_extension.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../auth/application/app_session_controller.dart';
+import '../../auth/application/app_session_state.dart';
+import '../../profile/domain/avatar_catalog.dart';
+import '../../profile/domain/player_profile.dart';
+import '../../profile/presentation/avatar_badge.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -14,6 +19,11 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final config = ref.watch(appConfigProvider);
+    final sessionState = ref.watch(appSessionControllerProvider);
+    final profile = switch (sessionState) {
+      AppSessionReady(:final profile) => profile,
+      _ => null,
+    };
     final l10n = context.l10n;
 
     return Scaffold(
@@ -50,6 +60,10 @@ class HomeScreen extends ConsumerWidget {
                                 ),
                               ),
                               const SizedBox(height: 24),
+                            ],
+                            if (profile != null) ...[
+                              _ProfileSummary(profile: profile),
+                              const SizedBox(height: 30),
                             ],
                             _IdentityMark(label: l10n.identityMarkLabel),
                             const SizedBox(height: 24),
@@ -135,6 +149,59 @@ class HomeScreen extends ConsumerWidget {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(SnackBar(content: Text(context.l10n.comingSoon)));
+  }
+}
+
+class _ProfileSummary extends StatelessWidget {
+  const _ProfileSummary({required this.profile});
+
+  final PlayerProfile profile;
+
+  @override
+  Widget build(BuildContext context) {
+    final avatar = AvatarCatalog.byId(profile.avatarId);
+    final l10n = context.l10n;
+    return Card(
+      key: const Key('profile-summary'),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            AvatarBadge(emoji: avatar.emoji),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    profile.username,
+                    key: const Key('profile-username'),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  const SizedBox(height: 3),
+                  Text(l10n.playerLevel(profile.level)),
+                ],
+              ),
+            ),
+            const SizedBox(width: 10),
+            Semantics(
+              label: l10n.coinBalance(profile.coins),
+              child: Text(
+                '🪙 ${profile.coins}',
+                key: const Key('profile-coins'),
+                style: const TextStyle(
+                  color: AppColors.gold,
+                  fontWeight: FontWeight.w900,
+                  fontSize: 16,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 

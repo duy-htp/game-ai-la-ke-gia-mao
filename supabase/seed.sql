@@ -1,0 +1,2 @@
+-- Milestone 2 requires no shared seed data. Test identities are transaction-local
+-- fixtures in supabase/tests/database/profiles_rls_test.sql.

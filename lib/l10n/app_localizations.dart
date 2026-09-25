@@ -164,6 +164,66 @@ abstract class AppLocalizations {
   /// **'Biểu tượng chiếc mặt nạ bí ẩn'**
   String get identityMarkLabel;
 
+  /// No description provided for @authInitializing.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đang khôi phục người chơi…'**
+  String get authInitializing;
+
+  /// No description provided for @retry.
+  ///
+  /// In vi, this message translates to:
+  /// **'THỬ LẠI'**
+  String get retry;
+
+  /// No description provided for @chooseYourName.
+  ///
+  /// In vi, this message translates to:
+  /// **'CHỌN TÊN CỦA BẠN'**
+  String get chooseYourName;
+
+  /// No description provided for @displayName.
+  ///
+  /// In vi, this message translates to:
+  /// **'Tên hiển thị'**
+  String get displayName;
+
+  /// No description provided for @usernameHint.
+  ///
+  /// In vi, this message translates to:
+  /// **'Ví dụ: Dũng'**
+  String get usernameHint;
+
+  /// No description provided for @chooseAvatar.
+  ///
+  /// In vi, this message translates to:
+  /// **'CHỌN NHÂN VẬT'**
+  String get chooseAvatar;
+
+  /// No description provided for @startPlaying.
+  ///
+  /// In vi, this message translates to:
+  /// **'BẮT ĐẦU CHƠI'**
+  String get startPlaying;
+
+  /// No description provided for @avatarOption.
+  ///
+  /// In vi, this message translates to:
+  /// **'Nhân vật {number}'**
+  String avatarOption(int number);
+
+  /// No description provided for @playerLevel.
+  ///
+  /// In vi, this message translates to:
+  /// **'Cấp {level}'**
+  String playerLevel(int level);
+
+  /// No description provided for @coinBalance.
+  ///
+  /// In vi, this message translates to:
+  /// **'Số dư {coins} xu'**
+  String coinBalance(int coins);
+
   /// No description provided for @errorNetworkUnavailable.
   ///
   /// In vi, this message translates to:
@@ -181,6 +241,66 @@ abstract class AppLocalizations {
   /// In vi, this message translates to:
   /// **'Đã xảy ra lỗi. Vui lòng thử lại.'**
   String get errorUnexpected;
+
+  /// No description provided for @errorConfiguration.
+  ///
+  /// In vi, this message translates to:
+  /// **'Ứng dụng chưa được cấu hình kết nối máy chủ.'**
+  String get errorConfiguration;
+
+  /// No description provided for @errorAuthInitialization.
+  ///
+  /// In vi, this message translates to:
+  /// **'Không thể khởi tạo phiên người chơi.'**
+  String get errorAuthInitialization;
+
+  /// No description provided for @errorAnonymousSignIn.
+  ///
+  /// In vi, this message translates to:
+  /// **'Không thể tạo phiên khách. Vui lòng thử lại.'**
+  String get errorAnonymousSignIn;
+
+  /// No description provided for @errorProfileLoad.
+  ///
+  /// In vi, this message translates to:
+  /// **'Không thể tải hồ sơ. Vui lòng thử lại.'**
+  String get errorProfileLoad;
+
+  /// No description provided for @errorUsernameBlank.
+  ///
+  /// In vi, this message translates to:
+  /// **'Vui lòng nhập tên hiển thị.'**
+  String get errorUsernameBlank;
+
+  /// No description provided for @errorUsernameTooShort.
+  ///
+  /// In vi, this message translates to:
+  /// **'Tên phải có ít nhất 2 ký tự.'**
+  String get errorUsernameTooShort;
+
+  /// No description provided for @errorUsernameTooLong.
+  ///
+  /// In vi, this message translates to:
+  /// **'Tên không được dài quá 20 ký tự.'**
+  String get errorUsernameTooLong;
+
+  /// No description provided for @errorUsernameInvalidCharacters.
+  ///
+  /// In vi, this message translates to:
+  /// **'Tên chứa ký tự không được hỗ trợ.'**
+  String get errorUsernameInvalidCharacters;
+
+  /// No description provided for @errorInvalidAvatar.
+  ///
+  /// In vi, this message translates to:
+  /// **'Vui lòng chọn một nhân vật hợp lệ.'**
+  String get errorInvalidAvatar;
+
+  /// No description provided for @errorProfileCreation.
+  ///
+  /// In vi, this message translates to:
+  /// **'Không thể tạo hồ sơ. Vui lòng thử lại.'**
+  String get errorProfileCreation;
 }
 
 class _AppLocalizationsDelegate

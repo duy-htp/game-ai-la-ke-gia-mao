@@ -1,4 +1,6 @@
 abstract final class RouteNames {
+  static const startup = 'startup';
+  static const onboarding = 'onboarding';
   static const home = 'home';
   static const createRoom = 'create-room';
   static const joinRoom = 'join-room';
@@ -10,6 +12,8 @@ abstract final class RouteNames {
 }
 
 abstract final class RoutePaths {
+  static const startup = '/startup';
+  static const onboarding = '/onboarding';
   static const home = '/';
   static const createRoom = '/create-room';
   static const joinRoom = '/join-room';

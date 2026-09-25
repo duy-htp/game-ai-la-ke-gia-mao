@@ -11,7 +11,36 @@
   "developmentEnvironment": "BẢN PHÁT TRIỂN",
   "stagingEnvironment": "BẢN KIỂM THỬ",
   "identityMarkLabel": "Biểu tượng chiếc mặt nạ bí ẩn",
+  "authInitializing": "Đang khôi phục người chơi…",
+  "retry": "THỬ LẠI",
+  "chooseYourName": "CHỌN TÊN CỦA BẠN",
+  "displayName": "Tên hiển thị",
+  "usernameHint": "Ví dụ: Dũng",
+  "chooseAvatar": "CHỌN NHÂN VẬT",
+  "startPlaying": "BẮT ĐẦU CHƠI",
+  "avatarOption": "Nhân vật {number}",
+  "@avatarOption": {
+    "placeholders": {"number": {"type": "int"}}
+  },
+  "playerLevel": "Cấp {level}",
+  "@playerLevel": {
+    "placeholders": {"level": {"type": "int"}}
+  },
+  "coinBalance": "Số dư {coins} xu",
+  "@coinBalance": {
+    "placeholders": {"coins": {"type": "int"}}
+  },
   "errorNetworkUnavailable": "Không có kết nối mạng. Vui lòng thử lại.",
   "errorSessionExpired": "Phiên đăng nhập đã hết hạn. Vui lòng bắt đầu lại.",
-  "errorUnexpected": "Đã xảy ra lỗi. Vui lòng thử lại."
+  "errorUnexpected": "Đã xảy ra lỗi. Vui lòng thử lại.",
+  "errorConfiguration": "Ứng dụng chưa được cấu hình kết nối máy chủ.",
+  "errorAuthInitialization": "Không thể khởi tạo phiên người chơi.",
+  "errorAnonymousSignIn": "Không thể tạo phiên khách. Vui lòng thử lại.",
+  "errorProfileLoad": "Không thể tải hồ sơ. Vui lòng thử lại.",
+  "errorUsernameBlank": "Vui lòng nhập tên hiển thị.",
+  "errorUsernameTooShort": "Tên phải có ít nhất 2 ký tự.",
+  "errorUsernameTooLong": "Tên không được dài quá 20 ký tự.",
+  "errorUsernameInvalidCharacters": "Tên chứa ký tự không được hỗ trợ.",
+  "errorInvalidAvatar": "Vui lòng chọn một nhân vật hợp lệ.",
+  "errorProfileCreation": "Không thể tạo hồ sơ. Vui lòng thử lại."
 }

@@ -43,6 +43,42 @@ class AppLocalizationsVi extends AppLocalizations {
   String get identityMarkLabel => 'Biểu tượng chiếc mặt nạ bí ẩn';
 
   @override
+  String get authInitializing => 'Đang khôi phục người chơi…';
+
+  @override
+  String get retry => 'THỬ LẠI';
+
+  @override
+  String get chooseYourName => 'CHỌN TÊN CỦA BẠN';
+
+  @override
+  String get displayName => 'Tên hiển thị';
+
+  @override
+  String get usernameHint => 'Ví dụ: Dũng';
+
+  @override
+  String get chooseAvatar => 'CHỌN NHÂN VẬT';
+
+  @override
+  String get startPlaying => 'BẮT ĐẦU CHƠI';
+
+  @override
+  String avatarOption(int number) {
+    return 'Nhân vật $number';
+  }
+
+  @override
+  String playerLevel(int level) {
+    return 'Cấp $level';
+  }
+
+  @override
+  String coinBalance(int coins) {
+    return 'Số dư $coins xu';
+  }
+
+  @override
   String get errorNetworkUnavailable =>
       'Không có kết nối mạng. Vui lòng thử lại.';
 
@@ -52,4 +88,37 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get errorUnexpected => 'Đã xảy ra lỗi. Vui lòng thử lại.';
+
+  @override
+  String get errorConfiguration =>
+      'Ứng dụng chưa được cấu hình kết nối máy chủ.';
+
+  @override
+  String get errorAuthInitialization => 'Không thể khởi tạo phiên người chơi.';
+
+  @override
+  String get errorAnonymousSignIn =>
+      'Không thể tạo phiên khách. Vui lòng thử lại.';
+
+  @override
+  String get errorProfileLoad => 'Không thể tải hồ sơ. Vui lòng thử lại.';
+
+  @override
+  String get errorUsernameBlank => 'Vui lòng nhập tên hiển thị.';
+
+  @override
+  String get errorUsernameTooShort => 'Tên phải có ít nhất 2 ký tự.';
+
+  @override
+  String get errorUsernameTooLong => 'Tên không được dài quá 20 ký tự.';
+
+  @override
+  String get errorUsernameInvalidCharacters =>
+      'Tên chứa ký tự không được hỗ trợ.';
+
+  @override
+  String get errorInvalidAvatar => 'Vui lòng chọn một nhân vật hợp lệ.';
+
+  @override
+  String get errorProfileCreation => 'Không thể tạo hồ sơ. Vui lòng thử lại.';
 }
