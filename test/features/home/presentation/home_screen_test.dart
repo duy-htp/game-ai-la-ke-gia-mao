@@ -3,6 +3,8 @@ import 'package:ai_la_ke_gia_mao/core/config/app_config.dart';
 import 'package:ai_la_ke_gia_mao/core/config/app_environment.dart';
 import 'package:ai_la_ke_gia_mao/features/auth/domain/auth_repository.dart';
 import 'package:ai_la_ke_gia_mao/features/profile/domain/profile_repository.dart';
+import 'package:ai_la_ke_gia_mao/features/room/domain/room_repository.dart';
+import 'package:ai_la_ke_gia_mao/features/room/presentation/create_room_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -23,6 +25,7 @@ Widget _testScope(Widget child) {
       profileRepositoryProvider.overrideWithValue(
         FakeProfileRepository(profile: sampleProfile),
       ),
+      roomRepositoryProvider.overrideWithValue(FakeRoomRepository()),
     ],
     child: child,
   );
@@ -52,18 +55,13 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('unavailable primary action is harmless and explained', (
-    tester,
-  ) async {
+  testWidgets('create-room action opens the create screen', (tester) async {
     await tester.pumpWidget(_testScope(const App()));
     await tester.pumpAndSettle();
 
     await tester.tap(find.byKey(const Key('create-room-button')));
-    await tester.pump();
+    await tester.pumpAndSettle();
 
-    expect(
-      find.text('Tính năng sẽ có trong cột mốc tiếp theo.'),
-      findsOneWidget,
-    );
+    expect(find.byKey(CreateRoomScreen.screenKey), findsOneWidget);
   });
 }

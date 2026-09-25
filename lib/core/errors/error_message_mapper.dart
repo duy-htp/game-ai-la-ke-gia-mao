@@ -21,6 +21,16 @@ abstract final class ErrorMessageMapper {
       },
       InvalidAvatarAppError() => localizations.errorInvalidAvatar,
       ProfileCreationAppError() => localizations.errorProfileCreation,
+      InvalidRoomCodeAppError() => localizations.errorInvalidRoomCode,
+      RoomNotFoundAppError() => localizations.errorRoomNotFound,
+      RoomClosedAppError() => localizations.errorRoomClosed,
+      RoomFullAppError() => localizations.errorRoomFull,
+      AlreadyInAnotherRoomAppError() => localizations.errorAlreadyInRoom,
+      UnsupportedGameTypeAppError() => localizations.errorUnsupportedGameType,
+      InvalidMaxPlayersAppError() => localizations.errorInvalidMaxPlayers,
+      ProfileRequiredAppError() => localizations.errorProfileRequired,
+      NotRoomMemberAppError() => localizations.errorNotRoomMember,
+      RoomOperationAppError() => localizations.errorRoomOperation,
     };
   }
 }

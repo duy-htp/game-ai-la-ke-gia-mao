@@ -4,6 +4,8 @@ import '../../../core/config/app_config.dart';
 import '../../../core/errors/app_error.dart';
 import '../../profile/domain/profile_input_validator.dart';
 import '../../profile/domain/profile_repository.dart';
+import '../../room/domain/room_repository.dart';
+import '../../room/domain/room_snapshot.dart';
 import '../domain/auth_repository.dart';
 import 'app_session_state.dart';
 
@@ -31,7 +33,10 @@ class AppSessionController extends Notifier<AppSessionState> {
 
     final authRepository = ref.read(authRepositoryProvider);
     final profileRepository = ref.read(profileRepositoryProvider);
-    if (authRepository == null || profileRepository == null) {
+    final roomRepository = ref.read(roomRepositoryProvider);
+    if (authRepository == null ||
+        profileRepository == null ||
+        roomRepository == null) {
       state = const AppSessionFatalConfigurationError(
         AuthInitializationAppError(),
       );
@@ -41,9 +46,12 @@ class AppSessionController extends Notifier<AppSessionState> {
     try {
       final identity = await authRepository.ensureAuthenticated();
       final profile = await profileRepository.fetchOwnProfile();
-      state = profile == null
-          ? AppSessionNeedsProfile(identity: identity)
-          : AppSessionReady(profile);
+      if (profile == null) {
+        state = AppSessionNeedsProfile(identity: identity);
+        return;
+      }
+      final room = await roomRepository.loadCurrentRoom();
+      state = AppSessionReady(profile, room: room);
     } on AppError catch (error) {
       state = AppSessionRecoverableError(error);
     } catch (_) {
@@ -79,6 +87,20 @@ class AppSessionController extends Notifier<AppSessionState> {
       state = current.copyWith(
         submissionError: const ProfileCreationAppError(),
       );
+    }
+  }
+
+  void setRoom(RoomSnapshot room) {
+    final current = state;
+    if (current is AppSessionReady) {
+      state = AppSessionReady(current.profile, room: room);
+    }
+  }
+
+  void clearRoom() {
+    final current = state;
+    if (current is AppSessionReady) {
+      state = AppSessionReady(current.profile);
     }
   }
 }

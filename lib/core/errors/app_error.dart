@@ -51,3 +51,43 @@ final class InvalidAvatarAppError extends AppError {
 final class ProfileCreationAppError extends AppError {
   const ProfileCreationAppError() : super('profile_creation_failed');
 }
+
+final class InvalidRoomCodeAppError extends AppError {
+  const InvalidRoomCodeAppError() : super('invalid_room_code');
+}
+
+final class RoomNotFoundAppError extends AppError {
+  const RoomNotFoundAppError() : super('room_not_found');
+}
+
+final class RoomClosedAppError extends AppError {
+  const RoomClosedAppError() : super('room_closed');
+}
+
+final class RoomFullAppError extends AppError {
+  const RoomFullAppError() : super('room_full');
+}
+
+final class AlreadyInAnotherRoomAppError extends AppError {
+  const AlreadyInAnotherRoomAppError() : super('already_in_another_room');
+}
+
+final class UnsupportedGameTypeAppError extends AppError {
+  const UnsupportedGameTypeAppError() : super('unsupported_game_type');
+}
+
+final class InvalidMaxPlayersAppError extends AppError {
+  const InvalidMaxPlayersAppError() : super('invalid_max_players');
+}
+
+final class ProfileRequiredAppError extends AppError {
+  const ProfileRequiredAppError() : super('profile_required');
+}
+
+final class NotRoomMemberAppError extends AppError {
+  const NotRoomMemberAppError() : super('not_room_member');
+}
+
+final class RoomOperationAppError extends AppError {
+  const RoomOperationAppError() : super('room_operation_failed');
+}

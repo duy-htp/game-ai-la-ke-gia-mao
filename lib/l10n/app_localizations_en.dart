@@ -123,4 +123,84 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get errorProfileCreation =>
       'Your profile could not be created. Please retry.';
+
+  @override
+  String get gameType => 'Game';
+
+  @override
+  String get maximumPlayers => 'Maximum players';
+
+  @override
+  String get create => 'CREATE ROOM';
+
+  @override
+  String get join => 'JOIN ROOM';
+
+  @override
+  String get cancel => 'CANCEL';
+
+  @override
+  String get enterRoomCode => 'ENTER ROOM CODE';
+
+  @override
+  String get roomCode => 'Room code';
+
+  @override
+  String get roomCodeHint => 'Enter the 6-character code shared by the host.';
+
+  @override
+  String get waitingRoom => 'WAITING ROOM';
+
+  @override
+  String get players => 'Players';
+
+  @override
+  String get host => 'Host';
+
+  @override
+  String get leaveRoom => 'LEAVE ROOM';
+
+  @override
+  String roomCodeValue(String code) {
+    return 'Room code $code';
+  }
+
+  @override
+  String capacity(int current, int maximum) {
+    return '$current/$maximum';
+  }
+
+  @override
+  String get errorInvalidRoomCode =>
+      'The room code must contain exactly 6 valid characters.';
+
+  @override
+  String get errorRoomNotFound => 'Room not found.';
+
+  @override
+  String get errorRoomClosed => 'This room is closed.';
+
+  @override
+  String get errorRoomFull => 'The room is full.';
+
+  @override
+  String get errorAlreadyInRoom => 'You are already in another room.';
+
+  @override
+  String get errorUnsupportedGameType => 'This game is not supported.';
+
+  @override
+  String get errorInvalidMaxPlayers =>
+      'Player capacity must be between 3 and 10.';
+
+  @override
+  String get errorProfileRequired =>
+      'Complete your profile before joining a room.';
+
+  @override
+  String get errorNotRoomMember => 'You are no longer a member of this room.';
+
+  @override
+  String get errorRoomOperation =>
+      'The room request could not be completed. Please retry.';
 }

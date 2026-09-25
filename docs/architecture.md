@@ -36,6 +36,13 @@ initializing
 onboarding. Supabase SDK khôi phục session đã lưu; repository chỉ anonymous
 sign-in khi không có session và gộp các request sign-in đồng thời.
 
+Milestone 3 mở rộng ready state bằng một `RoomSnapshot?`. Sau khi profile được
+tải, startup luôn gọi `RoomRepository.loadCurrentRoom()`: room hiện hữu chuyển
+đến Room; không có room chuyển Home; lỗi truy vấn chuyển recoverable error.
+Create/join/leave cập nhật snapshot duy nhất trong application session. Room
+controller chỉ giữ trạng thái action tạm thời và idempotency key, không sao chép
+authoritative room data.
+
 ## Ranh giới
 
 - Widget không chứa luật game hay truy cập database.
@@ -44,3 +51,5 @@ sign-in khi không có session và gộp các request sign-in đồng thời.
 - Secret không được đưa vào public state, Realtime event hoặc production log.
 - `auth.uid()` là player identity duy nhất; username không phải định danh/login.
 - Profile JSON được parse thành `PlayerProfile` trước khi đi vào UI.
+- Room RPC trả `RoomSnapshot` an toàn thay vì raw table rows.
+- Direct navigation không thể bỏ qua onboarding hoặc active-room guard.

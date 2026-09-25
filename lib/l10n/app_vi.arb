@@ -42,5 +42,36 @@
   "errorUsernameTooLong": "Tên không được dài quá 20 ký tự.",
   "errorUsernameInvalidCharacters": "Tên chứa ký tự không được hỗ trợ.",
   "errorInvalidAvatar": "Vui lòng chọn một nhân vật hợp lệ.",
-  "errorProfileCreation": "Không thể tạo hồ sơ. Vui lòng thử lại."
+  "errorProfileCreation": "Không thể tạo hồ sơ. Vui lòng thử lại.",
+  "gameType": "Trò chơi",
+  "maximumPlayers": "Số người tối đa",
+  "create": "TẠO PHÒNG",
+  "join": "VÀO PHÒNG",
+  "cancel": "HỦY",
+  "enterRoomCode": "NHẬP MÃ PHÒNG",
+  "roomCode": "Mã phòng",
+  "roomCodeHint": "Nhập mã gồm 6 ký tự do chủ phòng chia sẻ.",
+  "waitingRoom": "PHÒNG CHỜ",
+  "players": "Người chơi",
+  "host": "Chủ phòng",
+  "leaveRoom": "RỜI PHÒNG",
+  "roomCodeValue": "Mã phòng {code}",
+  "@roomCodeValue": {"placeholders": {"code": {"type": "String"}}},
+  "capacity": "{current}/{maximum}",
+  "@capacity": {
+    "placeholders": {
+      "current": {"type": "int"},
+      "maximum": {"type": "int"}
+    }
+  },
+  "errorInvalidRoomCode": "Mã phòng phải gồm đúng 6 ký tự hợp lệ.",
+  "errorRoomNotFound": "Không tìm thấy phòng.",
+  "errorRoomClosed": "Phòng này đã đóng.",
+  "errorRoomFull": "Phòng đã đủ người.",
+  "errorAlreadyInRoom": "Bạn đang ở trong một phòng khác.",
+  "errorUnsupportedGameType": "Trò chơi này chưa được hỗ trợ.",
+  "errorInvalidMaxPlayers": "Số người chơi phải từ 3 đến 10.",
+  "errorProfileRequired": "Bạn cần hoàn tất hồ sơ trước khi vào phòng.",
+  "errorNotRoomMember": "Bạn không còn ở trong phòng này.",
+  "errorRoomOperation": "Không thể xử lý phòng. Vui lòng thử lại."
 }

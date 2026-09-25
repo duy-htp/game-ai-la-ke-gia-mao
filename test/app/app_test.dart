@@ -7,6 +7,7 @@ import 'package:ai_la_ke_gia_mao/features/home/presentation/home_screen.dart';
 import 'package:ai_la_ke_gia_mao/features/profile/domain/player_profile.dart';
 import 'package:ai_la_ke_gia_mao/features/profile/domain/profile_repository.dart';
 import 'package:ai_la_ke_gia_mao/features/profile/presentation/onboarding_screen.dart';
+import 'package:ai_la_ke_gia_mao/features/room/domain/room_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -27,6 +28,7 @@ Widget _testApp({Locale? locale, PlayerProfile? profile}) {
       profileRepositoryProvider.overrideWithValue(
         FakeProfileRepository(profile: profile ?? sampleProfile),
       ),
+      roomRepositoryProvider.overrideWithValue(FakeRoomRepository()),
     ],
     child: App(locale: locale),
   );
@@ -79,6 +81,7 @@ void main() {
         ),
         authRepositoryProvider.overrideWithValue(FakeAuthRepository()),
         profileRepositoryProvider.overrideWithValue(FakeProfileRepository()),
+        roomRepositoryProvider.overrideWithValue(FakeRoomRepository()),
       ],
     );
     addTearDown(container.dispose);

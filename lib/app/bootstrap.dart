@@ -9,6 +9,8 @@ import '../features/auth/data/supabase_auth_repository.dart';
 import '../features/auth/domain/auth_repository.dart';
 import '../features/profile/data/supabase_profile_repository.dart';
 import '../features/profile/domain/profile_repository.dart';
+import '../features/room/data/supabase_room_repository.dart';
+import '../features/room/domain/room_repository.dart';
 import 'app.dart';
 
 Future<void> bootstrap() async {
@@ -17,6 +19,7 @@ Future<void> bootstrap() async {
   final logger = ConsoleAppLogger(environment: config.environment);
   AuthRepository? authRepository;
   ProfileRepository? profileRepository;
+  RoomRepository? roomRepository;
 
   try {
     final supabaseConfig = config.requireSupabaseConfiguration();
@@ -29,6 +32,7 @@ Future<void> bootstrap() async {
       SupabaseAuthRemoteDataSource(client),
     );
     profileRepository = SupabaseProfileRepository(client);
+    roomRepository = SupabaseRoomRepository(client);
     logger.info('Application services initialized');
   } on AppError catch (error) {
     logger.error(
@@ -48,6 +52,8 @@ Future<void> bootstrap() async {
           authRepositoryProvider.overrideWithValue(authRepository),
         if (profileRepository != null)
           profileRepositoryProvider.overrideWithValue(profileRepository),
+        if (roomRepository != null)
+          roomRepositoryProvider.overrideWithValue(roomRepository),
       ],
       child: const App(),
     ),

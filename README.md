@@ -1,8 +1,8 @@
 # AI LÀ KẺ GIẢ MẠO?
 
 Ứng dụng party game social-deduction đa nền tảng dành cho iOS và Android.
-Repository hiện hoàn thành **Milestone 2 — Supabase + Guest Authentication**;
-room và gameplay chưa được triển khai.
+Repository hiện hoàn thành **Milestone 3 — Private Rooms**. Realtime lobby,
+ready state và gameplay chưa được triển khai.
 
 ## Bắt đầu nhanh
 
@@ -35,6 +35,8 @@ Xem [hướng dẫn cài đặt](docs/setup.md), [kiến trúc](docs/architectur
 - Supabase Anonymous Auth và session restoration.
 - Profile onboarding bảo mật qua RPC, RLS và PostgreSQL grants.
 - Home hiển thị avatar, username, level và coins.
+- Tạo/vào/rời private room qua transactional RPC.
+- Room code server-generated, capacity-safe và hỗ trợ khôi phục sau restart.
 
 Application ID hiện tại là `com.duyhtp.ailakegiamao` và cần được rà soát lại
 trước khi phát hành production.

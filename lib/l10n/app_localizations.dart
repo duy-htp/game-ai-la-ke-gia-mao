@@ -301,6 +301,150 @@ abstract class AppLocalizations {
   /// In vi, this message translates to:
   /// **'Không thể tạo hồ sơ. Vui lòng thử lại.'**
   String get errorProfileCreation;
+
+  /// No description provided for @gameType.
+  ///
+  /// In vi, this message translates to:
+  /// **'Trò chơi'**
+  String get gameType;
+
+  /// No description provided for @maximumPlayers.
+  ///
+  /// In vi, this message translates to:
+  /// **'Số người tối đa'**
+  String get maximumPlayers;
+
+  /// No description provided for @create.
+  ///
+  /// In vi, this message translates to:
+  /// **'TẠO PHÒNG'**
+  String get create;
+
+  /// No description provided for @join.
+  ///
+  /// In vi, this message translates to:
+  /// **'VÀO PHÒNG'**
+  String get join;
+
+  /// No description provided for @cancel.
+  ///
+  /// In vi, this message translates to:
+  /// **'HỦY'**
+  String get cancel;
+
+  /// No description provided for @enterRoomCode.
+  ///
+  /// In vi, this message translates to:
+  /// **'NHẬP MÃ PHÒNG'**
+  String get enterRoomCode;
+
+  /// No description provided for @roomCode.
+  ///
+  /// In vi, this message translates to:
+  /// **'Mã phòng'**
+  String get roomCode;
+
+  /// No description provided for @roomCodeHint.
+  ///
+  /// In vi, this message translates to:
+  /// **'Nhập mã gồm 6 ký tự do chủ phòng chia sẻ.'**
+  String get roomCodeHint;
+
+  /// No description provided for @waitingRoom.
+  ///
+  /// In vi, this message translates to:
+  /// **'PHÒNG CHỜ'**
+  String get waitingRoom;
+
+  /// No description provided for @players.
+  ///
+  /// In vi, this message translates to:
+  /// **'Người chơi'**
+  String get players;
+
+  /// No description provided for @host.
+  ///
+  /// In vi, this message translates to:
+  /// **'Chủ phòng'**
+  String get host;
+
+  /// No description provided for @leaveRoom.
+  ///
+  /// In vi, this message translates to:
+  /// **'RỜI PHÒNG'**
+  String get leaveRoom;
+
+  /// No description provided for @roomCodeValue.
+  ///
+  /// In vi, this message translates to:
+  /// **'Mã phòng {code}'**
+  String roomCodeValue(String code);
+
+  /// No description provided for @capacity.
+  ///
+  /// In vi, this message translates to:
+  /// **'{current}/{maximum}'**
+  String capacity(int current, int maximum);
+
+  /// No description provided for @errorInvalidRoomCode.
+  ///
+  /// In vi, this message translates to:
+  /// **'Mã phòng phải gồm đúng 6 ký tự hợp lệ.'**
+  String get errorInvalidRoomCode;
+
+  /// No description provided for @errorRoomNotFound.
+  ///
+  /// In vi, this message translates to:
+  /// **'Không tìm thấy phòng.'**
+  String get errorRoomNotFound;
+
+  /// No description provided for @errorRoomClosed.
+  ///
+  /// In vi, this message translates to:
+  /// **'Phòng này đã đóng.'**
+  String get errorRoomClosed;
+
+  /// No description provided for @errorRoomFull.
+  ///
+  /// In vi, this message translates to:
+  /// **'Phòng đã đủ người.'**
+  String get errorRoomFull;
+
+  /// No description provided for @errorAlreadyInRoom.
+  ///
+  /// In vi, this message translates to:
+  /// **'Bạn đang ở trong một phòng khác.'**
+  String get errorAlreadyInRoom;
+
+  /// No description provided for @errorUnsupportedGameType.
+  ///
+  /// In vi, this message translates to:
+  /// **'Trò chơi này chưa được hỗ trợ.'**
+  String get errorUnsupportedGameType;
+
+  /// No description provided for @errorInvalidMaxPlayers.
+  ///
+  /// In vi, this message translates to:
+  /// **'Số người chơi phải từ 3 đến 10.'**
+  String get errorInvalidMaxPlayers;
+
+  /// No description provided for @errorProfileRequired.
+  ///
+  /// In vi, this message translates to:
+  /// **'Bạn cần hoàn tất hồ sơ trước khi vào phòng.'**
+  String get errorProfileRequired;
+
+  /// No description provided for @errorNotRoomMember.
+  ///
+  /// In vi, this message translates to:
+  /// **'Bạn không còn ở trong phòng này.'**
+  String get errorNotRoomMember;
+
+  /// No description provided for @errorRoomOperation.
+  ///
+  /// In vi, this message translates to:
+  /// **'Không thể xử lý phòng. Vui lòng thử lại.'**
+  String get errorRoomOperation;
 }
 
 class _AppLocalizationsDelegate

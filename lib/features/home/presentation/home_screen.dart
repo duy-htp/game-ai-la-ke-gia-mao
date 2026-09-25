@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../core/config/app_config.dart';
 import '../../../core/config/app_environment.dart';
 import '../../../core/localization/localization_extension.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/router/route_names.dart';
 import '../../auth/application/app_session_controller.dart';
 import '../../auth/application/app_session_state.dart';
 import '../../profile/domain/avatar_catalog.dart';
@@ -87,14 +89,15 @@ class HomeScreen extends ConsumerWidget {
                             const SizedBox(height: 40),
                             FilledButton.icon(
                               key: const Key('create-room-button'),
-                              onPressed: () => _showComingSoon(context),
+                              onPressed: () =>
+                                  context.go(RoutePaths.createRoom),
                               icon: const Icon(Icons.add_rounded),
                               label: Text(l10n.createRoom),
                             ),
                             const SizedBox(height: 14),
                             FilledButton.icon(
                               key: const Key('join-room-button'),
-                              onPressed: () => _showComingSoon(context),
+                              onPressed: () => context.go(RoutePaths.joinRoom),
                               style: FilledButton.styleFrom(
                                 backgroundColor: AppColors.navy800,
                                 foregroundColor: AppColors.textPrimary,
@@ -143,12 +146,6 @@ class HomeScreen extends ConsumerWidget {
         ],
       ),
     );
-  }
-
-  void _showComingSoon(BuildContext context) {
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(SnackBar(content: Text(context.l10n.comingSoon)));
   }
 }
 

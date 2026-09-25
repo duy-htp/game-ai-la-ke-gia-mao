@@ -42,5 +42,36 @@
   "errorUsernameTooLong": "The name cannot exceed 20 characters.",
   "errorUsernameInvalidCharacters": "The name contains unsupported characters.",
   "errorInvalidAvatar": "Choose a valid character.",
-  "errorProfileCreation": "Your profile could not be created. Please retry."
+  "errorProfileCreation": "Your profile could not be created. Please retry.",
+  "gameType": "Game",
+  "maximumPlayers": "Maximum players",
+  "create": "CREATE ROOM",
+  "join": "JOIN ROOM",
+  "cancel": "CANCEL",
+  "enterRoomCode": "ENTER ROOM CODE",
+  "roomCode": "Room code",
+  "roomCodeHint": "Enter the 6-character code shared by the host.",
+  "waitingRoom": "WAITING ROOM",
+  "players": "Players",
+  "host": "Host",
+  "leaveRoom": "LEAVE ROOM",
+  "roomCodeValue": "Room code {code}",
+  "@roomCodeValue": {"placeholders": {"code": {"type": "String"}}},
+  "capacity": "{current}/{maximum}",
+  "@capacity": {
+    "placeholders": {
+      "current": {"type": "int"},
+      "maximum": {"type": "int"}
+    }
+  },
+  "errorInvalidRoomCode": "The room code must contain exactly 6 valid characters.",
+  "errorRoomNotFound": "Room not found.",
+  "errorRoomClosed": "This room is closed.",
+  "errorRoomFull": "The room is full.",
+  "errorAlreadyInRoom": "You are already in another room.",
+  "errorUnsupportedGameType": "This game is not supported.",
+  "errorInvalidMaxPlayers": "Player capacity must be between 3 and 10.",
+  "errorProfileRequired": "Complete your profile before joining a room.",
+  "errorNotRoomMember": "You are no longer a member of this room.",
+  "errorRoomOperation": "The room request could not be completed. Please retry."
 }

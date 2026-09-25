@@ -46,6 +46,7 @@ Tools cũ:
 npx --yes supabase@latest start
 npx --yes supabase@latest db reset
 npx --yes supabase@latest test db
+supabase/tests/concurrency/room_join_race.sh
 npx --yes supabase@latest stop
 ```
 

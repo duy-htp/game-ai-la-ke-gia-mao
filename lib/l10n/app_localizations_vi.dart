@@ -121,4 +121,81 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get errorProfileCreation => 'Không thể tạo hồ sơ. Vui lòng thử lại.';
+
+  @override
+  String get gameType => 'Trò chơi';
+
+  @override
+  String get maximumPlayers => 'Số người tối đa';
+
+  @override
+  String get create => 'TẠO PHÒNG';
+
+  @override
+  String get join => 'VÀO PHÒNG';
+
+  @override
+  String get cancel => 'HỦY';
+
+  @override
+  String get enterRoomCode => 'NHẬP MÃ PHÒNG';
+
+  @override
+  String get roomCode => 'Mã phòng';
+
+  @override
+  String get roomCodeHint => 'Nhập mã gồm 6 ký tự do chủ phòng chia sẻ.';
+
+  @override
+  String get waitingRoom => 'PHÒNG CHỜ';
+
+  @override
+  String get players => 'Người chơi';
+
+  @override
+  String get host => 'Chủ phòng';
+
+  @override
+  String get leaveRoom => 'RỜI PHÒNG';
+
+  @override
+  String roomCodeValue(String code) {
+    return 'Mã phòng $code';
+  }
+
+  @override
+  String capacity(int current, int maximum) {
+    return '$current/$maximum';
+  }
+
+  @override
+  String get errorInvalidRoomCode => 'Mã phòng phải gồm đúng 6 ký tự hợp lệ.';
+
+  @override
+  String get errorRoomNotFound => 'Không tìm thấy phòng.';
+
+  @override
+  String get errorRoomClosed => 'Phòng này đã đóng.';
+
+  @override
+  String get errorRoomFull => 'Phòng đã đủ người.';
+
+  @override
+  String get errorAlreadyInRoom => 'Bạn đang ở trong một phòng khác.';
+
+  @override
+  String get errorUnsupportedGameType => 'Trò chơi này chưa được hỗ trợ.';
+
+  @override
+  String get errorInvalidMaxPlayers => 'Số người chơi phải từ 3 đến 10.';
+
+  @override
+  String get errorProfileRequired =>
+      'Bạn cần hoàn tất hồ sơ trước khi vào phòng.';
+
+  @override
+  String get errorNotRoomMember => 'Bạn không còn ở trong phòng này.';
+
+  @override
+  String get errorRoomOperation => 'Không thể xử lý phòng. Vui lòng thử lại.';
 }

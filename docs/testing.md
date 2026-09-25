@@ -35,3 +35,26 @@ npx --yes supabase@latest test db
 
 File `supabase/tests/database/profiles_rls_test.sql` có 22 pgTAP assertions cho
 RLS, grants, `auth.uid()`, economy defaults, validation và idempotency.
+
+## Milestone 3
+
+Flutter tests bao phủ RoomCode, safe snapshot parsing, typed RPC error mapping,
+create/join/leave controller, create idempotency key, startup restore, router
+guards, ba room screens, localization và viewport nhỏ.
+
+Room pgTAP tests kiểm tra schema constraints, code generation/uniqueness/reuse,
+create/join/leave idempotency, capacity, grants, privacy, history và host
+transfer. Chạy cùng profile tests bằng:
+
+```sh
+npx --yes supabase@latest test db
+```
+
+Race test dùng hai PostgreSQL connections thật cùng chờ một room-row lock:
+
+```sh
+supabase/tests/concurrency/room_join_race.sh
+```
+
+Kỳ vọng: đúng một join thành công, một join nhận `room_full`, member count và
+distinct active seats đều bằng capacity.
