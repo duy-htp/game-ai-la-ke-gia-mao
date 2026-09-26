@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'game_snapshot.dart';
 import 'player_game_secret.dart';
+import '../../room/domain/room_snapshot.dart';
 
 abstract interface class GameRepository {
   Future<GameSnapshot> startGame(String requestId);
@@ -12,6 +13,8 @@ abstract interface class GameRepository {
   Future<GameSnapshot> submitClue(String text);
   Future<GameSnapshot> setDiscussionReady(bool ready);
   Future<GameSnapshot> submitVote(String targetPlayerId);
+  Future<GameSnapshot> submitFinalGuess(String choiceId);
+  Future<RoomSnapshot> playAgain();
 }
 
 final gameRepositoryProvider = Provider<GameRepository?>((ref) => null);

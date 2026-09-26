@@ -425,4 +425,83 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get errorVoteExpired => 'Thời gian bỏ phiếu đã hết.';
+
+  @override
+  String get finalGuessTitle => 'ĐOÁN TỪ KHÓA';
+
+  @override
+  String get chooseKeyword => 'Chọn từ khóa bí mật';
+
+  @override
+  String waitingForFinalGuess(String username) {
+    return '$username đang đoán từ khóa...';
+  }
+
+  @override
+  String get finalGuessConfirmTitle => 'Câu trả lời cuối';
+
+  @override
+  String finalGuessConfirm(String choice) {
+    return 'Bạn chắc chắn chọn $choice?';
+  }
+
+  @override
+  String get gameResultTitle => 'KẾT QUẢ VÁN CHƠI';
+
+  @override
+  String get normalTeamWins => 'NGƯỜI THƯỜNG CHIẾN THẮNG!';
+
+  @override
+  String get impostorTeamWins => 'KẺ GIẢ MẠO CHIẾN THẮNG!';
+
+  @override
+  String resultKeyword(String keyword) {
+    return 'Từ khóa: $keyword';
+  }
+
+  @override
+  String get resultReasonNormalEliminated => 'Một Người Thường đã bị loại.';
+
+  @override
+  String get resultReasonGuessCorrect => 'Kẻ Giả Mạo đã đoán đúng từ khóa.';
+
+  @override
+  String get resultReasonGuessWrong => 'Kẻ Giả Mạo đã đoán sai từ khóa.';
+
+  @override
+  String get resultReasonGuessTimeout => 'Kẻ Giả Mạo đã hết thời gian.';
+
+  @override
+  String xpGained(int xp) {
+    return '+$xp XP';
+  }
+
+  @override
+  String coinsGained(int coins) {
+    return '+$coins xu';
+  }
+
+  @override
+  String newTotals(int level, int xp, int coins) {
+    return 'Cấp $level · $xp XP · $coins xu';
+  }
+
+  @override
+  String get playAgain => 'CHƠI LẠI';
+
+  @override
+  String get waitingForHost => 'Đang chờ chủ phòng...';
+
+  @override
+  String get errorNotGuessingPlayer =>
+      'Chỉ Kẻ Giả Mạo bị loại mới được đoán từ khóa.';
+
+  @override
+  String get errorInvalidGuessChoice => 'Lựa chọn này không hợp lệ.';
+
+  @override
+  String get errorFinalGuessSubmitted => 'Câu trả lời cuối đã được chốt.';
+
+  @override
+  String get errorFinalGuessExpired => 'Thời gian đoán từ khóa đã hết.';
 }

@@ -9,6 +9,7 @@ class GameParticipantSummary {
     required this.avatarId,
     required this.roleAcknowledged,
     required this.discussionReady,
+    this.role,
   });
   factory GameParticipantSummary.fromJson(Map<String, Object?> json) {
     final value = GameParticipantSummary(
@@ -17,6 +18,7 @@ class GameParticipantSummary {
       avatarId: json['avatar_id']! as String,
       roleAcknowledged: json['role_acknowledged'] as bool? ?? false,
       discussionReady: json['discussion_ready'] as bool? ?? false,
+      role: json['role'] as String?,
     );
     if (value.playerId.isEmpty ||
         value.username.isEmpty ||
@@ -30,6 +32,129 @@ class GameParticipantSummary {
   final String avatarId;
   final bool roleAcknowledged;
   final bool discussionReady;
+  final String? role;
+}
+
+class FinalGuessChoice {
+  const FinalGuessChoice({
+    required this.choiceId,
+    required this.wordVi,
+    required this.wordEn,
+  });
+  factory FinalGuessChoice.fromJson(Map<String, Object?> json) =>
+      FinalGuessChoice(
+        choiceId: json['choice_id']! as String,
+        wordVi: json['word_vi']! as String,
+        wordEn: json['word_en']! as String,
+      );
+  final String choiceId;
+  final String wordVi;
+  final String wordEn;
+  String localized(String languageCode) =>
+      languageCode == 'vi' ? wordVi : wordEn;
+}
+
+class FinalGuessSnapshot {
+  const FinalGuessSnapshot({
+    required this.guessingPlayerId,
+    required this.choices,
+    required this.hasSubmitted,
+    this.selectedChoiceId,
+    this.isCorrect,
+    required this.timedOut,
+  });
+  factory FinalGuessSnapshot.fromJson(Map<String, Object?> json) =>
+      FinalGuessSnapshot(
+        guessingPlayerId: json['guessing_player_id']! as String,
+        choices: (json['choices'] as List<Object?>? ?? const [])
+            .map(
+              (e) => FinalGuessChoice.fromJson(
+                Map<String, Object?>.from(e! as Map),
+              ),
+            )
+            .toList(growable: false),
+        hasSubmitted: json['has_submitted']! as bool,
+        selectedChoiceId: json['selected_choice_id'] as String?,
+        isCorrect: json['is_correct'] as bool?,
+        timedOut: json['timed_out'] as bool? ?? false,
+      );
+  final String guessingPlayerId;
+  final List<FinalGuessChoice> choices;
+  final bool hasSubmitted;
+  final String? selectedChoiceId;
+  final bool? isCorrect;
+  final bool timedOut;
+}
+
+enum WinnerTeam {
+  normal,
+  impostor;
+
+  static WinnerTeam parse(String v) => v == 'normal' ? normal : impostor;
+}
+
+enum GameResultReason {
+  normalEliminated,
+  impostorFinalGuessCorrect,
+  impostorFinalGuessWrong,
+  impostorFinalGuessTimeout;
+
+  static GameResultReason parse(String value) => switch (value) {
+    'normal_eliminated' => normalEliminated,
+    'impostor_final_guess_correct' => impostorFinalGuessCorrect,
+    'impostor_final_guess_wrong' => impostorFinalGuessWrong,
+    'impostor_final_guess_timeout' => impostorFinalGuessTimeout,
+    _ => throw const FormatException('Unsupported game result reason'),
+  };
+}
+
+class RewardSummary {
+  const RewardSummary({
+    required this.xpGained,
+    required this.coinsGained,
+    required this.newXp,
+    required this.newCoins,
+    required this.newLevel,
+  });
+  factory RewardSummary.fromJson(Map<String, Object?> j) => RewardSummary(
+    xpGained: j['xp_gained']! as int,
+    coinsGained: j['coins_gained']! as int,
+    newXp: j['new_xp']! as int,
+    newCoins: j['new_coins']! as int,
+    newLevel: j['new_level']! as int,
+  );
+  final int xpGained, coinsGained, newXp, newCoins, newLevel;
+}
+
+class GameResultSnapshot {
+  const GameResultSnapshot({
+    required this.winnerTeam,
+    required this.reason,
+    required this.keywordVi,
+    required this.keywordEn,
+    required this.eliminatedPlayerId,
+    required this.finishedAt,
+    required this.reward,
+  });
+  factory GameResultSnapshot.fromJson(Map<String, Object?> j) =>
+      GameResultSnapshot(
+        winnerTeam: WinnerTeam.parse(j['winner_team']! as String),
+        reason: GameResultReason.parse(j['reason']! as String),
+        keywordVi: j['keyword_vi']! as String,
+        keywordEn: j['keyword_en']! as String,
+        eliminatedPlayerId: j['eliminated_player_id']! as String,
+        finishedAt: DateTime.parse(j['finished_at']! as String),
+        reward: RewardSummary.fromJson(
+          Map<String, Object?>.from(j['reward']! as Map),
+        ),
+      );
+  final WinnerTeam winnerTeam;
+  final GameResultReason reason;
+  final String keywordVi, keywordEn, eliminatedPlayerId;
+  final DateTime finishedAt;
+  final RewardSummary reward;
+  String localizedKeyword(String languageCode) =>
+      languageCode == 'vi' ? keywordVi : keywordEn;
 }
 
 class VoteResultEntry {
@@ -152,6 +277,8 @@ class GameSnapshot {
     required this.serverNow,
     required this.turns,
     this.voting,
+    this.finalGuess,
+    this.result,
   });
   factory GameSnapshot.fromJson(Map<String, Object?> json) {
     try {
@@ -187,6 +314,16 @@ class GameSnapshot {
             : VotingSnapshot.fromJson(
                 Map<String, Object?>.from(json['voting']! as Map),
               ),
+        finalGuess: json['final_guess'] == null
+            ? null
+            : FinalGuessSnapshot.fromJson(
+                Map<String, Object?>.from(json['final_guess']! as Map),
+              ),
+        result: json['result'] == null
+            ? null
+            : GameResultSnapshot.fromJson(
+                Map<String, Object?>.from(json['result']! as Map),
+              ),
       );
     } catch (error) {
       if (error is AppError) rethrow;
@@ -204,6 +341,8 @@ class GameSnapshot {
   final DateTime serverNow;
   final List<GameTurnSnapshot> turns;
   final VotingSnapshot? voting;
+  final FinalGuessSnapshot? finalGuess;
+  final GameResultSnapshot? result;
 
   GameTurnSnapshot? get activeTurn {
     for (final turn in turns) {

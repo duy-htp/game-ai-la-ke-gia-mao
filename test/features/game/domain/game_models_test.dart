@@ -82,4 +82,72 @@ void main() {
     });
     expect(secret.role, PlayerRole.impostor);
   });
+
+  test('parses opaque final guess choices without correctness metadata', () {
+    final game = GameSnapshot.fromJson({
+      'game_id': 'g1',
+      'room_id': 'r1',
+      'round_number': 1,
+      'status': 'final_guess',
+      'phase_started_at': '2026-09-25T00:00:00Z',
+      'phase_ends_at': '2026-09-25T00:00:20Z',
+      'revision': 9,
+      'participants': [
+        {'player_id': 'p1', 'username': 'An', 'avatar_id': 'avatar_01'},
+      ],
+      'final_guess': {
+        'guessing_player_id': 'p1',
+        'choices': [
+          {
+            'choice_id': 'opaque-1',
+            'word_vi': 'Dưa hấu',
+            'word_en': 'Watermelon',
+          },
+        ],
+        'has_submitted': false,
+        'timed_out': false,
+      },
+    });
+    expect(game.finalGuess!.choices.single.choiceId, 'opaque-1');
+    expect(game.finalGuess!.choices.single.localized('en'), 'Watermelon');
+    expect(game.finalGuess!.isCorrect, isNull);
+  });
+
+  test('parses typed result reason and caller-only reward summary', () {
+    final game = GameSnapshot.fromJson({
+      'game_id': 'g1',
+      'room_id': 'r1',
+      'round_number': 1,
+      'status': 'result',
+      'phase_started_at': '2026-09-25T00:00:00Z',
+      'phase_ends_at': null,
+      'revision': 10,
+      'participants': [
+        {
+          'player_id': 'p1',
+          'username': 'An',
+          'avatar_id': 'avatar_01',
+          'role': 'normal',
+        },
+      ],
+      'result': {
+        'winner_team': 'normal',
+        'reason': 'impostor_final_guess_wrong',
+        'keyword_vi': 'Dưa hấu',
+        'keyword_en': 'Watermelon',
+        'eliminated_player_id': 'p1',
+        'finished_at': '2026-09-25T00:01:00Z',
+        'reward': {
+          'xp_gained': 180,
+          'coins_gained': 20,
+          'new_xp': 680,
+          'new_coins': 40,
+          'new_level': 2,
+        },
+      },
+    });
+    expect(game.result!.winnerTeam, WinnerTeam.normal);
+    expect(game.result!.reason, GameResultReason.impostorFinalGuessWrong);
+    expect(game.result!.reward.newLevel, 2);
+  });
 }

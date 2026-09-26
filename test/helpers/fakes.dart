@@ -88,7 +88,10 @@ class FakeGameRepository implements GameRepository {
   int submitCalls = 0;
   int discussionReadyCalls = 0;
   int voteCalls = 0;
+  int finalGuessCalls = 0;
+  int playAgainCalls = 0;
   String? submittedText;
+  String? submittedChoiceId;
   @override
   Future<GameSnapshot> startGame(String requestId) async {
     startCalls++;
@@ -144,6 +147,21 @@ class FakeGameRepository implements GameRepository {
     voteCalls++;
     if (error case final value?) throw value;
     return currentGame ?? sampleGame;
+  }
+
+  @override
+  Future<GameSnapshot> submitFinalGuess(String choiceId) async {
+    finalGuessCalls++;
+    submittedChoiceId = choiceId;
+    if (error case final value?) throw value;
+    return currentGame ?? sampleGame;
+  }
+
+  @override
+  Future<RoomSnapshot> playAgain() async {
+    playAgainCalls++;
+    if (error case final value?) throw value;
+    return sampleRoom;
   }
 }
 

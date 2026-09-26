@@ -131,3 +131,19 @@ final class VoteAlreadySubmittedAppError extends AppError {
 final class VoteExpiredAppError extends AppError {
   const VoteExpiredAppError() : super('vote_expired');
 }
+
+final class NotGuessingPlayerAppError extends AppError {
+  const NotGuessingPlayerAppError() : super('not_guessing_player');
+}
+
+final class InvalidGuessChoiceAppError extends AppError {
+  const InvalidGuessChoiceAppError() : super('invalid_guess_choice');
+}
+
+final class FinalGuessSubmittedAppError extends AppError {
+  const FinalGuessSubmittedAppError() : super('final_guess_already_submitted');
+}
+
+final class FinalGuessExpiredAppError extends AppError {
+  const FinalGuessExpiredAppError() : super('final_guess_expired');
+}

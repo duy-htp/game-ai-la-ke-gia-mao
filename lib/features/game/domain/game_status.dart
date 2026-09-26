@@ -3,7 +3,9 @@ enum GameStatus {
   clue,
   discussion,
   voting,
-  voteResult;
+  voteResult,
+  finalGuess,
+  result;
 
   static GameStatus parse(String value) => switch (value) {
     'role_reveal' => GameStatus.roleReveal,
@@ -11,6 +13,8 @@ enum GameStatus {
     'discussion' => GameStatus.discussion,
     'voting' => GameStatus.voting,
     'vote_result' => GameStatus.voteResult,
+    'final_guess' => GameStatus.finalGuess,
+    'result' => GameStatus.result,
     _ => throw const FormatException('Unsupported game status'),
   };
 }

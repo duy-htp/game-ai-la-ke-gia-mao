@@ -1,8 +1,8 @@
 # AI LÀ KẺ GIẢ MẠO?
 
 Ứng dụng party game social-deduction đa nền tảng dành cho iOS và Android.
-Repository hiện hoàn thành **Milestone 3 — Private Rooms**. Realtime lobby,
-ready state và gameplay chưa được triển khai.
+Repository hiện hoàn thành **Milestone 8 — Complete Game Flow**: một ván đầy đủ
+từ lobby đến kết quả, reward và Chơi lại.
 
 ## Bắt đầu nhanh
 
@@ -67,5 +67,12 @@ chuyển sang Discussion.
 
 Discussion readiness, voting deadlines, private immutable ballots, aggregate
 results và tối đa một revote đều do database điều khiển. Tie vòng hai được chọn
-ngẫu nhiên bằng PostgreSQL secure randomness. Vote Result không tiết lộ role và
-là terminal phase; Final Guess thuộc Milestone 8.
+ngẫu nhiên bằng PostgreSQL secure randomness. Vote Result không tiết lộ role.
+
+## Milestone 8 — Final Guess, Result và Rewards
+
+Sau 5 giây hiển thị Vote Result, backend tự quyết định đi thẳng tới Result hoặc
+cho impostor bị loại 20 giây để chọn một trong bốn đáp án opaque đã persist.
+Winner, reward, level và stats đều được giải quyết atomically phía server với
+ledger idempotent. Result chỉ tiết lộ role/keyword cho participant; host có thể
+đưa chính room đó về Lobby bằng Chơi lại mà vẫn giữ settings và lịch sử.

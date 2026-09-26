@@ -158,3 +158,30 @@ Voting deadline cố định 30 giây; missing rows là abstention. Round 1 tie 
 `vote_result` 5 giây rồi round 2 chỉ với tied leaders. Tie vòng 2 chọn một tied
 candidate bằng `gen_random_bytes`; chỉ aggregate counts và cờ random-resolution
 được public, individual ballots không bao giờ được trả.
+
+## Final Guess, result and rewards
+
+`final_guess_options` persist đúng bốn concept: keyword thật và ba concept active
+khác, ưu tiên cùng category rồi fallback category khác. Thứ tự được random bằng
+crypto bytes; raw `word_id` không có grant. Projection trả UUID lựa chọn opaque
+và text VI/EN chỉ cho impostor bị loại. `final_guesses` unique theo game/player;
+retry cùng lựa chọn idempotent, lựa chọn khác bị từ chối.
+
+Sau Vote Result 5 giây, normal bị loại cho impostor thắng ngay; impostor bị loại
+có 20 giây Final Guess. Đúng thì impostor thắng, sai/timeout thì normal thắng.
+Luật này kết thúc ván kể cả cấu hình có hai impostor; chỉ impostor bị loại được
+đoán.
+
+`games.winner_team`, `result_reason`, `finished_at` persist kết quả. Private
+resolution khóa game row, ghi result, insert `game_rewards` unique
+`(game_id, player_id)`, cập nhật profile và stats trong cùng transaction. Reward:
+mọi người +10 coin, đội thắng thêm +10; normal +100 khi bắt được impostor, +30
+nếu ballot vòng quyết định nhắm bất kỳ impostor nào, +50 khi đội normal thắng;
+mỗi impostor +150 khi normal bị loại; chỉ impostor đoán đúng nhận +120. Level là
+`floor(total_xp / 500) + 1`. Stats gồm games played/won, normal/impostor wins và
+correct votes; client không có quyền sửa economy, ledger hay result.
+
+`play_again()` chỉ host gọi được. Nó khóa room/game, chuyển `in_game → waiting`,
+reset ready của non-host và tăng revision nhưng giữ members, settings cùng toàn
+bộ history. Retry khi đã waiting trả cùng lobby; lần start kế tiếp dùng round
+number lớn nhất + 1.

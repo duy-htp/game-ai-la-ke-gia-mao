@@ -4,6 +4,7 @@ import '../../../core/errors/app_error.dart';
 import '../domain/game_repository.dart';
 import '../domain/game_snapshot.dart';
 import '../domain/player_game_secret.dart';
+import '../../room/domain/room_snapshot.dart';
 
 class SupabaseGameRepository implements GameRepository {
   SupabaseGameRepository(this._client);
@@ -62,6 +63,22 @@ class SupabaseGameRepository implements GameRepository {
   Future<GameSnapshot> submitVote(String targetPlayerId) =>
       _gameRpc('submit_vote', params: {'p_target_player_id': targetPlayerId});
 
+  @override
+  Future<GameSnapshot> submitFinalGuess(String choiceId) =>
+      _gameRpc('submit_final_guess', params: {'p_choice_id': choiceId});
+
+  @override
+  Future<RoomSnapshot> playAgain() async {
+    try {
+      final value = await _client.rpc<Object?>('play_again');
+      if (value is! Map) throw const GameOperationAppError();
+      return RoomSnapshot.fromJson(Map<String, Object?>.from(value));
+    } catch (error) {
+      if (error is AppError) rethrow;
+      throw const GameOperationAppError();
+    }
+  }
+
   Future<GameSnapshot> _gameRpc(
     String name, {
     Map<String, Object?>? params,
@@ -84,6 +101,10 @@ class SupabaseGameRepository implements GameRepository {
         'self_vote_not_allowed' => const SelfVoteAppError(),
         'vote_already_submitted' => const VoteAlreadySubmittedAppError(),
         'vote_expired' => const VoteExpiredAppError(),
+        'not_guessing_player' => const NotGuessingPlayerAppError(),
+        'invalid_guess_choice' => const InvalidGuessChoiceAppError(),
+        'final_guess_already_submitted' => const FinalGuessSubmittedAppError(),
+        'final_guess_expired' => const FinalGuessExpiredAppError(),
         _ => const GameOperationAppError(),
       };
     } catch (_) {

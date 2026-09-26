@@ -11,11 +11,8 @@ waiting lobby
        └─ role_reveal
 ```
 
-Milestone 5 dừng tại `role_reveal`. Deadline 15 giây dùng server timestamp nhưng
-không tự chuyển phase. Các trạng thái `clue`, `discussion`, `voting`,
-`vote_result`, `final_guess`, `result` được dành chỗ trong constraint nhưng
-chưa có transition/RPC/UI và **NOT IMPLEMENTED YET**. Milestone 6 sẽ bổ sung
-transition authoritative từ `role_reveal` sang `clue`.
+Deadline và transition đều dựa vào server timestamp; client timer chỉ hiển thị
+và gọi RPC advance idempotent.
 
 ## Milestone 6
 
@@ -38,6 +35,19 @@ vote_result tie round 1 -- 5s due --> voting round 2
 voting round 2 ---------------------> vote_result (unique or random tie-break)
 ```
 
-Unique result và round-2 result là terminal trong M7. Abstention không tạo ballot
-giả. Mỗi action khóa game/round row; không thể có active rounds song song hoặc
-round thứ ba. Final Guess và role reveal sau elimination chưa được triển khai.
+Abstention không tạo ballot giả. Mỗi action khóa game/round row; không thể có
+active rounds song song hoặc round thứ ba.
+
+## Milestone 8
+
+```text
+vote_result -- 5s, normal eliminated ----> result (impostor win)
+vote_result -- 5s, impostor eliminated --> final_guess
+final_guess -- correct ------------------> result (impostor win)
+final_guess -- wrong / 20s timeout ------> result (normal win)
+result -- host play_again ---------------> waiting lobby
+```
+
+Một ván kết thúc sau đúng một elimination, kể cả có hai impostor. Winner, reason,
+ledger, profile totals và stats được ghi atomically. Play Again không xóa ván;
+ván kế tiếp tăng `round_number` đơn điệu.

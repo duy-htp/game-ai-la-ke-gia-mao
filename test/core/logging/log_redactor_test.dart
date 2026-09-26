@@ -14,6 +14,9 @@ void main() {
       'word_en': 'Watermelon',
       'clue_text': 'Mùa hè',
       'target_id': 'private-ballot-target',
+      'choice_id': 'private-choice',
+      'xp_delta': 999,
+      'new_coins': 999,
       'room_code': 'ABC23',
     });
 
@@ -29,6 +32,9 @@ void main() {
       'word_en',
       'clue_text',
       'target_id',
+      'choice_id',
+      'xp_delta',
+      'new_coins',
     ]) {
       expect(result[key], '[REDACTED]');
     }

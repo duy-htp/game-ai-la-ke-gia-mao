@@ -41,6 +41,24 @@ class GamePhaseController extends Notifier<GamePhaseActionState> {
   Future<void> submitVote(String targetPlayerId) =>
       _perform((repository) => repository.submitVote(targetPlayerId));
 
+  Future<void> submitFinalGuess(String choiceId) =>
+      _perform((repository) => repository.submitFinalGuess(choiceId));
+
+  Future<void> playAgain() async {
+    if (state is GamePhaseSubmitting) return;
+    final repository = ref.read(gameRepositoryProvider);
+    if (repository == null) return;
+    state = const GamePhaseSubmitting();
+    try {
+      final room = await repository.playAgain();
+      ref.read(appSessionControllerProvider.notifier).setRoom(room);
+      ref.read(appSessionControllerProvider.notifier).setGame(null);
+      state = const GamePhaseIdle();
+    } on AppError catch (error) {
+      state = GamePhaseFailure(error);
+    }
+  }
+
   Future<void> advanceIfDue() async {
     if (_advancing) return;
     _advancing = true;

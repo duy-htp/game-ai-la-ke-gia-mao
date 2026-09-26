@@ -429,4 +429,85 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorVoteExpired => 'Voting time has expired.';
+
+  @override
+  String get finalGuessTitle => 'FINAL GUESS';
+
+  @override
+  String get chooseKeyword => 'Choose the secret keyword';
+
+  @override
+  String waitingForFinalGuess(String username) {
+    return '$username is guessing the keyword...';
+  }
+
+  @override
+  String get finalGuessConfirmTitle => 'Final answer';
+
+  @override
+  String finalGuessConfirm(String choice) {
+    return 'Are you sure you choose $choice?';
+  }
+
+  @override
+  String get gameResultTitle => 'GAME RESULT';
+
+  @override
+  String get normalTeamWins => 'NORMAL TEAM WINS!';
+
+  @override
+  String get impostorTeamWins => 'IMPOSTOR TEAM WINS!';
+
+  @override
+  String resultKeyword(String keyword) {
+    return 'Keyword: $keyword';
+  }
+
+  @override
+  String get resultReasonNormalEliminated => 'A normal player was eliminated.';
+
+  @override
+  String get resultReasonGuessCorrect =>
+      'The Impostor guessed the keyword correctly.';
+
+  @override
+  String get resultReasonGuessWrong =>
+      'The Impostor\'s final guess was incorrect.';
+
+  @override
+  String get resultReasonGuessTimeout => 'The Impostor ran out of time.';
+
+  @override
+  String xpGained(int xp) {
+    return '+$xp XP';
+  }
+
+  @override
+  String coinsGained(int coins) {
+    return '+$coins coins';
+  }
+
+  @override
+  String newTotals(int level, int xp, int coins) {
+    return 'Level $level · $xp XP · $coins coins';
+  }
+
+  @override
+  String get playAgain => 'PLAY AGAIN';
+
+  @override
+  String get waitingForHost => 'Waiting for the host...';
+
+  @override
+  String get errorNotGuessingPlayer =>
+      'Only the eliminated impostor may make the final guess.';
+
+  @override
+  String get errorInvalidGuessChoice => 'That choice is not valid.';
+
+  @override
+  String get errorFinalGuessSubmitted => 'The final guess is already locked.';
+
+  @override
+  String get errorFinalGuessExpired => 'Final Guess time has expired.';
 }

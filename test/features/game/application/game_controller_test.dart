@@ -99,4 +99,32 @@ void main() {
     expect(games.discussionReadyCalls, 1);
     expect(games.voteCalls, 1);
   });
+
+  test(
+    'final guess delegates opaque choice to authoritative repository',
+    () async {
+      final games = FakeGameRepository(currentGame: sampleGame);
+      final container = makeContainer(games);
+      addTearDown(container.dispose);
+      await container.read(appSessionControllerProvider.notifier).initialize();
+      await container
+          .read(gamePhaseControllerProvider.notifier)
+          .submitFinalGuess('opaque-choice');
+      expect(games.finalGuessCalls, 1);
+      expect(games.submittedChoiceId, 'opaque-choice');
+    },
+  );
+
+  test('play again applies lobby and clears completed game', () async {
+    final games = FakeGameRepository(currentGame: sampleGame);
+    final container = makeContainer(games);
+    addTearDown(container.dispose);
+    await container.read(appSessionControllerProvider.notifier).initialize();
+    await container.read(gamePhaseControllerProvider.notifier).playAgain();
+    final session =
+        container.read(appSessionControllerProvider) as AppSessionReady;
+    expect(games.playAgainCalls, 1);
+    expect(session.room, sampleRoom);
+    expect(session.game, isNull);
+  });
 }

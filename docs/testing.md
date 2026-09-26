@@ -90,3 +90,17 @@ Milestone 7 thêm `secure_voting_test.sql`, `voting_races.sh` và
 immutability/secrecy, abstention, unique result, first tie/revote, second tie
 random resolution, concurrent final actions, Realtime payload privacy và
 reconnect trước/sau vote.
+
+Milestone 8 thêm `complete_game_test.sql` với reward matrix, Final Guess privacy,
+winner/reason persistence, timeout, idempotency, stats, Play Again và round kế
+tiếp. Race và complete-game harness chạy bằng:
+
+```sh
+bash supabase/tests/concurrency/result_reward_races.sh
+dart run tool/complete_game_harness.dart <local-api-url> <publishable-key>
+```
+
+Concurrency xác minh hai advance, hai guess/reward resolution và hai Play Again
+không tạo bản ghi trùng. Harness ba client đi qua ba scenario: normal bị loại,
+impostor đoán sai và impostor đoán đúng; đồng thời kiểm tra reconnect, quyền đọc
+option/result/reward, economy mutation và hội tụ về Lobby.

@@ -41,6 +41,10 @@ abstract final class ErrorMessageMapper {
       SelfVoteAppError() => localizations.errorSelfVote,
       VoteAlreadySubmittedAppError() => localizations.errorVoteAlreadySubmitted,
       VoteExpiredAppError() => localizations.errorVoteExpired,
+      NotGuessingPlayerAppError() => localizations.errorNotGuessingPlayer,
+      InvalidGuessChoiceAppError() => localizations.errorInvalidGuessChoice,
+      FinalGuessSubmittedAppError() => localizations.errorFinalGuessSubmitted,
+      FinalGuessExpiredAppError() => localizations.errorFinalGuessExpired,
     };
   }
 }

@@ -15,6 +15,8 @@ import 'package:ai_la_ke_gia_mao/features/game/presentation/clue_screen.dart';
 import 'package:ai_la_ke_gia_mao/features/game/presentation/discussion_screen.dart';
 import 'package:ai_la_ke_gia_mao/features/game/presentation/voting_screen.dart';
 import 'package:ai_la_ke_gia_mao/features/game/presentation/vote_result_screen.dart';
+import 'package:ai_la_ke_gia_mao/features/game/presentation/final_guess_screen.dart';
+import 'package:ai_la_ke_gia_mao/features/game/presentation/game_result_screen.dart';
 import 'package:ai_la_ke_gia_mao/features/game/domain/game_status.dart';
 import 'package:ai_la_ke_gia_mao/features/room/domain/room_snapshot.dart';
 import 'package:flutter/material.dart';
@@ -265,5 +267,90 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
     expect(find.byKey(VoteResultScreen.screenKey), findsOneWidget);
+  });
+
+  testWidgets(
+    'server final guess phase shows choices only to guessing player',
+    (tester) async {
+      final game = GameSnapshot(
+        gameId: sampleGame.gameId,
+        roomId: sampleGame.roomId,
+        roundNumber: 1,
+        status: GameStatus.finalGuess,
+        phaseStartedAt: sampleGame.phaseStartedAt,
+        phaseEndsAt: sampleGame.phaseEndsAt,
+        revision: 11,
+        participants: sampleGame.participants,
+        serverNow: sampleGame.serverNow,
+        turns: const [],
+        finalGuess: FinalGuessSnapshot(
+          guessingPlayerId: sampleProfile.id,
+          choices: const [
+            FinalGuessChoice(
+              choiceId: 'opaque-choice',
+              wordVi: 'Dưa hấu',
+              wordEn: 'Watermelon',
+            ),
+          ],
+          hasSubmitted: false,
+          timedOut: false,
+        ),
+      );
+      await tester.pumpWidget(_testApp(room: sampleRoom, game: game));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+      expect(find.byKey(FinalGuessScreen.screenKey), findsOneWidget);
+      expect(find.text('Dưa hấu'), findsOneWidget);
+      await tester.tap(find.text('Dưa hấu'));
+      await tester.pumpAndSettle();
+      expect(find.text('Bạn chắc chắn chọn Dưa hấu?'), findsOneWidget);
+    },
+  );
+
+  testWidgets('server result phase renders authoritative winner and reward', (
+    tester,
+  ) async {
+    final game = GameSnapshot(
+      gameId: sampleGame.gameId,
+      roomId: sampleGame.roomId,
+      roundNumber: 1,
+      status: GameStatus.result,
+      phaseStartedAt: sampleGame.phaseStartedAt,
+      phaseEndsAt: null,
+      revision: 12,
+      participants: [
+        GameParticipantSummary(
+          playerId: sampleProfile.id,
+          username: sampleProfile.username,
+          avatarId: sampleProfile.avatarId,
+          roleAcknowledged: true,
+          discussionReady: true,
+          role: 'normal',
+        ),
+      ],
+      serverNow: sampleGame.serverNow,
+      turns: const [],
+      result: GameResultSnapshot(
+        winnerTeam: WinnerTeam.normal,
+        reason: GameResultReason.impostorFinalGuessWrong,
+        keywordVi: 'Dưa hấu',
+        keywordEn: 'Watermelon',
+        eliminatedPlayerId: sampleProfile.id,
+        finishedAt: sampleGame.phaseStartedAt,
+        reward: const RewardSummary(
+          xpGained: 180,
+          coinsGained: 20,
+          newXp: 180,
+          newCoins: 20,
+          newLevel: 1,
+        ),
+      ),
+    );
+    await tester.pumpWidget(_testApp(room: sampleRoom, game: game));
+    await tester.pumpAndSettle();
+    expect(find.byKey(GameResultScreen.screenKey), findsOneWidget);
+    expect(find.text('NGƯỜI THƯỜNG CHIẾN THẮNG!'), findsOneWidget);
+    expect(find.text('+180 XP'), findsOneWidget);
+    expect(find.byKey(const Key('play-again')), findsOneWidget);
   });
 }

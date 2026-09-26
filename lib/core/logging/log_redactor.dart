@@ -14,6 +14,15 @@ abstract final class LogRedactor {
     'clue_text',
     'target_id',
     'p_target_player_id',
+    'choice_id',
+    'p_choice_id',
+    'word_id',
+    'xp_delta',
+    'coins_delta',
+    'resulting_xp',
+    'resulting_coins',
+    'new_xp',
+    'new_coins',
   };
 
   static Map<String, Object?> redact(

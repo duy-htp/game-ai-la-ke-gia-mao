@@ -88,3 +88,16 @@ Realtime tiếp tục là invalidation không chứa voter/target. Snapshot acti
 chỉ có candidate list, `N/total` và cờ caller-specific `currentUserHasVoted`.
 Router ánh xạ trực tiếp `discussion`, `voting`, `vote_result`; resume/reconnect
 khởi động lại room channel và refetch authoritative game.
+
+## Final Guess, result and economy boundary
+
+`GamePhaseController` chỉ gửi opaque `choice_id`, advance deadline và Play Again;
+không tính winner/reward. `FinalGuessSnapshot` chỉ chứa bốn lựa chọn cho đúng
+impostor bị loại; client khác nhận danh sách rỗng. `GameResultSnapshot` dùng enum
+typed cho winner/reason, role và keyword chỉ xuất hiện khi status là `result`, và
+reward summary chỉ thuộc caller hiện tại. Router ánh xạ `final_guess`/`result`
+trực tiếp từ snapshot.
+
+Realtime tiếp tục chỉ phát invalidation tối giản. Keyword, đáp án, winner,
+reward và economy totals không đi trong Broadcast. Resume/reconnect luôn refetch
+RPC; uniqueness trong database ngăn việc refetch hoặc retry cấp reward lần hai.

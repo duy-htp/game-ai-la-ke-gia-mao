@@ -871,6 +871,138 @@ abstract class AppLocalizations {
   /// In vi, this message translates to:
   /// **'Thời gian bỏ phiếu đã hết.'**
   String get errorVoteExpired;
+
+  /// No description provided for @finalGuessTitle.
+  ///
+  /// In vi, this message translates to:
+  /// **'ĐOÁN TỪ KHÓA'**
+  String get finalGuessTitle;
+
+  /// No description provided for @chooseKeyword.
+  ///
+  /// In vi, this message translates to:
+  /// **'Chọn từ khóa bí mật'**
+  String get chooseKeyword;
+
+  /// No description provided for @waitingForFinalGuess.
+  ///
+  /// In vi, this message translates to:
+  /// **'{username} đang đoán từ khóa...'**
+  String waitingForFinalGuess(String username);
+
+  /// No description provided for @finalGuessConfirmTitle.
+  ///
+  /// In vi, this message translates to:
+  /// **'Câu trả lời cuối'**
+  String get finalGuessConfirmTitle;
+
+  /// No description provided for @finalGuessConfirm.
+  ///
+  /// In vi, this message translates to:
+  /// **'Bạn chắc chắn chọn {choice}?'**
+  String finalGuessConfirm(String choice);
+
+  /// No description provided for @gameResultTitle.
+  ///
+  /// In vi, this message translates to:
+  /// **'KẾT QUẢ VÁN CHƠI'**
+  String get gameResultTitle;
+
+  /// No description provided for @normalTeamWins.
+  ///
+  /// In vi, this message translates to:
+  /// **'NGƯỜI THƯỜNG CHIẾN THẮNG!'**
+  String get normalTeamWins;
+
+  /// No description provided for @impostorTeamWins.
+  ///
+  /// In vi, this message translates to:
+  /// **'KẺ GIẢ MẠO CHIẾN THẮNG!'**
+  String get impostorTeamWins;
+
+  /// No description provided for @resultKeyword.
+  ///
+  /// In vi, this message translates to:
+  /// **'Từ khóa: {keyword}'**
+  String resultKeyword(String keyword);
+
+  /// No description provided for @resultReasonNormalEliminated.
+  ///
+  /// In vi, this message translates to:
+  /// **'Một Người Thường đã bị loại.'**
+  String get resultReasonNormalEliminated;
+
+  /// No description provided for @resultReasonGuessCorrect.
+  ///
+  /// In vi, this message translates to:
+  /// **'Kẻ Giả Mạo đã đoán đúng từ khóa.'**
+  String get resultReasonGuessCorrect;
+
+  /// No description provided for @resultReasonGuessWrong.
+  ///
+  /// In vi, this message translates to:
+  /// **'Kẻ Giả Mạo đã đoán sai từ khóa.'**
+  String get resultReasonGuessWrong;
+
+  /// No description provided for @resultReasonGuessTimeout.
+  ///
+  /// In vi, this message translates to:
+  /// **'Kẻ Giả Mạo đã hết thời gian.'**
+  String get resultReasonGuessTimeout;
+
+  /// No description provided for @xpGained.
+  ///
+  /// In vi, this message translates to:
+  /// **'+{xp} XP'**
+  String xpGained(int xp);
+
+  /// No description provided for @coinsGained.
+  ///
+  /// In vi, this message translates to:
+  /// **'+{coins} xu'**
+  String coinsGained(int coins);
+
+  /// No description provided for @newTotals.
+  ///
+  /// In vi, this message translates to:
+  /// **'Cấp {level} · {xp} XP · {coins} xu'**
+  String newTotals(int level, int xp, int coins);
+
+  /// No description provided for @playAgain.
+  ///
+  /// In vi, this message translates to:
+  /// **'CHƠI LẠI'**
+  String get playAgain;
+
+  /// No description provided for @waitingForHost.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đang chờ chủ phòng...'**
+  String get waitingForHost;
+
+  /// No description provided for @errorNotGuessingPlayer.
+  ///
+  /// In vi, this message translates to:
+  /// **'Chỉ Kẻ Giả Mạo bị loại mới được đoán từ khóa.'**
+  String get errorNotGuessingPlayer;
+
+  /// No description provided for @errorInvalidGuessChoice.
+  ///
+  /// In vi, this message translates to:
+  /// **'Lựa chọn này không hợp lệ.'**
+  String get errorInvalidGuessChoice;
+
+  /// No description provided for @errorFinalGuessSubmitted.
+  ///
+  /// In vi, this message translates to:
+  /// **'Câu trả lời cuối đã được chốt.'**
+  String get errorFinalGuessSubmitted;
+
+  /// No description provided for @errorFinalGuessExpired.
+  ///
+  /// In vi, this message translates to:
+  /// **'Thời gian đoán từ khóa đã hết.'**
+  String get errorFinalGuessExpired;
 }
 
 class _AppLocalizationsDelegate
