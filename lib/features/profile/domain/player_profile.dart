@@ -9,6 +9,11 @@ class PlayerProfile {
     required this.coins,
     required this.xp,
     required this.level,
+    this.gamesPlayed = 0,
+    this.gamesWon = 0,
+    this.normalWins = 0,
+    this.impostorWins = 0,
+    this.correctVotes = 0,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -22,6 +27,11 @@ class PlayerProfile {
         coins: json['coins']! as int,
         xp: json['xp']! as int,
         level: json['level']! as int,
+        gamesPlayed: json['games_played'] as int? ?? 0,
+        gamesWon: json['games_won'] as int? ?? 0,
+        normalWins: json['normal_wins'] as int? ?? 0,
+        impostorWins: json['impostor_wins'] as int? ?? 0,
+        correctVotes: json['correct_votes'] as int? ?? 0,
         createdAt: DateTime.parse(json['created_at']! as String),
         updatedAt: DateTime.parse(json['updated_at']! as String),
       );
@@ -30,7 +40,13 @@ class PlayerProfile {
           !AvatarCatalog.ids.contains(profile.avatarId) ||
           profile.coins < 0 ||
           profile.xp < 0 ||
-          profile.level < 1) {
+          profile.level < 1 ||
+          profile.gamesPlayed < 0 ||
+          profile.gamesWon < 0 ||
+          profile.gamesWon > profile.gamesPlayed ||
+          profile.normalWins + profile.impostorWins != profile.gamesWon ||
+          profile.correctVotes < 0 ||
+          profile.correctVotes > profile.gamesPlayed) {
         throw const FormatException('Invalid profile values');
       }
       return profile;
@@ -45,6 +61,50 @@ class PlayerProfile {
   final int coins;
   final int xp;
   final int level;
+  final int gamesPlayed;
+  final int gamesWon;
+  final int normalWins;
+  final int impostorWins;
+  final int correctVotes;
   final DateTime createdAt;
   final DateTime updatedAt;
+
+  int get xpIntoLevel => xp % 500;
+  double get xpProgress => xpIntoLevel / 500;
+  double get winRate => gamesPlayed == 0 ? 0 : gamesWon / gamesPlayed;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is PlayerProfile &&
+          id == other.id &&
+          username == other.username &&
+          avatarId == other.avatarId &&
+          coins == other.coins &&
+          xp == other.xp &&
+          level == other.level &&
+          gamesPlayed == other.gamesPlayed &&
+          gamesWon == other.gamesWon &&
+          normalWins == other.normalWins &&
+          impostorWins == other.impostorWins &&
+          correctVotes == other.correctVotes &&
+          createdAt == other.createdAt &&
+          updatedAt == other.updatedAt;
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    username,
+    avatarId,
+    coins,
+    xp,
+    level,
+    gamesPlayed,
+    gamesWon,
+    normalWins,
+    impostorWins,
+    correctVotes,
+    createdAt,
+    updatedAt,
+  );
 }

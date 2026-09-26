@@ -164,6 +164,64 @@ class AppLocalizationsEn extends AppLocalizations {
   String get errorRoomInGame => 'You can\'t leave while a game is in progress.';
 
   @override
+  String get profileTitle => 'PROFILE';
+
+  @override
+  String get editProfile => 'EDIT PROFILE';
+
+  @override
+  String get save => 'SAVE';
+
+  @override
+  String get statistics => 'STATISTICS';
+
+  @override
+  String get gamesPlayed => 'Games';
+
+  @override
+  String get gamesWon => 'Wins';
+
+  @override
+  String get normalWins => 'Normal wins';
+
+  @override
+  String get impostorWins => 'Impostor wins';
+
+  @override
+  String get correctVotes => 'Correct votes';
+
+  @override
+  String get winRateLabel => 'Win rate';
+
+  @override
+  String winRate(int percent) {
+    return 'Win rate: $percent%';
+  }
+
+  @override
+  String xpProgress(int current, int required) {
+    return '$current / $required XP';
+  }
+
+  @override
+  String get recentGames => 'RECENT GAMES';
+
+  @override
+  String get noGameHistory => 'No completed games yet.';
+
+  @override
+  String get historyWin => 'WIN';
+
+  @override
+  String get historyLoss => 'LOSS';
+
+  @override
+  String get loadMore => 'LOAD MORE';
+
+  @override
+  String get levelUp => 'LEVEL UP!';
+
+  @override
   String roomCodeValue(String code) {
     return 'Room code $code';
   }

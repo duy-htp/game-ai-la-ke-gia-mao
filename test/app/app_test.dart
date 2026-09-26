@@ -6,7 +6,9 @@ import 'package:ai_la_ke_gia_mao/features/auth/domain/auth_repository.dart';
 import 'package:ai_la_ke_gia_mao/features/home/presentation/home_screen.dart';
 import 'package:ai_la_ke_gia_mao/features/profile/domain/player_profile.dart';
 import 'package:ai_la_ke_gia_mao/features/profile/domain/profile_repository.dart';
+import 'package:ai_la_ke_gia_mao/features/profile/domain/game_history.dart';
 import 'package:ai_la_ke_gia_mao/features/profile/presentation/onboarding_screen.dart';
+import 'package:ai_la_ke_gia_mao/features/profile/presentation/profile_screen.dart';
 import 'package:ai_la_ke_gia_mao/features/room/domain/room_repository.dart';
 import 'package:ai_la_ke_gia_mao/features/game/domain/game_repository.dart';
 import 'package:ai_la_ke_gia_mao/features/game/domain/game_snapshot.dart';
@@ -30,6 +32,7 @@ Widget _testApp({
   PlayerProfile? profile,
   RoomSnapshot? room,
   GameSnapshot? game,
+  ProfileRepository? profiles,
 }) {
   return ProviderScope(
     overrides: [
@@ -42,7 +45,7 @@ Widget _testApp({
       ),
       authRepositoryProvider.overrideWithValue(FakeAuthRepository()),
       profileRepositoryProvider.overrideWithValue(
-        FakeProfileRepository(profile: profile ?? sampleProfile),
+        profiles ?? FakeProfileRepository(profile: profile ?? sampleProfile),
       ),
       roomRepositoryProvider.overrideWithValue(
         FakeRoomRepository(currentRoom: room),
@@ -89,6 +92,85 @@ void main() {
     expect(find.byKey(HomeScreen.screenKey), findsOneWidget);
     expect(find.byKey(const Key('game-title')), findsOneWidget);
   });
+
+  testWidgets('Home opens authoritative Profile with XP and empty history', (
+    tester,
+  ) async {
+    final profile = PlayerProfile(
+      id: sampleProfile.id,
+      username: 'Tên người chơi rất dài',
+      avatarId: 'avatar_01',
+      coins: 987654,
+      xp: 1850,
+      level: 4,
+      gamesPlayed: 4,
+      gamesWon: 2,
+      normalWins: 1,
+      impostorWins: 1,
+      correctVotes: 2,
+      createdAt: sampleProfile.createdAt,
+      updatedAt: sampleProfile.updatedAt,
+    );
+    await tester.pumpWidget(_testApp(profile: profile));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.byKey(const Key('profile-shortcut')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Hồ sơ'));
+    await tester.pumpAndSettle();
+    expect(find.byKey(ProfileScreen.screenKey), findsOneWidget);
+    expect(find.text('350 / 500 XP'), findsWidgets);
+    await tester.drag(find.byType(ListView).last, const Offset(0, -700));
+    await tester.pumpAndSettle();
+    expect(find.text('Chưa có ván hoàn thành.'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets(
+    'Profile renders private history and edit dialog on small screen',
+    (tester) async {
+      tester.view.physicalSize = const Size(360, 640);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      final profiles = FakeProfileRepository(profile: sampleProfile)
+        ..historyPage = GameHistoryPage(
+          items: [
+            GameHistoryItem(
+              gameId: 'g1',
+              roundNumber: 1,
+              finishedAt: DateTime.utc(2026, 9, 27),
+              winnerTeam: 'normal',
+              resultReason: 'impostor_final_guess_wrong',
+              callerRole: 'normal',
+              didWin: true,
+              keywordVi: 'Dưa hấu',
+              keywordEn: 'Watermelon',
+              categoryVi: 'Đồ ăn',
+              categoryEn: 'Food',
+              xpGained: 180,
+              coinsGained: 20,
+              playerCount: 3,
+            ),
+          ],
+        );
+      await tester.pumpWidget(_testApp(profiles: profiles));
+      await tester.pumpAndSettle();
+      await tester.ensureVisible(find.byKey(const Key('profile-shortcut')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Hồ sơ'));
+      await tester.pumpAndSettle();
+      await tester.drag(find.byType(ListView).last, const Offset(0, -700));
+      await tester.pumpAndSettle();
+      expect(find.text('THẮNG'), findsOneWidget);
+      expect(find.textContaining('+180 XP'), findsOneWidget);
+      await tester.ensureVisible(find.byKey(const Key('edit-profile')));
+      await tester.tap(find.byKey(const Key('edit-profile')));
+      await tester.pumpAndSettle();
+      expect(find.byKey(const Key('edit-username')), findsOneWidget);
+      expect(find.byKey(const Key('save-profile')), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    },
+  );
 
   testWidgets('router guard prevents bypassing onboarding', (tester) async {
     final container = ProviderContainer(

@@ -16,21 +16,25 @@ abstract final class ProfileInputValidator {
     required String avatarId,
   }) {
     final trimmedUsername = username.trim();
-    if (trimmedUsername.isEmpty) {
-      throw const InvalidUsernameAppError(UsernameErrorReason.blank);
-    }
-    if (trimmedUsername.runes.length < 2) {
-      throw const InvalidUsernameAppError(UsernameErrorReason.tooShort);
-    }
-    if (trimmedUsername.runes.length > 20) {
-      throw const InvalidUsernameAppError(UsernameErrorReason.tooLong);
-    }
     if (_controlCharacters.hasMatch(trimmedUsername)) {
       throw const InvalidUsernameAppError(UsernameErrorReason.controlCharacter);
+    }
+    final normalizedUsername = trimmedUsername.replaceAll(RegExp(r'\s+'), ' ');
+    if (normalizedUsername.isEmpty) {
+      throw const InvalidUsernameAppError(UsernameErrorReason.blank);
+    }
+    if (normalizedUsername.runes.length < 2) {
+      throw const InvalidUsernameAppError(UsernameErrorReason.tooShort);
+    }
+    if (normalizedUsername.runes.length > 20) {
+      throw const InvalidUsernameAppError(UsernameErrorReason.tooLong);
     }
     if (!AvatarCatalog.ids.contains(avatarId)) {
       throw const InvalidAvatarAppError();
     }
-    return ValidatedProfileInput(username: trimmedUsername, avatarId: avatarId);
+    return ValidatedProfileInput(
+      username: normalizedUsername,
+      avatarId: avatarId,
+    );
   }
 }

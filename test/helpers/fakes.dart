@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:ai_la_ke_gia_mao/features/auth/domain/auth_identity.dart';
 import 'package:ai_la_ke_gia_mao/features/auth/domain/auth_repository.dart';
 import 'package:ai_la_ke_gia_mao/features/profile/domain/player_profile.dart';
+import 'package:ai_la_ke_gia_mao/features/profile/domain/game_history.dart';
 import 'package:ai_la_ke_gia_mao/features/profile/domain/profile_repository.dart';
 import 'package:ai_la_ke_gia_mao/features/room/domain/game_type.dart';
 import 'package:ai_la_ke_gia_mao/features/room/domain/room_code.dart';
@@ -185,8 +186,11 @@ class FakeProfileRepository implements ProfileRepository {
   PlayerProfile? profile;
   final Object? fetchError;
   final Object? completeError;
+  GameHistoryPage historyPage = const GameHistoryPage(items: []);
+  Object? historyError;
   int fetchCalls = 0;
   int completeCalls = 0;
+  int updateCalls = 0;
   String? submittedUsername;
   String? submittedAvatarId;
 
@@ -207,6 +211,28 @@ class FakeProfileRepository implements ProfileRepository {
     submittedAvatarId = avatarId;
     if (completeError case final error?) throw error;
     return profile ?? sampleProfile;
+  }
+
+  @override
+  Future<PlayerProfile> updateProfile({
+    required String username,
+    required String avatarId,
+  }) async {
+    updateCalls++;
+    submittedUsername = username;
+    submittedAvatarId = avatarId;
+    if (completeError case final error?) throw error;
+    return profile ?? sampleProfile;
+  }
+
+  @override
+  Future<GameHistoryPage> fetchGameHistory({
+    int limit = 20,
+    DateTime? beforeFinishedAt,
+    String? beforeGameId,
+  }) async {
+    if (historyError case final error?) throw error;
+    return historyPage;
   }
 }
 

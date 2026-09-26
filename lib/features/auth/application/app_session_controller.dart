@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/config/app_config.dart';
 import '../../../core/errors/app_error.dart';
 import '../../profile/domain/profile_input_validator.dart';
+import '../../profile/domain/player_profile.dart';
 import '../../profile/domain/profile_repository.dart';
 import '../../room/domain/room_repository.dart';
 import '../../room/domain/room_snapshot.dart';
@@ -104,6 +105,14 @@ class AppSessionController extends Notifier<AppSessionState> {
         return;
       }
       state = AppSessionReady(current.profile, room: room, game: current.game);
+    }
+  }
+
+  void setProfile(PlayerProfile profile) {
+    final current = state;
+    if (current is AppSessionReady) {
+      if (current.profile == profile) return;
+      state = AppSessionReady(profile, room: current.room, game: current.game);
     }
   }
 

@@ -1,8 +1,8 @@
 # AI LÀ KẺ GIẢ MẠO?
 
 Ứng dụng party game social-deduction đa nền tảng dành cho iOS và Android.
-Repository hiện hoàn thành **Milestone 8 — Complete Game Flow**: một ván đầy đủ
-từ lobby đến kết quả, reward và Chơi lại.
+Repository hiện hoàn thành **Milestone 10 — Profile, Stats & Private History**:
+hồ sơ editable, thống kê authoritative và lịch sử riêng tư có phân trang.
 
 ## Bắt đầu nhanh
 
@@ -84,3 +84,11 @@ Realtime reconnect hoặc outcome mutation chưa chắc chắn. Refresh là sing
 có một follow-up coalesced; generation loại response cũ, revision không bao giờ
 lùi và deadline hội tụ bằng vòng advance giới hạn 16 bước. Presence vẫn chỉ là
 UX: mất mạng không xóa membership hay đổi host.
+
+## Milestone 10 — Profile, Stats & Private History
+
+Profile screen đọc profile/stats qua RPC caller-scoped, cho đổi username/avatar
+với cùng validation ở client và server, hiển thị XP/level/coins cùng sáu thống
+kê. Lịch sử chỉ trả các ván Result mà caller đã tham gia, dùng keyset pagination
+ổn định và reward lấy trực tiếp từ ledger. Sau Result hoặc khi recovery, client
+refetch profile authoritative; profile/economy tables vẫn không mở direct read.

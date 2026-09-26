@@ -118,3 +118,15 @@ RPC current-state bảo vệ khỏi invalidation của game cũ.
 Channel lifecycle là create → subscribe → replace khi room ID đổi → dispose khi
 không còn room/app dispose. Presence biến mất không đổi membership, host, turn,
 vote hoặc reward eligibility.
+
+## Profile, stats and private history
+
+`AppSessionReady.profile` là nguồn profile duy nhất cho UI. `ProfileController`
+validate rồi gọi update RPC; response không chắc chắn được reconcile bằng
+`get_my_profile()`. Profile refresh không tái tạo router. Khi game chuyển Result
+và trong recovery, controller đọc lại totals authoritative thay vì cộng reward
+ở client.
+
+`GameHistoryController` giữ danh sách riêng tư, trạng thái lỗi/loading và cursor
+`(finished_at, game_id)`. Pagination merge theo game ID để retry không nhân đôi.
+Widget chỉ render typed models; không query Supabase hay tính stats/winner.

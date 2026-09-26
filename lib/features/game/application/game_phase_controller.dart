@@ -1,11 +1,15 @@
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/errors/app_error.dart';
 import '../../../core/recovery/recovery_controller.dart';
 import '../../auth/application/app_session_controller.dart';
 import '../../auth/application/app_session_state.dart';
+import '../../profile/application/profile_controller.dart';
 import '../domain/game_snapshot.dart';
 import '../domain/game_repository.dart';
+import '../domain/game_status.dart';
 
 sealed class GamePhaseActionState {
   const GamePhaseActionState();
@@ -127,6 +131,9 @@ class GamePhaseController extends Notifier<GamePhaseActionState> {
       return;
     }
     ref.read(appSessionControllerProvider.notifier).setGame(game);
+    if (game.status == GameStatus.result) {
+      unawaited(ref.read(profileControllerProvider.notifier).refresh());
+    }
   }
 }
 

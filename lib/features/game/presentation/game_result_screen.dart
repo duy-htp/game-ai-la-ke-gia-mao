@@ -20,6 +20,8 @@ class GameResultScreen extends ConsumerWidget {
       Localizations.localeOf(context).languageCode,
     );
     final host = session.room?.hostId == session.profile.id;
+    final oldLevel =
+        ((result.reward.newXp - result.reward.xpGained) ~/ 500) + 1;
     final busy = ref.watch(gamePhaseControllerProvider) is GamePhaseSubmitting;
     return Scaffold(
       key: screenKey,
@@ -74,6 +76,12 @@ class GameResultScreen extends ConsumerWidget {
               ),
             ),
           ),
+          if (result.reward.newLevel > oldLevel)
+            Text(
+              context.l10n.levelUp,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.headlineSmall,
+            ),
           if (host)
             FilledButton(
               key: const Key('play-again'),

@@ -185,3 +185,18 @@ correct votes; client không có quyền sửa economy, ledger hay result.
 reset ready của non-host và tăng revision nhưng giữ members, settings cùng toàn
 bộ history. Retry khi đã waiting trả cùng lobby; lần start kế tiếp dùng round
 number lớn nhất + 1.
+
+## Profile RPC và private game history
+
+`get_my_profile()` và `update_my_profile(text,text)` không nhận player ID; identity
+luôn là `auth.uid()`. Update chỉ cho username/avatar, normalize whitespace, giới
+hạn 2–20 ký tự, chặn control character và kiểm tra avatar allowlist. Các CHECK
+constraint giữ `wins <= played`, tổng role wins bằng wins và correct votes không
+vượt games played.
+
+`get_my_game_history(limit,before_finished_at,before_game_id)` chỉ join những
+`game_players` của caller, chỉ game `result`, và lấy XP/coin từ `game_rewards`.
+Kết quả tối giản, sắp xếp `(finished_at,id) DESC`; hai cursor bắt buộc cùng có
+hoặc cùng null. Index theo player/game và partial Result history hỗ trợ truy vấn.
+Authenticated chỉ có EXECUTE các RPC cần thiết, không có direct SELECT/UPDATE
+profiles, game rewards hay stats.

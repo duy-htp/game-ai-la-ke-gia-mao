@@ -6,6 +6,7 @@ import '../../features/auth/application/app_session_state.dart';
 import '../../features/auth/presentation/startup_screen.dart';
 import '../../features/home/presentation/home_screen.dart';
 import '../../features/profile/presentation/onboarding_screen.dart';
+import '../../features/profile/presentation/profile_screen.dart';
 import '../../features/room/presentation/create_room_screen.dart';
 import '../../features/room/presentation/join_room_screen.dart';
 import '../../features/room/presentation/room_screen.dart';
@@ -20,7 +21,25 @@ import '../../features/game/domain/game_status.dart';
 import 'route_names.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
-  final sessionState = ref.watch(appSessionControllerProvider);
+  // Profile/stat refreshes must not recreate GoRouter and throw the user back
+  // to its initial location. Only routing-relevant session changes invalidate
+  // this provider.
+  ref.watch(
+    appSessionControllerProvider.select(
+      (value) => switch (value) {
+        AppSessionReady(:final room, :final game) => (
+          value.runtimeType,
+          room?.roomId,
+          room?.revision,
+          game?.gameId,
+          game?.revision,
+          game?.status,
+        ),
+        _ => (value.runtimeType, null, null, null, null, null),
+      },
+    ),
+  );
+  final sessionState = ref.read(appSessionControllerProvider);
   final router = GoRouter(
     initialLocation: RoutePaths.startup,
     redirect: (context, state) {
@@ -33,6 +52,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           RoutePaths.home ||
           RoutePaths.createRoom ||
           RoutePaths.joinRoom => null,
+          RoutePaths.profile => null,
           _ => RoutePaths.home,
         },
         AppSessionNeedsProfile() =>
@@ -60,6 +80,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         name: RouteNames.home,
         path: RoutePaths.home,
         builder: (context, state) => const HomeScreen(),
+      ),
+      GoRoute(
+        name: RouteNames.profile,
+        path: RoutePaths.profile,
+        builder: (context, state) => const ProfileScreen(),
       ),
       GoRoute(
         name: RouteNames.createRoom,

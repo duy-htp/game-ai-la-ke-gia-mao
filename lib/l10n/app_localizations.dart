@@ -380,6 +380,114 @@ abstract class AppLocalizations {
   /// **'Không thể rời phòng khi ván chơi đang diễn ra.'**
   String get errorRoomInGame;
 
+  /// No description provided for @profileTitle.
+  ///
+  /// In vi, this message translates to:
+  /// **'HỒ SƠ'**
+  String get profileTitle;
+
+  /// No description provided for @editProfile.
+  ///
+  /// In vi, this message translates to:
+  /// **'CHỈNH SỬA HỒ SƠ'**
+  String get editProfile;
+
+  /// No description provided for @save.
+  ///
+  /// In vi, this message translates to:
+  /// **'LƯU'**
+  String get save;
+
+  /// No description provided for @statistics.
+  ///
+  /// In vi, this message translates to:
+  /// **'THỐNG KÊ'**
+  String get statistics;
+
+  /// No description provided for @gamesPlayed.
+  ///
+  /// In vi, this message translates to:
+  /// **'Số ván'**
+  String get gamesPlayed;
+
+  /// No description provided for @gamesWon.
+  ///
+  /// In vi, this message translates to:
+  /// **'Chiến thắng'**
+  String get gamesWon;
+
+  /// No description provided for @normalWins.
+  ///
+  /// In vi, this message translates to:
+  /// **'Thắng Người Thường'**
+  String get normalWins;
+
+  /// No description provided for @impostorWins.
+  ///
+  /// In vi, this message translates to:
+  /// **'Thắng Kẻ Giả Mạo'**
+  String get impostorWins;
+
+  /// No description provided for @correctVotes.
+  ///
+  /// In vi, this message translates to:
+  /// **'Bình chọn đúng'**
+  String get correctVotes;
+
+  /// No description provided for @winRateLabel.
+  ///
+  /// In vi, this message translates to:
+  /// **'Tỷ lệ thắng'**
+  String get winRateLabel;
+
+  /// No description provided for @winRate.
+  ///
+  /// In vi, this message translates to:
+  /// **'Tỷ lệ thắng: {percent}%'**
+  String winRate(int percent);
+
+  /// No description provided for @xpProgress.
+  ///
+  /// In vi, this message translates to:
+  /// **'{current} / {required} XP'**
+  String xpProgress(int current, int required);
+
+  /// No description provided for @recentGames.
+  ///
+  /// In vi, this message translates to:
+  /// **'LỊCH SỬ GẦN ĐÂY'**
+  String get recentGames;
+
+  /// No description provided for @noGameHistory.
+  ///
+  /// In vi, this message translates to:
+  /// **'Chưa có ván hoàn thành.'**
+  String get noGameHistory;
+
+  /// No description provided for @historyWin.
+  ///
+  /// In vi, this message translates to:
+  /// **'THẮNG'**
+  String get historyWin;
+
+  /// No description provided for @historyLoss.
+  ///
+  /// In vi, this message translates to:
+  /// **'THUA'**
+  String get historyLoss;
+
+  /// No description provided for @loadMore.
+  ///
+  /// In vi, this message translates to:
+  /// **'TẢI THÊM'**
+  String get loadMore;
+
+  /// No description provided for @levelUp.
+  ///
+  /// In vi, this message translates to:
+  /// **'LÊN CẤP!'**
+  String get levelUp;
+
   /// No description provided for @roomCodeValue.
   ///
   /// In vi, this message translates to:

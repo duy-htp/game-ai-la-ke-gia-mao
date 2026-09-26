@@ -163,6 +163,64 @@ class AppLocalizationsVi extends AppLocalizations {
       'Không thể rời phòng khi ván chơi đang diễn ra.';
 
   @override
+  String get profileTitle => 'HỒ SƠ';
+
+  @override
+  String get editProfile => 'CHỈNH SỬA HỒ SƠ';
+
+  @override
+  String get save => 'LƯU';
+
+  @override
+  String get statistics => 'THỐNG KÊ';
+
+  @override
+  String get gamesPlayed => 'Số ván';
+
+  @override
+  String get gamesWon => 'Chiến thắng';
+
+  @override
+  String get normalWins => 'Thắng Người Thường';
+
+  @override
+  String get impostorWins => 'Thắng Kẻ Giả Mạo';
+
+  @override
+  String get correctVotes => 'Bình chọn đúng';
+
+  @override
+  String get winRateLabel => 'Tỷ lệ thắng';
+
+  @override
+  String winRate(int percent) {
+    return 'Tỷ lệ thắng: $percent%';
+  }
+
+  @override
+  String xpProgress(int current, int required) {
+    return '$current / $required XP';
+  }
+
+  @override
+  String get recentGames => 'LỊCH SỬ GẦN ĐÂY';
+
+  @override
+  String get noGameHistory => 'Chưa có ván hoàn thành.';
+
+  @override
+  String get historyWin => 'THẮNG';
+
+  @override
+  String get historyLoss => 'THUA';
+
+  @override
+  String get loadMore => 'TẢI THÊM';
+
+  @override
+  String get levelUp => 'LÊN CẤP!';
+
+  @override
   String roomCodeValue(String code) {
     return 'Mã phòng $code';
   }

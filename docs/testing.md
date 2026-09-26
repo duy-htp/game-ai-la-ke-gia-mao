@@ -130,3 +130,15 @@ SOAK_ROUNDS=25 dart run tool/complete_game_harness.dart <local-api-url> <publish
 Khi response mutation bị mất, recovery refetch snapshot thay vì kết luận thất
 bại. Automatic recovery được coalesce/bounded; không có connectivity plugin hay
 retry vô hạn.
+
+## Milestone 10
+
+`profile_history_test.sql` có 22 assertions cho caller-only profile/history,
+validation, cross-stat constraints, ordering/cursor, reward ledger consistency và
+direct-access denial. Flutter tests bao phủ model invariants, XP/win rate,
+normalization, save/refetch sau network outcome không chắc chắn, pagination
+dedupe/error retention và layout 360×640.
+
+Complete-game soak còn kiểm tra mỗi vòng rằng profile totals tăng đúng reward và
+history mới nhất khớp game/result. Chạy cùng lệnh Milestone 9; toàn bộ database
+suite chạy bằng `npx --yes supabase@latest test db`.

@@ -9,6 +9,7 @@ import '../../features/game/domain/game_snapshot.dart';
 import '../../features/room/application/room_realtime_controller.dart';
 import '../../features/room/domain/room_repository.dart';
 import '../../features/room/domain/room_status.dart';
+import '../../features/profile/domain/profile_repository.dart';
 
 enum RecoveryStatus { idle, recovering, failed }
 
@@ -88,7 +89,10 @@ class RecoveryController extends Notifier<RecoveryState> {
     if (current is! AppSessionReady) return;
     final rooms = ref.read(roomRepositoryProvider);
     final games = ref.read(gameRepositoryProvider);
-    if (rooms == null || games == null) return;
+    final profiles = ref.read(profileRepositoryProvider);
+    if (rooms == null || games == null || profiles == null) return;
+    final profile = await profiles.fetchOwnProfile();
+    if (generation != _generation || profile == null) return;
     final room = await rooms.loadCurrentRoom();
     if (generation != _generation) return;
     GameSnapshot? game;
@@ -102,6 +106,7 @@ class RecoveryController extends Notifier<RecoveryState> {
         if (generation != _generation) return;
       }
     }
+    ref.read(appSessionControllerProvider.notifier).setProfile(profile);
     ref
         .read(appSessionControllerProvider.notifier)
         .applyRecovered(room: room, game: game);

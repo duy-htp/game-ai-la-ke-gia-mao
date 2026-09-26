@@ -89,6 +89,14 @@ class _Harness {
   }
 
   Future<void> complete(_Outcome outcome) async {
+    final profileBefore = <Map<String, dynamic>>[];
+    for (final client in clients) {
+      profileBefore.add(
+        Map<String, dynamic>.from(
+          await client.rpc<Object?>('get_my_profile') as Map,
+        ),
+      );
+    }
     for (var i = 1; i < clients.length; i++) {
       await clients[i].rpc<Object?>('set_ready', params: {'p_is_ready': true});
       await clients[i].rpc<Object?>('set_ready', params: {'p_is_ready': true});
@@ -200,6 +208,41 @@ class _Harness {
       reward['coins_gained'] == 10 || reward['coins_gained'] == 20,
       'caller-only completion/winner coins',
     );
+    for (var i = 0; i < clients.length; i++) {
+      final result = (await game(i))['result'] as Map;
+      final ownReward = result['reward'] as Map;
+      final after = Map<String, dynamic>.from(
+        await clients[i].rpc<Object?>('get_my_profile') as Map,
+      );
+      _expect(
+        after['xp'] == profileBefore[i]['xp'] + ownReward['xp_gained'],
+        'profile XP matches reward ledger',
+      );
+      _expect(
+        after['coins'] == profileBefore[i]['coins'] + ownReward['coins_gained'],
+        'profile coins match reward ledger',
+      );
+      _expect(
+        after['games_played'] == profileBefore[i]['games_played'] + 1,
+        'profile games played increments once',
+      );
+      final history = Map<String, dynamic>.from(
+        await clients[i].rpc<Object?>('get_my_game_history') as Map,
+      );
+      final newest = (history['items'] as List).first as Map;
+      _expect(
+        newest['game_id'] == started['game_id'],
+        'new game is first history item',
+      );
+      _expect(
+        newest['xp_gained'] == ownReward['xp_gained'],
+        'history XP matches result',
+      );
+      _expect(
+        newest['coins_gained'] == ownReward['coins_gained'],
+        'history coins match result',
+      );
+    }
     await _securityChecks();
     await _expectPostgrestFailure(
       () => clients[1].rpc<Object?>('play_again'),
