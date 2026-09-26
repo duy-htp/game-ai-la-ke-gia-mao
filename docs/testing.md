@@ -104,3 +104,29 @@ Concurrency xác minh hai advance, hai guess/reward resolution và hai Play Agai
 không tạo bản ghi trùng. Harness ba client đi qua ba scenario: normal bị loại,
 impostor đoán sai và impostor đoán đúng; đồng thời kiểm tra reconnect, quyền đọc
 option/result/reward, economy mutation và hội tụ về Lobby.
+
+## Milestone 9
+
+Flutter tests kiểm tra 20-event storm, single-flight/follow-up, response đảo thứ
+tự, revision monotonic, same-revision refresh, reconnect, subscription reuse và
+dispose. Complete-game harness mặc định chạy 10 ván liên tiếp trong cùng room:
+
+```sh
+dart run tool/complete_game_harness.dart <local-api-url> <publishable-key>
+SOAK_ROUNDS=25 dart run tool/complete_game_harness.dart <local-api-url> <publishable-key>
+```
+
+### Action retry classification
+
+| Action | Policy |
+|---|---|
+| create room, start game | Retry cùng request ID; action mới dùng ID mới |
+| ready, acknowledge, discussion ready, same clue/vote/final guess, Play Again | Same-input retry an toàn |
+| join | Same-room retry an toàn |
+| leave | Retry sau khi reconcile current room |
+| settings | Retry cùng payload; không tự retry payload đã đổi |
+| different clue/vote/final guess | Manual only; không blind retry |
+
+Khi response mutation bị mất, recovery refetch snapshot thay vì kết luận thất
+bại. Automatic recovery được coalesce/bounded; không có connectivity plugin hay
+retry vô hạn.

@@ -101,3 +101,20 @@ trực tiếp từ snapshot.
 Realtime tiếp tục chỉ phát invalidation tối giản. Keyword, đáp án, winner,
 reward và economy totals không đi trong Broadcast. Resume/reconnect luôn refetch
 RPC; uniqueness trong database ngăn việc refetch hoặc retry cấp reward lần hai.
+
+## Recovery coordinator
+
+`RecoveryController` sở hữu pipeline room/game recovery; `App` sở hữu lifecycle
+observer, còn `RoomRealtimeController` sở hữu private channel/Presence.
+Invalidation được debounce 120 ms rồi yêu cầu recovery, không mutate snapshot.
+
+Recovery load room rồi game, hội tụ deadline tối đa 16 lần và áp dụng cặp
+snapshot atomically. Một pass chạy tại một thời điểm; trigger trong lúc chạy vô
+hiệu generation cũ và gom thành một follow-up. Cùng game/room ID không nhận
+revision thấp hơn; same revision được thay thế vì các field caller-specific như
+`currentUserHasVoted` và reward có thể đổi. Event không mang game authority nên
+RPC current-state bảo vệ khỏi invalidation của game cũ.
+
+Channel lifecycle là create → subscribe → replace khi room ID đổi → dispose khi
+không còn room/app dispose. Presence biến mất không đổi membership, host, turn,
+vote hoặc reward eligibility.

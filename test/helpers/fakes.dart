@@ -234,6 +234,7 @@ class FakeRoomRepository implements RoomRepository {
   int leaveCalls = 0;
   int readyCalls = 0;
   int settingsCalls = 0;
+  int realtimeConnectCalls = 0;
   int? submittedMaxPlayers;
   String? submittedRequestId;
   RoomCode? submittedCode;
@@ -296,8 +297,10 @@ class FakeRoomRepository implements RoomRepository {
   Future<List<GameCategory>> loadCategories() async => const [];
 
   @override
-  Future<RoomRealtimeSession> connectRealtime(String roomId) async =>
-      lastRealtimeSession = FakeRoomRealtimeSession();
+  Future<RoomRealtimeSession> connectRealtime(String roomId) async => (
+    realtimeConnectCalls++,
+    lastRealtimeSession = FakeRoomRealtimeSession(),
+  ).$2;
 }
 
 class FakeRoomRealtimeSession implements RoomRealtimeSession {

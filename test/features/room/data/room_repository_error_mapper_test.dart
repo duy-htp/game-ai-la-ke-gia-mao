@@ -9,6 +9,7 @@ void main() {
     'room_full': RoomFullAppError,
     'already_in_another_room': AlreadyInAnotherRoomAppError,
     'room_closed': RoomClosedAppError,
+    'room_in_game': RoomInGameAppError,
   };
 
   for (final entry in mappings.entries) {

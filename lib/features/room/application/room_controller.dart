@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../core/errors/app_error.dart';
+import '../../../core/recovery/recovery_controller.dart';
 import '../../auth/application/app_session_controller.dart';
 import '../domain/game_type.dart';
 import '../domain/room_code.dart';
@@ -42,7 +43,7 @@ class RoomController extends Notifier<RoomActionState> {
       ref.read(appSessionControllerProvider.notifier).setRoom(room);
       state = const RoomActionIdle();
     } on AppError catch (error) {
-      state = RoomActionError(error);
+      await _reconcileOrFail(error);
     } catch (_) {
       state = const RoomActionError(RoomOperationAppError());
     }
@@ -62,7 +63,7 @@ class RoomController extends Notifier<RoomActionState> {
       ref.read(appSessionControllerProvider.notifier).setRoom(room);
       state = const RoomActionIdle();
     } on AppError catch (error) {
-      state = RoomActionError(error);
+      await _reconcileOrFail(error);
     } catch (_) {
       state = const RoomActionError(RoomOperationAppError());
     }
@@ -81,7 +82,7 @@ class RoomController extends Notifier<RoomActionState> {
       ref.read(appSessionControllerProvider.notifier).clearRoom();
       state = const RoomActionIdle();
     } on AppError catch (error) {
-      state = RoomActionError(error);
+      await _reconcileOrFail(error);
     } catch (_) {
       state = const RoomActionError(RoomOperationAppError());
     }
@@ -97,7 +98,7 @@ class RoomController extends Notifier<RoomActionState> {
       ref.read(appSessionControllerProvider.notifier).setRoom(room);
       state = const RoomActionIdle();
     } on AppError catch (error) {
-      state = RoomActionError(error);
+      await _reconcileOrFail(error);
     }
   }
 
@@ -111,11 +112,22 @@ class RoomController extends Notifier<RoomActionState> {
       ref.read(appSessionControllerProvider.notifier).setRoom(room);
       state = const RoomActionIdle();
     } on AppError catch (error) {
-      state = RoomActionError(error);
+      await _reconcileOrFail(error);
     }
   }
 
   void clearError() => state = const RoomActionIdle();
+
+  Future<void> _reconcileOrFail(AppError error) async {
+    if (error is NetworkAppError) {
+      await ref
+          .read(recoveryControllerProvider.notifier)
+          .recover(RecoveryReason.uncertainMutation);
+      state = const RoomActionIdle();
+    } else {
+      state = RoomActionError(error);
+    }
+  }
 }
 
 final roomControllerProvider =

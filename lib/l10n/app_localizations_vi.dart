@@ -159,6 +159,10 @@ class AppLocalizationsVi extends AppLocalizations {
   String get leaveRoom => 'RỜI PHÒNG';
 
   @override
+  String get errorRoomInGame =>
+      'Không thể rời phòng khi ván chơi đang diễn ra.';
+
+  @override
   String roomCodeValue(String code) {
     return 'Mã phòng $code';
   }
@@ -488,6 +492,10 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get playAgain => 'CHƠI LẠI';
+
+  @override
+  String get connectionLost =>
+      'MẤT KẾT NỐI — HÃY THỬ LẠI NẾU KHÔNG TỰ KHÔI PHỤC';
 
   @override
   String get waitingForHost => 'Đang chờ chủ phòng...';

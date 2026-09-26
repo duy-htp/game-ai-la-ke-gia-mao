@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/errors/app_error.dart';
+import '../../../core/recovery/recovery_controller.dart';
 import '../../auth/application/app_session_controller.dart';
 import '../../auth/application/app_session_state.dart';
 import '../domain/game_snapshot.dart';
@@ -55,7 +56,14 @@ class GamePhaseController extends Notifier<GamePhaseActionState> {
       ref.read(appSessionControllerProvider.notifier).setGame(null);
       state = const GamePhaseIdle();
     } on AppError catch (error) {
-      state = GamePhaseFailure(error);
+      if (error is NetworkAppError) {
+        await ref
+            .read(recoveryControllerProvider.notifier)
+            .recover(RecoveryReason.uncertainMutation);
+        state = const GamePhaseIdle();
+      } else {
+        state = GamePhaseFailure(error);
+      }
     }
   }
 
@@ -97,7 +105,14 @@ class GamePhaseController extends Notifier<GamePhaseActionState> {
       _apply(game);
       state = const GamePhaseIdle();
     } on AppError catch (error) {
-      state = GamePhaseFailure(error);
+      if (error is NetworkAppError) {
+        await ref
+            .read(recoveryControllerProvider.notifier)
+            .recover(RecoveryReason.uncertainMutation);
+        state = const GamePhaseIdle();
+      } else {
+        state = GamePhaseFailure(error);
+      }
     } catch (_) {
       state = const GamePhaseFailure(GameOperationAppError());
     }

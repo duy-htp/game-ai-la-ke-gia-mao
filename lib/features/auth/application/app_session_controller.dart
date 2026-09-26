@@ -98,6 +98,11 @@ class AppSessionController extends Notifier<AppSessionState> {
   void setRoom(RoomSnapshot room) {
     final current = state;
     if (current is AppSessionReady) {
+      if (current.room case final existing?
+          when existing.roomId == room.roomId &&
+              existing.revision > room.revision) {
+        return;
+      }
       state = AppSessionReady(current.profile, room: room, game: current.game);
     }
   }
@@ -112,8 +117,38 @@ class AppSessionController extends Notifier<AppSessionState> {
   void setGame(GameSnapshot? game) {
     final current = state;
     if (current is AppSessionReady) {
+      final existing = current.game;
+      if (game != null &&
+          existing != null &&
+          existing.gameId == game.gameId &&
+          existing.revision > game.revision) {
+        return;
+      }
       state = AppSessionReady(current.profile, room: current.room, game: game);
     }
+  }
+
+  void applyRecovered({
+    required RoomSnapshot? room,
+    required GameSnapshot? game,
+  }) {
+    final current = state;
+    if (current is! AppSessionReady) return;
+    final existingRoom = current.room;
+    if (room != null &&
+        existingRoom != null &&
+        room.roomId == existingRoom.roomId &&
+        room.revision < existingRoom.revision) {
+      return;
+    }
+    final existingGame = current.game;
+    if (game != null &&
+        existingGame != null &&
+        game.gameId == existingGame.gameId &&
+        game.revision < existingGame.revision) {
+      return;
+    }
+    state = AppSessionReady(current.profile, room: room, game: game);
   }
 }
 

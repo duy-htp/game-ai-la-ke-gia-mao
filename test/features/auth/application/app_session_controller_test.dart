@@ -7,6 +7,9 @@ import 'package:ai_la_ke_gia_mao/features/auth/domain/auth_repository.dart';
 import 'package:ai_la_ke_gia_mao/features/profile/domain/profile_repository.dart';
 import 'package:ai_la_ke_gia_mao/features/room/domain/room_repository.dart';
 import 'package:ai_la_ke_gia_mao/features/game/domain/game_repository.dart';
+import 'package:ai_la_ke_gia_mao/features/game/domain/game_snapshot.dart';
+import 'package:ai_la_ke_gia_mao/features/game/domain/game_status.dart';
+import 'package:ai_la_ke_gia_mao/features/room/domain/room_snapshot.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -190,4 +193,58 @@ void main() {
       isA<InvalidUsernameAppError>(),
     );
   });
+
+  test(
+    'room and game revisions never regress but same revision may refresh',
+    () async {
+      final container = _container(
+        auth: FakeAuthRepository(),
+        profiles: FakeProfileRepository(profile: sampleProfile),
+        rooms: FakeRoomRepository(currentRoom: sampleRoom),
+      );
+      addTearDown(container.dispose);
+      final controller = container.read(appSessionControllerProvider.notifier);
+      await controller.initialize();
+
+      RoomSnapshot room(int revision, int maxPlayers) => RoomSnapshot(
+        roomId: sampleRoom.roomId,
+        code: sampleRoom.code,
+        gameType: sampleRoom.gameType,
+        status: sampleRoom.status,
+        maxPlayers: maxPlayers,
+        hostId: sampleRoom.hostId,
+        members: sampleRoom.members,
+        revision: revision,
+      );
+      GameSnapshot game(int revision, GameStatus status) => GameSnapshot(
+        gameId: sampleGame.gameId,
+        roomId: sampleGame.roomId,
+        roundNumber: sampleGame.roundNumber,
+        status: status,
+        phaseStartedAt: sampleGame.phaseStartedAt,
+        phaseEndsAt: sampleGame.phaseEndsAt,
+        revision: revision,
+        participants: sampleGame.participants,
+        serverNow: sampleGame.serverNow,
+        turns: const [],
+      );
+      controller.setRoom(room(20, 6));
+      controller.setRoom(room(19, 8));
+      controller.setRoom(room(20, 7));
+      controller.setGame(game(20, GameStatus.clue));
+      controller.setGame(game(19, GameStatus.discussion));
+      controller.setGame(game(20, GameStatus.voting));
+
+      final state =
+          container.read(appSessionControllerProvider) as AppSessionReady;
+      expect(state.room!.revision, 20);
+      expect(
+        state.room!.maxPlayers,
+        7,
+        reason: 'same revision refreshes caller-safe fields',
+      );
+      expect(state.game!.revision, 20);
+      expect(state.game!.status, GameStatus.voting);
+    },
+  );
 }

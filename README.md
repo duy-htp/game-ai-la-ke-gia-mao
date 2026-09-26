@@ -76,3 +76,11 @@ cho impostor bị loại 20 giây để chọn một trong bốn đáp án opaqu
 Winner, reward, level và stats đều được giải quyết atomically phía server với
 ledger idempotent. Result chỉ tiết lộ role/keyword cho participant; host có thể
 đưa chính room đó về Lobby bằng Chơi lại mà vẫn giữ settings và lịch sử.
+
+## Milestone 9 — Multiplayer Reliability
+
+Recovery coordinator cấp ứng dụng thực hiện authoritative refetch khi resume,
+Realtime reconnect hoặc outcome mutation chưa chắc chắn. Refresh là single-flight
+có một follow-up coalesced; generation loại response cũ, revision không bao giờ
+lùi và deadline hội tụ bằng vòng advance giới hạn 16 bước. Presence vẫn chỉ là
+UX: mất mạng không xóa membership hay đổi host.

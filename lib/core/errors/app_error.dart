@@ -92,6 +92,10 @@ final class RoomOperationAppError extends AppError {
   const RoomOperationAppError() : super('room_operation_failed');
 }
 
+final class RoomInGameAppError extends AppError {
+  const RoomInGameAppError() : super('room_in_game');
+}
+
 final class GameOperationAppError extends AppError {
   const GameOperationAppError() : super('game_operation_failed');
 }

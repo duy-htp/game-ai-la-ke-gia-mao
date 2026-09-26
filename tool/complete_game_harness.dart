@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 // ignore: depend_on_referenced_packages
 import 'package:supabase/supabase.dart';
@@ -12,18 +13,20 @@ Future<void> main(List<String> args) async {
       'Usage: dart run tool/complete_game_harness.dart URL KEY',
     );
   }
-  for (final outcome in _Outcome.values) {
-    final harness = await _Harness.create(args[0], args[1], outcome.name);
-    try {
-      await harness.complete(outcome);
-    } finally {
-      await harness.dispose();
+  final rounds = int.tryParse(Platform.environment['SOAK_ROUNDS'] ?? '') ?? 10;
+  if (rounds < 3) throw ArgumentError('SOAK_ROUNDS must be at least 3');
+  final harness = await _Harness.create(args[0], args[1], 'soak');
+  try {
+    for (var round = 0; round < rounds; round++) {
+      await harness.complete(_Outcome.values[round % _Outcome.values.length]);
     }
+  } finally {
+    await harness.dispose();
   }
   // ignore: avoid_print
   print(
-    'PASS: complete-game normal-eliminated/wrong/correct scenarios, security, '
-    'reconnect, rewards and Play Again converged',
+    'PASS: $rounds consecutive games, result branches, security, reconnect, '
+    'rewards and Play Again converged',
   );
 }
 
@@ -35,6 +38,7 @@ class _Harness {
   final List<SupabaseClient> clients;
   final String roomId;
   final List<Map<String, dynamic>> payloads;
+  int _lastRound = 0;
 
   List<String> get ids =>
       clients.map((client) => client.auth.currentUser!.id).toList();
@@ -85,10 +89,19 @@ class _Harness {
   }
 
   Future<void> complete(_Outcome outcome) async {
-    await clients[0].rpc<Object?>(
-      'start_game',
-      params: {'p_request_id': const Uuid().v4()},
+    for (var i = 1; i < clients.length; i++) {
+      await clients[i].rpc<Object?>('set_ready', params: {'p_is_ready': true});
+      await clients[i].rpc<Object?>('set_ready', params: {'p_is_ready': true});
+    }
+    final started = Map<String, dynamic>.from(
+      await clients[0].rpc<Object?>(
+        'start_game',
+        params: {'p_request_id': const Uuid().v4()},
+      ) as Map,
     );
+    final round = started['round_number'] as int;
+    _expect(round == _lastRound + 1, 'round number is monotonic');
+    _lastRound = round;
     final secrets = <Map<String, dynamic>>[];
     for (final client in clients) {
       secrets.add(

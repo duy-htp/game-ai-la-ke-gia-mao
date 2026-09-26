@@ -40,13 +40,24 @@ void main() {
     await controller.start(sampleRoom.roomId);
     final baseline = rooms.loadCalls;
 
-    rooms.lastRealtimeSession!.controller
-      ..add(const RoomInvalidated())
-      ..add(const RoomInvalidated())
-      ..add(const RoomInvalidated());
+    for (var i = 0; i < 20; i++) {
+      rooms.lastRealtimeSession!.controller.add(const RoomInvalidated());
+    }
     await Future<void>.delayed(const Duration(milliseconds: 180));
 
     expect(rooms.loadCalls, baseline + 1);
+  });
+
+  test('repeated start owns one effective subscription', () async {
+    final rooms = FakeRoomRepository(currentRoom: sampleRoom);
+    final container = containerFor(rooms);
+    addTearDown(container.dispose);
+    await container.read(appSessionControllerProvider.notifier).initialize();
+    final controller = container.read(roomRealtimeControllerProvider.notifier);
+    for (var i = 0; i < 10; i++) {
+      await controller.start(sampleRoom.roomId);
+    }
+    expect(rooms.realtimeConnectCalls, 1);
   });
 
   test('presence is UX-only and filters non-members', () async {

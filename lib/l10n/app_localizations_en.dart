@@ -161,6 +161,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get leaveRoom => 'LEAVE ROOM';
 
   @override
+  String get errorRoomInGame => 'You can\'t leave while a game is in progress.';
+
+  @override
   String roomCodeValue(String code) {
     return 'Room code $code';
   }
@@ -494,6 +497,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get playAgain => 'PLAY AGAIN';
+
+  @override
+  String get connectionLost =>
+      'CONNECTION LOST — TAP RETRY IF IT DOESN\'T RECOVER';
 
   @override
   String get waitingForHost => 'Waiting for the host...';

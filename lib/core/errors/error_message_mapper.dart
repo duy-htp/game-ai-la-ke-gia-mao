@@ -31,6 +31,7 @@ abstract final class ErrorMessageMapper {
       ProfileRequiredAppError() => localizations.errorProfileRequired,
       NotRoomMemberAppError() => localizations.errorNotRoomMember,
       RoomOperationAppError() => localizations.errorRoomOperation,
+      RoomInGameAppError() => localizations.errorRoomInGame,
       GameOperationAppError() => localizations.errorGameOperation,
       SecretUnavailableAppError() => localizations.errorSecretUnavailable,
       InvalidClueAppError() => localizations.errorInvalidClue,

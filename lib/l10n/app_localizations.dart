@@ -374,6 +374,12 @@ abstract class AppLocalizations {
   /// **'RỜI PHÒNG'**
   String get leaveRoom;
 
+  /// No description provided for @errorRoomInGame.
+  ///
+  /// In vi, this message translates to:
+  /// **'Không thể rời phòng khi ván chơi đang diễn ra.'**
+  String get errorRoomInGame;
+
   /// No description provided for @roomCodeValue.
   ///
   /// In vi, this message translates to:
@@ -973,6 +979,12 @@ abstract class AppLocalizations {
   /// In vi, this message translates to:
   /// **'CHƠI LẠI'**
   String get playAgain;
+
+  /// No description provided for @connectionLost.
+  ///
+  /// In vi, this message translates to:
+  /// **'MẤT KẾT NỐI — HÃY THỬ LẠI NẾU KHÔNG TỰ KHÔI PHỤC'**
+  String get connectionLost;
 
   /// No description provided for @waitingForHost.
   ///

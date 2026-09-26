@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -24,38 +22,9 @@ class RoomScreen extends ConsumerStatefulWidget {
   ConsumerState<RoomScreen> createState() => _RoomScreenState();
 }
 
-class _RoomScreenState extends ConsumerState<RoomScreen>
-    with WidgetsBindingObserver {
+class _RoomScreenState extends ConsumerState<RoomScreen> {
   LobbySettings? _draft;
   LobbySettings? _draftBase;
-  late final RoomRealtimeController _realtimeController;
-
-  @override
-  void initState() {
-    super.initState();
-    _realtimeController = ref.read(roomRealtimeControllerProvider.notifier);
-    WidgetsBinding.instance.addObserver(this);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final session = ref.read(appSessionControllerProvider);
-      if (session is AppSessionReady && session.room != null) {
-        unawaited(_realtimeController.start(session.room!.roomId));
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    unawaited(_realtimeController.stop());
-    super.dispose();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {
-      unawaited(_realtimeController.refresh());
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -211,7 +180,6 @@ class _RoomScreenState extends ConsumerState<RoomScreen>
                             await ref
                                 .read(roomControllerProvider.notifier)
                                 .leaveRoom();
-                            await _realtimeController.stop();
                           },
                     icon: const Icon(Icons.logout_rounded),
                     label: Text(context.l10n.leaveRoom),

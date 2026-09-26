@@ -51,3 +51,11 @@ result -- host play_again ---------------> waiting lobby
 Một ván kết thúc sau đúng một elimination, kể cả có hai impostor. Winner, reason,
 ledger, profile totals và stats được ghi atomically. Play Again không xóa ván;
 ván kế tiếp tăng `round_number` đơn điệu.
+
+## Recovery semantics
+
+Không có phase offline. Client giữ snapshot an toàn gần nhất, hiện reconnecting
+rồi refetch. Nếu `phase_ends_at <= server_now`, client chỉ yêu cầu
+`advance_game_if_due`; server vẫn quyết định transition. Recovery giới hạn 16
+lần để hội tụ deadline mà không loop vô hạn. Nếu mọi client đóng app, phase có
+thể nằm ở deadline đã hết; participant đầu tiên quay lại sẽ hội tụ state.

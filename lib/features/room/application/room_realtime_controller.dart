@@ -2,12 +2,11 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/recovery/recovery_controller.dart';
 import '../../auth/application/app_session_controller.dart';
 import '../../auth/application/app_session_state.dart';
 import '../domain/room_realtime.dart';
 import '../domain/room_repository.dart';
-import '../domain/room_status.dart';
-import '../../game/domain/game_repository.dart';
 
 class RoomRealtimeState {
   const RoomRealtimeState({
@@ -32,7 +31,6 @@ class RoomRealtimeController extends Notifier<RoomRealtimeState> {
   StreamSubscription<RoomRealtimeEvent>? _events;
   Timer? _debounce;
   String? _roomId;
-  int _refreshGeneration = 0;
 
   @override
   RoomRealtimeState build() {
@@ -52,7 +50,6 @@ class RoomRealtimeController extends Notifier<RoomRealtimeState> {
     try {
       _session = await repository.connectRealtime(roomId);
       _events = _session!.events.listen(_onEvent);
-      await refresh();
     } catch (_) {
       state = state.copyWith(connection: RoomConnectionState.reconnecting);
     }
@@ -62,7 +59,14 @@ class RoomRealtimeController extends Notifier<RoomRealtimeState> {
     switch (event) {
       case RoomInvalidated():
         _debounce?.cancel();
-        _debounce = Timer(const Duration(milliseconds: 120), refresh);
+        _debounce = Timer(
+          const Duration(milliseconds: 120),
+          () => unawaited(
+            ref
+                .read(recoveryControllerProvider.notifier)
+                .recover(RecoveryReason.realtime),
+          ),
+        );
       case RoomPresenceChanged(:final onlinePlayerIds):
         final current = ref.read(appSessionControllerProvider);
         final members = current is AppSessionReady
@@ -77,38 +81,24 @@ class RoomRealtimeController extends Notifier<RoomRealtimeState> {
             this.state.connection == RoomConnectionState.connected;
         this.state = this.state.copyWith(connection: state);
         if (state == RoomConnectionState.connected && !wasConnected) {
-          unawaited(refresh());
+          unawaited(
+            ref
+                .read(recoveryControllerProvider.notifier)
+                .recover(RecoveryReason.realtime),
+          );
         }
     }
   }
 
   Future<void> refresh() async {
-    final repository = ref.read(roomRepositoryProvider);
-    if (repository == null || _roomId == null) return;
-    final generation = ++_refreshGeneration;
-    try {
-      final room = await repository.loadCurrentRoom();
-      if (generation != _refreshGeneration) return;
-      final current = ref.read(appSessionControllerProvider);
-      if (room == null) {
-        ref.read(appSessionControllerProvider.notifier).clearRoom();
-        await stop();
-        return;
-      }
-      final currentRoom = current is AppSessionReady ? current.room : null;
-      if (currentRoom == null || room.revision > currentRoom.revision) {
-        ref.read(appSessionControllerProvider.notifier).setRoom(room);
-      }
-      final gameRepository = ref.read(gameRepositoryProvider);
-      if (room.status == RoomStatus.inGame && gameRepository != null) {
-        final game = await gameRepository.loadCurrentGame();
-        if (generation == _refreshGeneration && game != null) {
-          ref.read(appSessionControllerProvider.notifier).setGame(game);
-        }
-      }
-    } catch (_) {
-      state = state.copyWith(connection: RoomConnectionState.reconnecting);
-    }
+    await ref
+        .read(recoveryControllerProvider.notifier)
+        .recover(RecoveryReason.manual);
+  }
+
+  Future<void> ensureSubscription(String roomId) async {
+    if (_roomId == roomId && _session != null) return;
+    await start(roomId);
   }
 
   Future<void> stop() async {

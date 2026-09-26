@@ -19,6 +19,7 @@ abstract final class RoomRepositoryErrorMapper {
         'invalid_max_players' => const InvalidMaxPlayersAppError(),
         'profile_required' => const ProfileRequiredAppError(),
         'not_room_member' => const NotRoomMemberAppError(),
+        'room_in_game' => const RoomInGameAppError(),
         _ => const RoomOperationAppError(),
       };
     }
