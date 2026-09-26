@@ -11,6 +11,7 @@ import '../features/auth/application/app_session_controller.dart';
 import '../features/auth/application/app_session_state.dart';
 import '../features/room/application/room_realtime_controller.dart';
 import '../features/room/domain/room_realtime.dart';
+import '../features/monetization/application/monetization_controller.dart';
 import '../l10n/app_localizations.dart';
 
 class App extends ConsumerStatefulWidget {
@@ -32,6 +33,7 @@ class _AppState extends ConsumerState<App> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
     Future.microtask(() async {
       await ref.read(appSessionControllerProvider.notifier).initialize();
+      await ref.read(monetizationControllerProvider.notifier).initialize();
       await ref.read(recoveryControllerProvider.notifier).activate();
     });
   }

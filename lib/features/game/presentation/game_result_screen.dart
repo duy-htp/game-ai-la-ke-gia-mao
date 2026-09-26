@@ -5,6 +5,7 @@ import '../../../core/localization/localization_extension.dart';
 import '../../auth/application/app_session_controller.dart';
 import '../../auth/application/app_session_state.dart';
 import '../../room/application/room_controller.dart';
+import '../../monetization/application/monetization_controller.dart';
 import '../application/game_phase_controller.dart';
 import '../domain/game_snapshot.dart';
 
@@ -29,6 +30,7 @@ class GameResultScreen extends ConsumerWidget {
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: [
+          const _ResultAdGate(),
           Text(
             result.winnerTeam == WinnerTeam.normal
                 ? context.l10n.normalTeamWins
@@ -103,4 +105,23 @@ class GameResultScreen extends ConsumerWidget {
       ),
     );
   }
+}
+
+class _ResultAdGate extends ConsumerStatefulWidget {
+  const _ResultAdGate();
+  @override
+  ConsumerState<_ResultAdGate> createState() => _ResultAdGateState();
+}
+
+class _ResultAdGateState extends ConsumerState<_ResultAdGate> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(monetizationControllerProvider.notifier).onResultVisible();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) => const SizedBox.shrink();
 }

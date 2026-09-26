@@ -142,3 +142,19 @@ dedupe/error retention và layout 360×640.
 Complete-game soak còn kiểm tra mỗi vòng rằng profile totals tăng đúng reward và
 history mới nhất khớp game/result. Chạy cùng lệnh Milestone 9; toàn bộ database
 suite chạy bằng `npx --yes supabase@latest test db`.
+
+## Milestone 11
+
+`monetization_test.sql` kiểm tra grants/RLS, +50 cố định, duplicate, daily limit,
+ledger/profile consistency, entitlement idempotency và out-of-order revoke.
+Race harness thực sự chạy hai verified reward event khi quota đã dùng 2/3 và hai
+purchase event đồng thời:
+
+```sh
+bash supabase/tests/concurrency/monetization_races.sh
+```
+
+Flutter dùng fake adapters, không gọi live ads/store. Controller tests kiểm tra
+first-game/frequency, Remove Ads suppression, rewarded vẫn optional, duplicate
+callback guard, purchase/restore refresh. Provider sandbox/production matrix ở
+`docs/monetization-setup.md`.

@@ -14,6 +14,12 @@ ghi thiết bị, OS, build SHA và bằng chứng không chứa secret.
 | iPhone/iOS | Profile edit/relaunch | Username/avatar mới được giữ, stats không đổi | Not run |
 | iPhone/iOS | History pagination | Chỉ ván của user, không trùng khi load more | Not run |
 | iPhone/iOS | Result → Profile | XP/coin/stats/history cập nhật authoritative | Not run |
+| iPhone/iOS | Result interstitial | Chỉ safe boundary, ván đầu bỏ qua, failure không chặn | Not run |
+| iPhone/iOS | Rewarded ad | Verified +50, close/failure không cộng xu | Not run |
+| iPhone/iOS | Remove Ads sandbox | Purchase chặn interstitial, rewarded vẫn optional | Not run |
+| iPhone/iOS | Restore/reinstall | Entitlement phục hồi sau reinstall | Not run |
+| iPhone/iOS | Offline entitlement | Last-confirmed true tiếp tục chặn ads | Not run |
+| iPhone/iOS | Purchase cancellation | Không entitlement, game tiếp tục | Not run |
 | Android/Samsung | Fresh launch | Giữ identity, khôi phục Home/Room/Game | Not run |
 | Android/Samsung | Background/resume | Ẩn secret, refetch, hội tụ deadline | Not run |
 | Android/Samsung | Network off/on | Giữ snapshot, banner, không rời room | Not run |
@@ -23,6 +29,12 @@ ghi thiết bị, OS, build SHA và bằng chứng không chứa secret.
 | Android/Samsung | Profile edit/relaunch | Username/avatar mới được giữ, stats không đổi | Not run |
 | Android/Samsung | History pagination | Chỉ ván của user, không trùng khi load more | Not run |
 | Android/Samsung | Result → Profile | XP/coin/stats/history cập nhật authoritative | Not run |
+| Android/Samsung | Result interstitial | Chỉ safe boundary, ván đầu bỏ qua, failure không chặn | Not run |
+| Android/Samsung | Rewarded ad | Verified +50, close/failure không cộng xu | Not run |
+| Android/Samsung | Remove Ads sandbox | Purchase chặn interstitial, rewarded vẫn optional | Not run |
+| Android/Samsung | Restore/reinstall | Entitlement phục hồi sau reinstall | Not run |
+| Android/Samsung | Offline entitlement | Last-confirmed true tiếp tục chặn ads | Not run |
+| Android/Samsung | Purchase cancellation | Không entitlement, game tiếp tục | Not run |
 
 Supabase SDK được phép persist refresh/session token trong secure platform
 storage. Ứng dụng không persist keyword, role, vote target, Final Guess answer,

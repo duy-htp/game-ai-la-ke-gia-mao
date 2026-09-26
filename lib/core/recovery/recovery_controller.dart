@@ -10,6 +10,7 @@ import '../../features/room/application/room_realtime_controller.dart';
 import '../../features/room/domain/room_repository.dart';
 import '../../features/room/domain/room_status.dart';
 import '../../features/profile/domain/profile_repository.dart';
+import '../../features/monetization/application/monetization_controller.dart';
 
 enum RecoveryStatus { idle, recovering, failed }
 
@@ -107,6 +108,8 @@ class RecoveryController extends Notifier<RecoveryState> {
       }
     }
     ref.read(appSessionControllerProvider.notifier).setProfile(profile);
+    // Monetization is best-effort and must never block gameplay recovery.
+    unawaited(ref.read(monetizationControllerProvider.notifier).refresh());
     ref
         .read(appSessionControllerProvider.notifier)
         .applyRecovered(room: room, game: game);

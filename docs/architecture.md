@@ -130,3 +130,20 @@ và trong recovery, controller đọc lại totals authoritative thay vì cộng
 `GameHistoryController` giữ danh sách riêng tư, trạng thái lỗi/loading và cursor
 `(finished_at, game_id)`. Pagination merge theo game ID để retry không nhân đôi.
 Widget chỉ render typed models; không query Supabase hay tính stats/winner.
+
+## Monetization authority
+
+`MonetizationController` là state owner duy nhất cho entitlement/reward status;
+ad load state thuộc `AdsService`, store state thuộc `PurchaseService`. Provider
+SDK classes không đi vào Widgets. Supabase `auth.uid()` cũng là provider App User
+ID ổn định; username/avatar không tham gia identity.
+
+Result gate bỏ qua result đầu tiên và chỉ thử interstitial mỗi result thứ ba.
+Failure luôn fail-open cho gameplay. Last-confirmed Remove Ads `true` được giữ khi
+refresh lỗi để tránh hiện ads cho purchaser offline. Reward callback không sửa
+coins; client refetch monetization/profile sau khi provider SSV xử lý.
+
+RevenueCat webhook chỉ nhận minimal event, yêu cầu bearer secret, rồi gọi RPC
+service-role. Event ID unique và provider timestamp ngăn duplicate/out-of-order
+event làm entitlement lùi sai. Không gửi game secret, clue, vote hay keyword cho
+provider; receipt/service secrets không nằm trong Flutter.

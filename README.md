@@ -92,3 +92,13 @@ với cùng validation ở client và server, hiển thị XP/level/coins cùng 
 kê. Lịch sử chỉ trả các ván Result mà caller đã tham gia, dùng keyset pagination
 ổn định và reward lấy trực tiếp từ ledger. Sau Result hoặc khi recovery, client
 refetch profile authoritative; profile/economy tables vẫn không mở direct read.
+
+## Milestone 11 — Monetization Foundation
+
+Ads và purchase nằm sau adapter nên provider lỗi không chặn game. Interstitial
+chỉ được xét sau Result, bỏ qua ván đầu và mặc định hiện mỗi ván thứ ba; Remove
+Ads authoritative sẽ chặn interstitial nhưng không chặn rewarded ad tự nguyện.
+Rewarded completion chỉ là tín hiệu UX: provider verification phía server mới có
+thể ghi ledger và cộng đúng 50 xu, tối đa ba lần theo ngày UTC. Xem checklist
+[monetization setup](docs/monetization-setup.md); live AdMob/store/RevenueCat vẫn
+chờ cấu hình ngoài repository và kiểm thử thiết bị M12.

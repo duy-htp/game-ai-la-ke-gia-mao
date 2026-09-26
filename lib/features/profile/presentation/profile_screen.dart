@@ -5,6 +5,9 @@ import '../../../core/localization/localization_extension.dart';
 import '../../../core/errors/error_message_mapper.dart';
 import '../../auth/application/app_session_controller.dart';
 import '../../auth/application/app_session_state.dart';
+import '../../monetization/application/monetization_controller.dart';
+import '../../monetization/domain/ads_service.dart';
+import '../../monetization/domain/purchase_service.dart';
 import '../application/game_history_controller.dart';
 import '../application/profile_controller.dart';
 import '../domain/avatar_catalog.dart';
@@ -33,6 +36,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     final p = session.profile;
     final history = ref.watch(gameHistoryControllerProvider);
     final action = ref.watch(profileControllerProvider);
+    final monetization = ref.watch(monetizationControllerProvider);
     return Scaffold(
       key: ProfileScreen.screenKey,
       appBar: AppBar(title: Text(context.l10n.profileTitle)),
@@ -74,6 +78,72 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             Text(
               context.l10n.coinBalance(p.coins),
               textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 12),
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(14),
+                child: Column(
+                  children: [
+                    FilledButton.icon(
+                      key: const Key('watch-rewarded-ad'),
+                      onPressed:
+                          monetization.authoritative?.canWatchRewardedAd == true
+                          ? () => _watchRewarded(context)
+                          : null,
+                      icon: const Icon(Icons.smart_display_outlined),
+                      label: Text(context.l10n.watchAdCoins),
+                    ),
+                    Text(
+                      context.l10n.rewardedRemaining(
+                        monetization.authoritative?.rewardedRemainingToday ?? 0,
+                        3,
+                      ),
+                    ),
+                    const Divider(),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(context.l10n.removeAds),
+                              Text(
+                                monetization.authoritative?.removeAds == true
+                                    ? context.l10n.alreadyOwned
+                                    : monetization.product?.localizedPrice ??
+                                          context.l10n.storeUnavailable,
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        if (monetization.authoritative?.removeAds == true)
+                          const Icon(Icons.verified_outlined)
+                        else
+                          SizedBox(
+                            width: 88,
+                            child: FilledButton(
+                              key: const Key('purchase-remove-ads'),
+                              style: FilledButton.styleFrom(
+                                minimumSize: const Size(0, 48),
+                              ),
+                              onPressed: monetization.product == null
+                                  ? null
+                                  : () => _purchase(context),
+                              child: Text(context.l10n.buy),
+                            ),
+                          ),
+                      ],
+                    ),
+                    TextButton(
+                      key: const Key('restore-purchases'),
+                      onPressed: () => _restore(context),
+                      child: Text(context.l10n.restorePurchases),
+                    ),
+                  ],
+                ),
+              ),
             ),
             const SizedBox(height: 16),
             FilledButton.icon(
@@ -167,6 +237,51 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> _watchRewarded(BuildContext context) async {
+    final outcome = await ref
+        .read(monetizationControllerProvider.notifier)
+        .watchRewarded();
+    if (!context.mounted) return;
+    final message = switch (outcome) {
+      RewardedAdOutcome.completed => context.l10n.rewardVerificationPending,
+      RewardedAdOutcome.closedEarly => context.l10n.adClosedEarly,
+      RewardedAdOutcome.unavailable => context.l10n.adUnavailable,
+      RewardedAdOutcome.failed => context.l10n.adFailed,
+    };
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  Future<void> _purchase(BuildContext context) async {
+    final outcome = await ref
+        .read(monetizationControllerProvider.notifier)
+        .purchaseRemoveAds();
+    if (!context.mounted) return;
+    final message = switch (outcome) {
+      PurchaseOutcome.submitted => context.l10n.purchaseVerificationPending,
+      PurchaseOutcome.cancelled => context.l10n.purchaseCancelled,
+      PurchaseOutcome.unavailable => context.l10n.storeUnavailable,
+      PurchaseOutcome.failed => context.l10n.purchaseFailed,
+    };
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  Future<void> _restore(BuildContext context) async {
+    final outcome = await ref
+        .read(monetizationControllerProvider.notifier)
+        .restorePurchases();
+    if (!context.mounted) return;
+    final message = switch (outcome) {
+      RestoreOutcome.submitted => context.l10n.restoreVerificationPending,
+      RestoreOutcome.nothingToRestore => context.l10n.nothingToRestore,
+      RestoreOutcome.unavailable => context.l10n.storeUnavailable,
+      RestoreOutcome.failed => context.l10n.restoreFailed,
+    };
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
   }
 
   Future<void> _edit(

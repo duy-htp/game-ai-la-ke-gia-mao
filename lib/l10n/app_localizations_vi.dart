@@ -570,4 +570,59 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get errorFinalGuessExpired => 'Thời gian đoán từ khóa đã hết.';
+
+  @override
+  String get watchAdCoins => 'XEM QUẢNG CÁO +50 XU';
+
+  @override
+  String rewardedRemaining(int remaining, int maximum) {
+    return 'Còn $remaining/$maximum lượt hôm nay';
+  }
+
+  @override
+  String get removeAds => 'GỠ QUẢNG CÁO';
+
+  @override
+  String get alreadyOwned => 'ĐÃ SỞ HỮU';
+
+  @override
+  String get storeUnavailable => 'Cửa hàng hiện không khả dụng';
+
+  @override
+  String get buy => 'MUA';
+
+  @override
+  String get restorePurchases => 'Khôi phục giao dịch';
+
+  @override
+  String get rewardVerificationPending =>
+      'Đang xác minh phần thưởng. Số xu sẽ cập nhật sau khi máy chủ xác nhận.';
+
+  @override
+  String get adClosedEarly => 'Quảng cáo đã đóng trước khi hoàn tất.';
+
+  @override
+  String get adUnavailable => 'Hiện chưa có quảng cáo phù hợp.';
+
+  @override
+  String get adFailed => 'Không thể hiển thị quảng cáo.';
+
+  @override
+  String get purchaseVerificationPending => 'Giao dịch đang được xác minh.';
+
+  @override
+  String get purchaseCancelled => 'Bạn đã hủy giao dịch.';
+
+  @override
+  String get purchaseFailed => 'Giao dịch không thành công.';
+
+  @override
+  String get restoreVerificationPending =>
+      'Đang xác minh giao dịch đã khôi phục.';
+
+  @override
+  String get nothingToRestore => 'Không tìm thấy giao dịch để khôi phục.';
+
+  @override
+  String get restoreFailed => 'Không thể khôi phục giao dịch.';
 }

@@ -200,3 +200,16 @@ Kết quả tối giản, sắp xếp `(finished_at,id) DESC`; hai cursor bắt 
 hoặc cùng null. Index theo player/game và partial Result history hỗ trợ truy vấn.
 Authenticated chỉ có EXECUTE các RPC cần thiết, không có direct SELECT/UPDATE
 profiles, game rewards hay stats.
+
+## Monetization ledger và entitlement
+
+`ad_rewards` persist verified provider event, đúng 50 coins và trạng thái
+granted/daily-limit; unique `(provider,provider_event_id)` cho idempotency. RPC
+service-only khóa profile row, đếm granted trong ngày UTC rồi insert ledger và
+tăng coins trong cùng transaction. Tối đa ba grants/ngày/account.
+
+`monetization_events` là webhook event ledger. `player_entitlements` có một row
+`remove_ads` mỗi player, source transaction unique và provider timestamp. Upsert
+chỉ áp dụng event không cũ hơn state hiện tại. Cả ba bảng FORCE RLS và không cấp
+quyền trực tiếp cho mobile roles. `get_my_monetization_state()` là projection
+caller-only duy nhất cho Remove Ads và rewarded quota.

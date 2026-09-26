@@ -8,6 +8,13 @@ class AppConfig {
     required this.environment,
     this.supabaseUrl = '',
     this.supabaseAnonKey = '',
+    this.admobAndroidAppId = '',
+    this.admobIosAppId = '',
+    this.admobAndroidInterstitialId = '',
+    this.admobIosInterstitialId = '',
+    this.admobAndroidRewardedId = '',
+    this.admobIosRewardedId = '',
+    this.revenueCatPublicSdkKey = '',
   });
 
   factory AppConfig.fromEnvironment({
@@ -25,12 +32,34 @@ class AppConfig {
       environment: AppEnvironment.parse(value ?? definedValue),
       supabaseUrl: (supabaseUrl ?? definedSupabaseUrl).trim(),
       supabaseAnonKey: (supabaseAnonKey ?? definedSupabaseAnonKey).trim(),
+      admobAndroidAppId: const String.fromEnvironment('ADMOB_ANDROID_APP_ID'),
+      admobIosAppId: const String.fromEnvironment('ADMOB_IOS_APP_ID'),
+      admobAndroidInterstitialId: const String.fromEnvironment(
+        'ADMOB_ANDROID_INTERSTITIAL_ID',
+      ),
+      admobIosInterstitialId: const String.fromEnvironment(
+        'ADMOB_IOS_INTERSTITIAL_ID',
+      ),
+      admobAndroidRewardedId: const String.fromEnvironment(
+        'ADMOB_ANDROID_REWARDED_ID',
+      ),
+      admobIosRewardedId: const String.fromEnvironment('ADMOB_IOS_REWARDED_ID'),
+      revenueCatPublicSdkKey: const String.fromEnvironment(
+        'REVENUECAT_PUBLIC_SDK_KEY',
+      ),
     );
   }
 
   final AppEnvironment environment;
   final String supabaseUrl;
   final String supabaseAnonKey;
+  final String admobAndroidAppId;
+  final String admobIosAppId;
+  final String admobAndroidInterstitialId;
+  final String admobIosInterstitialId;
+  final String admobAndroidRewardedId;
+  final String admobIosRewardedId;
+  final String revenueCatPublicSdkKey;
 
   bool get isProduction => environment == AppEnvironment.production;
 

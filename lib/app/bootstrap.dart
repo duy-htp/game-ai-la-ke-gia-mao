@@ -13,6 +13,8 @@ import '../features/room/data/supabase_room_repository.dart';
 import '../features/room/domain/room_repository.dart';
 import '../features/game/data/supabase_game_repository.dart';
 import '../features/game/domain/game_repository.dart';
+import '../features/monetization/data/supabase_monetization_repository.dart';
+import '../features/monetization/domain/monetization_repository.dart';
 import 'app.dart';
 
 Future<void> bootstrap() async {
@@ -23,6 +25,7 @@ Future<void> bootstrap() async {
   ProfileRepository? profileRepository;
   RoomRepository? roomRepository;
   GameRepository? gameRepository;
+  MonetizationRepository? monetizationRepository;
 
   try {
     final supabaseConfig = config.requireSupabaseConfiguration();
@@ -37,6 +40,7 @@ Future<void> bootstrap() async {
     profileRepository = SupabaseProfileRepository(client);
     roomRepository = SupabaseRoomRepository(client);
     gameRepository = SupabaseGameRepository(client);
+    monetizationRepository = SupabaseMonetizationRepository(client);
     logger.info('Application services initialized');
   } on AppError catch (error) {
     logger.error(
@@ -60,6 +64,10 @@ Future<void> bootstrap() async {
           roomRepositoryProvider.overrideWithValue(roomRepository),
         if (gameRepository != null)
           gameRepositoryProvider.overrideWithValue(gameRepository),
+        if (monetizationRepository != null)
+          monetizationRepositoryProvider.overrideWithValue(
+            monetizationRepository,
+          ),
       ],
       child: const App(),
     ),

@@ -575,4 +575,59 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorFinalGuessExpired => 'Final Guess time has expired.';
+
+  @override
+  String get watchAdCoins => 'WATCH AD +50 COINS';
+
+  @override
+  String rewardedRemaining(int remaining, int maximum) {
+    return '$remaining/$maximum opportunities left today';
+  }
+
+  @override
+  String get removeAds => 'REMOVE ADS';
+
+  @override
+  String get alreadyOwned => 'OWNED';
+
+  @override
+  String get storeUnavailable => 'Store currently unavailable';
+
+  @override
+  String get buy => 'BUY';
+
+  @override
+  String get restorePurchases => 'Restore Purchases';
+
+  @override
+  String get rewardVerificationPending =>
+      'Reward verification is pending. Coins update only after server confirmation.';
+
+  @override
+  String get adClosedEarly => 'The ad was closed before completion.';
+
+  @override
+  String get adUnavailable => 'No rewarded ad is currently available.';
+
+  @override
+  String get adFailed => 'The ad could not be shown.';
+
+  @override
+  String get purchaseVerificationPending => 'Purchase verification is pending.';
+
+  @override
+  String get purchaseCancelled => 'Purchase cancelled.';
+
+  @override
+  String get purchaseFailed => 'Purchase failed.';
+
+  @override
+  String get restoreVerificationPending =>
+      'Restored purchases are being verified.';
+
+  @override
+  String get nothingToRestore => 'No purchases were found to restore.';
+
+  @override
+  String get restoreFailed => 'Purchases could not be restored.';
 }

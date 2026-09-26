@@ -1123,6 +1123,108 @@ abstract class AppLocalizations {
   /// In vi, this message translates to:
   /// **'Thời gian đoán từ khóa đã hết.'**
   String get errorFinalGuessExpired;
+
+  /// No description provided for @watchAdCoins.
+  ///
+  /// In vi, this message translates to:
+  /// **'XEM QUẢNG CÁO +50 XU'**
+  String get watchAdCoins;
+
+  /// No description provided for @rewardedRemaining.
+  ///
+  /// In vi, this message translates to:
+  /// **'Còn {remaining}/{maximum} lượt hôm nay'**
+  String rewardedRemaining(int remaining, int maximum);
+
+  /// No description provided for @removeAds.
+  ///
+  /// In vi, this message translates to:
+  /// **'GỠ QUẢNG CÁO'**
+  String get removeAds;
+
+  /// No description provided for @alreadyOwned.
+  ///
+  /// In vi, this message translates to:
+  /// **'ĐÃ SỞ HỮU'**
+  String get alreadyOwned;
+
+  /// No description provided for @storeUnavailable.
+  ///
+  /// In vi, this message translates to:
+  /// **'Cửa hàng hiện không khả dụng'**
+  String get storeUnavailable;
+
+  /// No description provided for @buy.
+  ///
+  /// In vi, this message translates to:
+  /// **'MUA'**
+  String get buy;
+
+  /// No description provided for @restorePurchases.
+  ///
+  /// In vi, this message translates to:
+  /// **'Khôi phục giao dịch'**
+  String get restorePurchases;
+
+  /// No description provided for @rewardVerificationPending.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đang xác minh phần thưởng. Số xu sẽ cập nhật sau khi máy chủ xác nhận.'**
+  String get rewardVerificationPending;
+
+  /// No description provided for @adClosedEarly.
+  ///
+  /// In vi, this message translates to:
+  /// **'Quảng cáo đã đóng trước khi hoàn tất.'**
+  String get adClosedEarly;
+
+  /// No description provided for @adUnavailable.
+  ///
+  /// In vi, this message translates to:
+  /// **'Hiện chưa có quảng cáo phù hợp.'**
+  String get adUnavailable;
+
+  /// No description provided for @adFailed.
+  ///
+  /// In vi, this message translates to:
+  /// **'Không thể hiển thị quảng cáo.'**
+  String get adFailed;
+
+  /// No description provided for @purchaseVerificationPending.
+  ///
+  /// In vi, this message translates to:
+  /// **'Giao dịch đang được xác minh.'**
+  String get purchaseVerificationPending;
+
+  /// No description provided for @purchaseCancelled.
+  ///
+  /// In vi, this message translates to:
+  /// **'Bạn đã hủy giao dịch.'**
+  String get purchaseCancelled;
+
+  /// No description provided for @purchaseFailed.
+  ///
+  /// In vi, this message translates to:
+  /// **'Giao dịch không thành công.'**
+  String get purchaseFailed;
+
+  /// No description provided for @restoreVerificationPending.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đang xác minh giao dịch đã khôi phục.'**
+  String get restoreVerificationPending;
+
+  /// No description provided for @nothingToRestore.
+  ///
+  /// In vi, this message translates to:
+  /// **'Không tìm thấy giao dịch để khôi phục.'**
+  String get nothingToRestore;
+
+  /// No description provided for @restoreFailed.
+  ///
+  /// In vi, this message translates to:
+  /// **'Không thể khôi phục giao dịch.'**
+  String get restoreFailed;
 }
 
 class _AppLocalizationsDelegate
