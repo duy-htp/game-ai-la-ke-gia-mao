@@ -54,6 +54,14 @@ class SupabaseGameRepository implements GameRepository {
   Future<GameSnapshot> submitClue(String text) =>
       _gameRpc('submit_clue', params: {'p_text': text});
 
+  @override
+  Future<GameSnapshot> setDiscussionReady(bool ready) =>
+      _gameRpc('set_discussion_ready', params: {'p_ready': ready});
+
+  @override
+  Future<GameSnapshot> submitVote(String targetPlayerId) =>
+      _gameRpc('submit_vote', params: {'p_target_player_id': targetPlayerId});
+
   Future<GameSnapshot> _gameRpc(
     String name, {
     Map<String, Object?>? params,
@@ -72,6 +80,10 @@ class SupabaseGameRepository implements GameRepository {
         'turn_expired' => const TurnExpiredAppError(),
         'invalid_clue' => const InvalidClueAppError(),
         'clue_already_submitted' => const ClueAlreadySubmittedAppError(),
+        'invalid_vote_target' => const InvalidVoteTargetAppError(),
+        'self_vote_not_allowed' => const SelfVoteAppError(),
+        'vote_already_submitted' => const VoteAlreadySubmittedAppError(),
+        'vote_expired' => const VoteExpiredAppError(),
         _ => const GameOperationAppError(),
       };
     } catch (_) {

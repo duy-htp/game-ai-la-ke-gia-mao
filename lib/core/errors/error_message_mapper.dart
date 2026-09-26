@@ -37,6 +37,10 @@ abstract final class ErrorMessageMapper {
       NotCurrentTurnAppError() => localizations.errorNotCurrentTurn,
       TurnExpiredAppError() => localizations.errorTurnExpired,
       ClueAlreadySubmittedAppError() => localizations.errorClueAlreadySubmitted,
+      InvalidVoteTargetAppError() => localizations.errorInvalidVoteTarget,
+      SelfVoteAppError() => localizations.errorSelfVote,
+      VoteAlreadySubmittedAppError() => localizations.errorVoteAlreadySubmitted,
+      VoteExpiredAppError() => localizations.errorVoteExpired,
     };
   }
 }

@@ -10,6 +10,8 @@ abstract interface class GameRepository {
   Future<GameSnapshot> acknowledgeRole();
   Future<GameSnapshot> advanceIfDue();
   Future<GameSnapshot> submitClue(String text);
+  Future<GameSnapshot> setDiscussionReady(bool ready);
+  Future<GameSnapshot> submitVote(String targetPlayerId);
 }
 
 final gameRepositoryProvider = Provider<GameRepository?>((ref) => null);

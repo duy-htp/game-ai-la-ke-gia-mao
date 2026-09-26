@@ -751,6 +751,126 @@ abstract class AppLocalizations {
   /// In vi, this message translates to:
   /// **'Lượt này đã có manh mối.'**
   String get errorClueAlreadySubmitted;
+
+  /// No description provided for @readyToVote.
+  ///
+  /// In vi, this message translates to:
+  /// **'SẴN SÀNG BỎ PHIẾU'**
+  String get readyToVote;
+
+  /// No description provided for @cancelVoteReady.
+  ///
+  /// In vi, this message translates to:
+  /// **'HỦY SẴN SÀNG'**
+  String get cancelVoteReady;
+
+  /// No description provided for @readyToVoteStatus.
+  ///
+  /// In vi, this message translates to:
+  /// **'Sẵn sàng bỏ phiếu'**
+  String get readyToVoteStatus;
+
+  /// No description provided for @discussingStatus.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đang thảo luận'**
+  String get discussingStatus;
+
+  /// No description provided for @votingTitle.
+  ///
+  /// In vi, this message translates to:
+  /// **'BỎ PHIẾU'**
+  String get votingTitle;
+
+  /// No description provided for @revoteTitle.
+  ///
+  /// In vi, this message translates to:
+  /// **'BỎ PHIẾU LẠI · VÒNG 2'**
+  String get revoteTitle;
+
+  /// No description provided for @votesSubmitted.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đã bỏ {submitted}/{total} phiếu'**
+  String votesSubmitted(int submitted, int total);
+
+  /// No description provided for @confirmVoteTitle.
+  ///
+  /// In vi, this message translates to:
+  /// **'Xác nhận bỏ phiếu'**
+  String get confirmVoteTitle;
+
+  /// No description provided for @confirmVoteFor.
+  ///
+  /// In vi, this message translates to:
+  /// **'Bạn muốn bỏ phiếu cho {username}?'**
+  String confirmVoteFor(String username);
+
+  /// No description provided for @confirmVote.
+  ///
+  /// In vi, this message translates to:
+  /// **'XÁC NHẬN'**
+  String get confirmVote;
+
+  /// No description provided for @voteSubmitted.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đã bỏ phiếu'**
+  String get voteSubmitted;
+
+  /// No description provided for @waitingForVotes.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đang chờ những người chơi còn lại...'**
+  String get waitingForVotes;
+
+  /// No description provided for @voteResultTitle.
+  ///
+  /// In vi, this message translates to:
+  /// **'KẾT QUẢ BỎ PHIẾU'**
+  String get voteResultTitle;
+
+  /// No description provided for @voteTie.
+  ///
+  /// In vi, this message translates to:
+  /// **'HÒA PHIẾU'**
+  String get voteTie;
+
+  /// No description provided for @randomTieBreak.
+  ///
+  /// In vi, this message translates to:
+  /// **'Hòa phiếu — hệ thống đã chọn ngẫu nhiên.'**
+  String get randomTieBreak;
+
+  /// No description provided for @eliminatedPlayer.
+  ///
+  /// In vi, this message translates to:
+  /// **'Người bị loại: {username}'**
+  String eliminatedPlayer(String username);
+
+  /// No description provided for @errorInvalidVoteTarget.
+  ///
+  /// In vi, this message translates to:
+  /// **'Không thể bỏ phiếu cho người chơi này.'**
+  String get errorInvalidVoteTarget;
+
+  /// No description provided for @errorSelfVote.
+  ///
+  /// In vi, this message translates to:
+  /// **'Bạn không thể bỏ phiếu cho chính mình.'**
+  String get errorSelfVote;
+
+  /// No description provided for @errorVoteAlreadySubmitted.
+  ///
+  /// In vi, this message translates to:
+  /// **'Phiếu của bạn trong vòng này đã được chốt.'**
+  String get errorVoteAlreadySubmitted;
+
+  /// No description provided for @errorVoteExpired.
+  ///
+  /// In vi, this message translates to:
+  /// **'Thời gian bỏ phiếu đã hết.'**
+  String get errorVoteExpired;
 }
 
 class _AppLocalizationsDelegate

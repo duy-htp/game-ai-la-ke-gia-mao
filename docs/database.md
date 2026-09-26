@@ -146,3 +146,15 @@ Keyword matching dùng NFC, `unaccent`, lowercase, gom punctuation/whitespace
 thành một khoảng trắng, rồi so khớp phrase theo ranh giới token cho cả VI và EN.
 Mọi semantic rejection chỉ trả `invalid_clue`; tối đa năm keyword-match failures
 mỗi turn hạn chế oracle probing nhưng không tuyên bố loại bỏ hoàn toàn side-channel.
+
+## Voting storage
+
+`discussion_ready_at` là idempotent per-player readiness. `voting_rounds` giới hạn
+round number 1–2 và có partial unique active-round index.
+`voting_round_candidates` persist candidate eligibility; `votes` có unique
+`(round,voter)` và cấm self-vote. Không bảng voting nào cấp direct client grants.
+
+Voting deadline cố định 30 giây; missing rows là abstention. Round 1 tie tạo
+`vote_result` 5 giây rồi round 2 chỉ với tied leaders. Tie vòng 2 chọn một tied
+candidate bằng `gen_random_bytes`; chỉ aggregate counts và cờ random-resolution
+được public, individual ballots không bao giờ được trả.

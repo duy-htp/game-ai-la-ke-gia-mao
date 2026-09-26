@@ -85,4 +85,18 @@ void main() {
       );
     },
   );
+  test('discussion readiness and vote use authoritative repository', () async {
+    final games = FakeGameRepository(currentGame: sampleGame);
+    final container = makeContainer(games);
+    addTearDown(container.dispose);
+    await container.read(appSessionControllerProvider.notifier).initialize();
+    await container
+        .read(gamePhaseControllerProvider.notifier)
+        .setDiscussionReady(true);
+    await container
+        .read(gamePhaseControllerProvider.notifier)
+        .submitVote('player-two');
+    expect(games.discussionReadyCalls, 1);
+    expect(games.voteCalls, 1);
+  });
 }

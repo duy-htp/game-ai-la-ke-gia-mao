@@ -62,6 +62,7 @@ final sampleGame = GameSnapshot(
       username: sampleProfile.username,
       avatarId: sampleProfile.avatarId,
       roleAcknowledged: false,
+      discussionReady: false,
     ),
   ],
 );
@@ -85,6 +86,8 @@ class FakeGameRepository implements GameRepository {
   int acknowledgeCalls = 0;
   int advanceCalls = 0;
   int submitCalls = 0;
+  int discussionReadyCalls = 0;
+  int voteCalls = 0;
   String? submittedText;
   @override
   Future<GameSnapshot> startGame(String requestId) async {
@@ -125,6 +128,20 @@ class FakeGameRepository implements GameRepository {
   Future<GameSnapshot> submitClue(String text) async {
     submitCalls++;
     submittedText = text;
+    if (error case final value?) throw value;
+    return currentGame ?? sampleGame;
+  }
+
+  @override
+  Future<GameSnapshot> setDiscussionReady(bool ready) async {
+    discussionReadyCalls++;
+    if (error case final value?) throw value;
+    return currentGame ?? sampleGame;
+  }
+
+  @override
+  Future<GameSnapshot> submitVote(String targetPlayerId) async {
+    voteCalls++;
     if (error case final value?) throw value;
     return currentGame ?? sampleGame;
   }

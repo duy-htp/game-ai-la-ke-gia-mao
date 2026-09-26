@@ -84,3 +84,9 @@ Milestone 6 thêm `clue_round_test.sql` cho acknowledgement, settings snapshot,
 turn order, validation VI/EN, timeout history, Discussion entry, RLS và snapshot
 secrecy. Concurrency/harness kiểm tra duplicate advancement, submit-timeout race,
 Realtime convergence và reconnect giữa active clue turn.
+
+Milestone 7 thêm `secure_voting_test.sql`, `voting_races.sh` và
+`voting_realtime_harness.dart`. Coverage gồm ready idempotency/deadline, ballot
+immutability/secrecy, abstention, unique result, first tie/revote, second tie
+random resolution, concurrent final actions, Realtime payload privacy và
+reconnect trước/sau vote.

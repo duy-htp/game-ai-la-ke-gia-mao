@@ -80,3 +80,11 @@ clients refetch room và game, sau đó tự gọi secret RPC cho chính mình.
 authoritative mới. Realtime vẫn là room-scoped invalidation; client refetch RPC.
 Timer cục bộ chỉ hiển thị và gọi `advance_game_if_due()` một lần khi về 0;
 `clock_timestamp()` cùng row lock phía database mới quyết định hết hạn.
+
+## Secure voting
+
+Flutter gửi `set_discussion_ready` và `submit_vote`, sau đó chỉ render snapshot.
+Realtime tiếp tục là invalidation không chứa voter/target. Snapshot active voting
+chỉ có candidate list, `N/total` và cờ caller-specific `currentUserHasVoted`.
+Router ánh xạ trực tiếp `discussion`, `voting`, `vote_result`; resume/reconnect
+khởi động lại room channel và refetch authoritative game.

@@ -61,4 +61,11 @@ cầu giữ một giây, tự ẩn sau năm giây và ẩn ngay khi app backgrou
 
 Role acknowledgement, deadline, thứ tự lượt, clue validation và timeout đều do
 database quyết định. `game_turns` lưu lịch sử submitted/timed-out; lượt cuối
-chuyển sang Discussion tối giản. Voting chưa được triển khai.
+chuyển sang Discussion.
+
+## Milestone 7 — Discussion và Secure Voting
+
+Discussion readiness, voting deadlines, private immutable ballots, aggregate
+results và tối đa một revote đều do database điều khiển. Tie vòng hai được chọn
+ngẫu nhiên bằng PostgreSQL secure randomness. Vote Result không tiết lộ role và
+là terminal phase; Final Guess thuộc Milestone 8.

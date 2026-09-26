@@ -362,4 +362,71 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get errorClueAlreadySubmitted =>
       'A clue has already been submitted for this turn.';
+
+  @override
+  String get readyToVote => 'READY TO VOTE';
+
+  @override
+  String get cancelVoteReady => 'CANCEL READY';
+
+  @override
+  String get readyToVoteStatus => 'Ready to vote';
+
+  @override
+  String get discussingStatus => 'Discussing';
+
+  @override
+  String get votingTitle => 'VOTING';
+
+  @override
+  String get revoteTitle => 'REVOTE · ROUND 2';
+
+  @override
+  String votesSubmitted(int submitted, int total) {
+    return '$submitted/$total votes submitted';
+  }
+
+  @override
+  String get confirmVoteTitle => 'Confirm vote';
+
+  @override
+  String confirmVoteFor(String username) {
+    return 'Vote for $username?';
+  }
+
+  @override
+  String get confirmVote => 'CONFIRM';
+
+  @override
+  String get voteSubmitted => 'Vote submitted';
+
+  @override
+  String get waitingForVotes => 'Waiting for the other players...';
+
+  @override
+  String get voteResultTitle => 'VOTE RESULT';
+
+  @override
+  String get voteTie => 'TIE VOTE';
+
+  @override
+  String get randomTieBreak =>
+      'Tie vote — the system selected a player at random.';
+
+  @override
+  String eliminatedPlayer(String username) {
+    return 'Eliminated: $username';
+  }
+
+  @override
+  String get errorInvalidVoteTarget => 'That player cannot receive your vote.';
+
+  @override
+  String get errorSelfVote => 'You cannot vote for yourself.';
+
+  @override
+  String get errorVoteAlreadySubmitted => 'Your vote for this round is final.';
+
+  @override
+  String get errorVoteExpired => 'Voting time has expired.';
 }

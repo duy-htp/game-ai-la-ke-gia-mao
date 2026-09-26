@@ -12,6 +12,8 @@ import '../../features/room/presentation/room_screen.dart';
 import '../../features/game/presentation/role_reveal_screen.dart';
 import '../../features/game/presentation/clue_screen.dart';
 import '../../features/game/presentation/discussion_screen.dart';
+import '../../features/game/presentation/voting_screen.dart';
+import '../../features/game/presentation/vote_result_screen.dart';
 import '../../features/game/domain/game_status.dart';
 import 'route_names.dart';
 
@@ -81,6 +83,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           return switch (game?.status) {
             GameStatus.clue => const ClueScreen(),
             GameStatus.discussion => const DiscussionScreen(),
+            GameStatus.voting => const VotingScreen(),
+            GameStatus.voteResult => const VoteResultScreen(),
             _ => const RoleRevealScreen(),
           };
         },

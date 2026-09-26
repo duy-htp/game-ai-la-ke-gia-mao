@@ -28,3 +28,16 @@ final clue turn -- submit / deadline -------> discussion
 Mỗi transition khóa game row. Entering clue tạo atomically đúng một turn theo
 M5 `turn_order`. Timeout ghi `timed_out` và không tạo clue giả. Discussion dùng
 deadline đã snapshot nhưng là terminal state của Milestone 6; chưa có vote.
+
+## Milestone 7
+
+```text
+discussion -- all ready / deadline --> voting round 1
+voting -- all voted / deadline -----> vote_result
+vote_result tie round 1 -- 5s due --> voting round 2
+voting round 2 ---------------------> vote_result (unique or random tie-break)
+```
+
+Unique result và round-2 result là terminal trong M7. Abstention không tạo ballot
+giả. Mỗi action khóa game/round row; không thể có active rounds song song hoặc
+round thứ ba. Final Guess và role reveal sau elimination chưa được triển khai.

@@ -115,3 +115,19 @@ final class TurnExpiredAppError extends AppError {
 final class ClueAlreadySubmittedAppError extends AppError {
   const ClueAlreadySubmittedAppError() : super('clue_already_submitted');
 }
+
+final class InvalidVoteTargetAppError extends AppError {
+  const InvalidVoteTargetAppError() : super('invalid_vote_target');
+}
+
+final class SelfVoteAppError extends AppError {
+  const SelfVoteAppError() : super('self_vote_not_allowed');
+}
+
+final class VoteAlreadySubmittedAppError extends AppError {
+  const VoteAlreadySubmittedAppError() : super('vote_already_submitted');
+}
+
+final class VoteExpiredAppError extends AppError {
+  const VoteExpiredAppError() : super('vote_expired');
+}

@@ -358,4 +358,71 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get errorClueAlreadySubmitted => 'Lượt này đã có manh mối.';
+
+  @override
+  String get readyToVote => 'SẴN SÀNG BỎ PHIẾU';
+
+  @override
+  String get cancelVoteReady => 'HỦY SẴN SÀNG';
+
+  @override
+  String get readyToVoteStatus => 'Sẵn sàng bỏ phiếu';
+
+  @override
+  String get discussingStatus => 'Đang thảo luận';
+
+  @override
+  String get votingTitle => 'BỎ PHIẾU';
+
+  @override
+  String get revoteTitle => 'BỎ PHIẾU LẠI · VÒNG 2';
+
+  @override
+  String votesSubmitted(int submitted, int total) {
+    return 'Đã bỏ $submitted/$total phiếu';
+  }
+
+  @override
+  String get confirmVoteTitle => 'Xác nhận bỏ phiếu';
+
+  @override
+  String confirmVoteFor(String username) {
+    return 'Bạn muốn bỏ phiếu cho $username?';
+  }
+
+  @override
+  String get confirmVote => 'XÁC NHẬN';
+
+  @override
+  String get voteSubmitted => 'Đã bỏ phiếu';
+
+  @override
+  String get waitingForVotes => 'Đang chờ những người chơi còn lại...';
+
+  @override
+  String get voteResultTitle => 'KẾT QUẢ BỎ PHIẾU';
+
+  @override
+  String get voteTie => 'HÒA PHIẾU';
+
+  @override
+  String get randomTieBreak => 'Hòa phiếu — hệ thống đã chọn ngẫu nhiên.';
+
+  @override
+  String eliminatedPlayer(String username) {
+    return 'Người bị loại: $username';
+  }
+
+  @override
+  String get errorInvalidVoteTarget => 'Không thể bỏ phiếu cho người chơi này.';
+
+  @override
+  String get errorSelfVote => 'Bạn không thể bỏ phiếu cho chính mình.';
+
+  @override
+  String get errorVoteAlreadySubmitted =>
+      'Phiếu của bạn trong vòng này đã được chốt.';
+
+  @override
+  String get errorVoteExpired => 'Thời gian bỏ phiếu đã hết.';
 }

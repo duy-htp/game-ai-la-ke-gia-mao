@@ -35,6 +35,12 @@ class GamePhaseController extends Notifier<GamePhaseActionState> {
   Future<void> submitClue(String text) =>
       _perform((repository) => repository.submitClue(text.trim()));
 
+  Future<void> setDiscussionReady(bool ready) =>
+      _perform((repository) => repository.setDiscussionReady(ready));
+
+  Future<void> submitVote(String targetPlayerId) =>
+      _perform((repository) => repository.submitVote(targetPlayerId));
+
   Future<void> advanceIfDue() async {
     if (_advancing) return;
     _advancing = true;

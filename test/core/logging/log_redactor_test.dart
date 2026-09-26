@@ -13,6 +13,7 @@ void main() {
       'word_vi': 'Dưa hấu',
       'word_en': 'Watermelon',
       'clue_text': 'Mùa hè',
+      'target_id': 'private-ballot-target',
       'room_code': 'ABC23',
     });
 
@@ -27,6 +28,7 @@ void main() {
       'word_vi',
       'word_en',
       'clue_text',
+      'target_id',
     ]) {
       expect(result[key], '[REDACTED]');
     }

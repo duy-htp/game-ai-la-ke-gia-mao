@@ -13,6 +13,8 @@ import 'package:ai_la_ke_gia_mao/features/game/domain/game_snapshot.dart';
 import 'package:ai_la_ke_gia_mao/features/game/presentation/role_reveal_screen.dart';
 import 'package:ai_la_ke_gia_mao/features/game/presentation/clue_screen.dart';
 import 'package:ai_la_ke_gia_mao/features/game/presentation/discussion_screen.dart';
+import 'package:ai_la_ke_gia_mao/features/game/presentation/voting_screen.dart';
+import 'package:ai_la_ke_gia_mao/features/game/presentation/vote_result_screen.dart';
 import 'package:ai_la_ke_gia_mao/features/game/domain/game_status.dart';
 import 'package:ai_la_ke_gia_mao/features/room/domain/room_snapshot.dart';
 import 'package:flutter/material.dart';
@@ -181,9 +183,87 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
     expect(find.byKey(DiscussionScreen.screenKey), findsOneWidget);
-    expect(
-      find.text('Voting will follow in the next milestone.'),
-      findsOneWidget,
+    expect(find.text('READY TO VOTE'), findsOneWidget);
+  });
+
+  testWidgets('server voting and result phases route authoritatively', (
+    tester,
+  ) async {
+    final voting = VotingSnapshot(
+      roundNumber: 1,
+      endsAt: sampleGame.phaseEndsAt!,
+      candidates: [
+        ...sampleGame.participants,
+        const GameParticipantSummary(
+          playerId: '00000000-0000-4000-8000-000000000002',
+          username: 'Vote Two',
+          avatarId: 'avatar_02',
+          roleAcknowledged: true,
+          discussionReady: true,
+        ),
+      ],
+      submittedVoteCount: 0,
+      eligibleVoterCount: 1,
+      currentUserHasVoted: false,
+      results: const [],
+      nextRoundRequired: false,
+      eliminatedPlayerId: null,
+      resolvedByRandomTieBreak: false,
     );
+    GameSnapshot game(GameStatus status, VotingSnapshot value) => GameSnapshot(
+      gameId: sampleGame.gameId,
+      roomId: sampleGame.roomId,
+      roundNumber: 1,
+      status: status,
+      phaseStartedAt: sampleGame.phaseStartedAt,
+      phaseEndsAt: sampleGame.phaseEndsAt,
+      revision: 10,
+      participants: sampleGame.participants,
+      serverNow: sampleGame.serverNow,
+      turns: const [],
+      voting: value,
+    );
+    await tester.pumpWidget(
+      _testApp(room: sampleRoom, game: game(GameStatus.voting, voting)),
+    );
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
+    expect(find.byKey(VotingScreen.screenKey), findsOneWidget);
+    await tester.tap(find.text('Vote Two'));
+    await tester.pumpAndSettle();
+    expect(find.text('Bạn muốn bỏ phiếu cho Vote Two?'), findsOneWidget);
+    await tester.tap(find.text('HỦY'));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('confirm-vote')), findsNothing);
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pump();
+    await tester.pumpWidget(
+      _testApp(
+        room: sampleRoom,
+        game: game(
+          GameStatus.voteResult,
+          VotingSnapshot(
+            roundNumber: 1,
+            endsAt: sampleGame.phaseEndsAt!,
+            candidates: sampleGame.participants,
+            submittedVoteCount: 1,
+            eligibleVoterCount: 1,
+            currentUserHasVoted: true,
+            results: const [
+              VoteResultEntry(
+                playerId: '00000000-0000-4000-8000-000000000001',
+                voteCount: 1,
+              ),
+            ],
+            nextRoundRequired: false,
+            eliminatedPlayerId: '00000000-0000-4000-8000-000000000001',
+            resolvedByRandomTieBreak: false,
+          ),
+        ),
+      ),
+    );
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
+    expect(find.byKey(VoteResultScreen.screenKey), findsOneWidget);
   });
 }

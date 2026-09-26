@@ -12,6 +12,8 @@ abstract final class LogRedactor {
     'word_en',
     'clue',
     'clue_text',
+    'target_id',
+    'p_target_player_id',
   };
 
   static Map<String, Object?> redact(
